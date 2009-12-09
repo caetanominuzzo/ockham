@@ -54,7 +54,10 @@ namespace primeira.Editor.Business
             FileInfo f = new FileInfo(filename);
 
             if (!f.Exists)
+            {
                 f.Create();
+                f.Refresh();
+            }
 
             if (f.Length == 0)
             {
