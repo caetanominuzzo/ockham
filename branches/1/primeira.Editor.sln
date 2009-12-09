@@ -3,6 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "primeira.Editor", "primeira.Editor\primeira.Editor.csproj", "{A9C4D2E8-A829-480D-99E5-A67E254BA687}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "primeira.Editor.Business", "primeira.Editor.Business\primeira.Editor.Business.csproj", "{60E195BA-125C-4DC4-A7B9-26C033CD1DCC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "primeira.Editor.Components", "primeira.Editor.Components\primeira.Editor.Components.csproj", "{F5E3F2D5-0629-4BEF-BC64-718E8483655E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "primeira.Editor.FileBrowserEditor", "primeira.Editor.FileBrowserEditor\primeira.Editor.FileBrowserEditor.csproj", "{209D2421-5C0D-45B5-8C5D-41F414FCA6A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "primeira.Editor.TabControlEditor", "primeira.Editor.TabControlEditor\primeira.Editor.TabControlEditor.csproj", "{CF52C6E4-2866-47CD-8F50-2584DFBD8938}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "primeira.Editor.MetaEditor", "primeira.Editor.MetaEditor\primeira.Editor.MetaEditor.csproj", "{BBE46FF0-457D-489D-82ED-2AF19FE8693B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +23,26 @@ Global
 		{A9C4D2E8-A829-480D-99E5-A67E254BA687}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9C4D2E8-A829-480D-99E5-A67E254BA687}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9C4D2E8-A829-480D-99E5-A67E254BA687}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60E195BA-125C-4DC4-A7B9-26C033CD1DCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60E195BA-125C-4DC4-A7B9-26C033CD1DCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60E195BA-125C-4DC4-A7B9-26C033CD1DCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60E195BA-125C-4DC4-A7B9-26C033CD1DCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5E3F2D5-0629-4BEF-BC64-718E8483655E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5E3F2D5-0629-4BEF-BC64-718E8483655E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5E3F2D5-0629-4BEF-BC64-718E8483655E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5E3F2D5-0629-4BEF-BC64-718E8483655E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{209D2421-5C0D-45B5-8C5D-41F414FCA6A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{209D2421-5C0D-45B5-8C5D-41F414FCA6A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{209D2421-5C0D-45B5-8C5D-41F414FCA6A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{209D2421-5C0D-45B5-8C5D-41F414FCA6A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF52C6E4-2866-47CD-8F50-2584DFBD8938}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF52C6E4-2866-47CD-8F50-2584DFBD8938}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF52C6E4-2866-47CD-8F50-2584DFBD8938}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF52C6E4-2866-47CD-8F50-2584DFBD8938}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBE46FF0-457D-489D-82ED-2AF19FE8693B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBE46FF0-457D-489D-82ED-2AF19FE8693B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBE46FF0-457D-489D-82ED-2AF19FE8693B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBE46FF0-457D-489D-82ED-2AF19FE8693B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
