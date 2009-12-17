@@ -85,9 +85,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\DataSources\TabButton.datasource" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\primeira.Editor\primeira.Editor.csproj">
       <Project>{60E195BA-125C-4DC4-A7B9-26C033CD1DCC}</Project>
       <Name>primeira.Editor</Name>
