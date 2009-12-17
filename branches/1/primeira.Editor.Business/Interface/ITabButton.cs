@@ -3,29 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace primeira.Editor.Business
 {
     public interface ITabButton
     {
-        Image SelectedImage { get; set; }
+        string TabTitle { get; }
 
-        Image UnselectedImage { get; set;  }
-
-        Image BackgroundImage { get; set; }
-
-        Image Image { get; set; }
-
-        object Tag { get; set; }
-
-        string Text { get; set; }
-
-        Size Size { get; set; }
-
-        ContentAlignment ImageAlign { get; set; }
+        void Invalidate();
 
         event EventHandler Click;
 
-        void SetToolTip(string tooltip);
+        void SetText(string tooltip);
+
+        void SetWidth(int width);
+
+        
     }
 }

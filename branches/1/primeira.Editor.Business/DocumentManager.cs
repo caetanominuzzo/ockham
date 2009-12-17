@@ -22,7 +22,7 @@ namespace primeira.Editor.Business
 
         #region DocumentDefinition & DocumentType
 
-        private static DocumentDefinition GetDocumentDefinitionByDocumentType(Type documentType)
+        private static DocumentDefinition GetDocumentDefinitionByClrType(Type documentType)
         {
             PropertyInfo pDef = documentType.GetProperty("DocumentDefinition");
 
@@ -48,11 +48,11 @@ namespace primeira.Editor.Business
             }
         }
 
-        public static DocumentDefinition GetDocumentDefinitionByFileExtension(string extension)
+        internal static DocumentDefinition GetDocumentDefinitionByFileExtension(string extension)
         {
             try
             {
-                return (from x in _knownDocumentDefinition where x.Extension == extension select (DocumentDefinition)x).FirstOrDefault();
+                return (from x in _knownDocumentDefinition where x.DefaultFileExtension == extension select (DocumentDefinition)x).FirstOrDefault();
             }
             catch
             {
@@ -61,18 +61,16 @@ namespace primeira.Editor.Business
             }
         }
 
+        internal static Type[] GetKnownDocumentTypes()
+        {
+            return _knownDocumentType.ToArray();
+        }
+
         public static DocumentDefinition GetDocumentDefinitionByFilename(string filename)
         {
             string ext = Path.GetExtension(filename);
 
-            Type type = EditorManager.GetEditorTypeByFileVersionExtension(ext);
-
-            return GetDocumentDefinitionByEditorType(type);
-        }
-
-        public static Type[] GetKnownDocumenTypes()
-        {
-            return _knownDocumentType.ToArray();
+            return GetDocumentDefinitionByFileExtension(ext);
         }
 
         public static DocumentDefinition[] GetKnowDocumentDefinition()
@@ -80,9 +78,13 @@ namespace primeira.Editor.Business
             return _knownDocumentDefinition.ToArray();
         }
 
-        public static void RegisterKnownDocumentType(Type documentType)
+        /// <summary>
+        /// Add the document CLR type and its DocumentDefinition to registered documents list.
+        /// </summary>
+        /// <param name="documentType">The document CLR type.</param>
+        public static void RegisterDocument(Type documentType)
         {
-            DocumentDefinition def = GetDocumentDefinitionByDocumentType(documentType);
+            DocumentDefinition def = GetDocumentDefinitionByClrType(documentType);
 
             if (def != null)
             {
@@ -102,7 +104,7 @@ namespace primeira.Editor.Business
             foreach (DocumentDefinition d in _knownDocumentDefinition)
             {
                 if ((d.Options & DocumentDefinitionOptions.ShowIQuickLauchnOpen) == DocumentDefinitionOptions.ShowIQuickLauchnOpen)
-                    sb.Append(string.Format("{0} (*{1})|*{1}|", d.Name, d.Extension));
+                    sb.Append(string.Format("{0} (*{1})|*{1}|", d.Name, d.DefaultFileExtension));
             }
 
             sb.Append("All files (*.*)|*.*");
@@ -144,12 +146,12 @@ namespace primeira.Editor.Business
 
         #region New, Open & Save Document
 
-        internal static void AddDocument(IEditorBase editor)
+        internal static void AddDocument(IEditor editor)
         {
             if(TabManager.GetInstance().TabControl != null)
                 TabManager.GetInstance().TabControl.AddTab(editor);
 
-            if ((editor.Document.GetDefinition.Options & DocumentDefinitionOptions.ShowInRecents) == DocumentDefinitionOptions.ShowInRecents)
+            if ((editor.Document.Definition.Options & DocumentDefinitionOptions.ShowInRecents) == DocumentDefinitionOptions.ShowInRecents)
             {
                     if(FileManager.Recent != null)
                         FileManager.Recent.AddRecent(editor.Filename);
@@ -160,9 +162,9 @@ namespace primeira.Editor.Business
             editor.Selected = true;
         }
 
-        static void TabControl_OnSelected(IEditorBase sender)
+        static void TabControl_OnSelected(IEditor sender)
         {
-            TabManager.GetInstance().ActiveEditor = (IEditorBase)sender;
+            TabManager.GetInstance().ActiveEditor = (IEditor)sender;
         }
 
 
@@ -177,7 +179,7 @@ namespace primeira.Editor.Business
 
             s.Filter = DocumentManager.GetDialogFilterString();
 
-            s.DefaultExt = FileVersion.Extension;
+            s.DefaultExt = FileVersion.DefaultFileExtension;
 
             s.FilterIndex = DocumentManager.GetDialogFilterIndex(FileVersion);
 
@@ -210,7 +212,6 @@ namespace primeira.Editor.Business
         }
 
         #endregion
-
 
     }
 }

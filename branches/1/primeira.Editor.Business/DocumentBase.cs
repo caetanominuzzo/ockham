@@ -1,19 +1,23 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.Serialization;
+using System.Reflection;
+using System.Xml;
+using System.Reflection.Emit;
+using System.Threading;
 
 namespace primeira.Editor.Business
 {
     [DataContract()]
-    public abstract class DocumentBase
+    public abstract class DocumentBase : IExtensibleDataObject 
     {
-        public abstract DocumentDefinition GetDefinition { get; }
+        public abstract DocumentDefinition Definition { get; }
 
         public void ToXml(string filename)
         {
             Stream sm = File.Create(filename);
 
-            Type[] knownTypes = DocumentManager.GetKnownDocumenTypes();
+            Type[] knownTypes = DocumentManager.GetKnownDocumentTypes();
 
             Array.Resize(ref knownTypes, knownTypes.Length + 1);
 
@@ -31,17 +35,16 @@ namespace primeira.Editor.Business
         {
             try
             {
-
                 Stream sm = File.OpenRead(filename);
 
-                Type[] knownTypes = DocumentManager.GetKnownDocumenTypes();
+                Type[] knownTypes = DocumentManager.GetKnownDocumentTypes();
 
                 Array.Resize(ref knownTypes, knownTypes.Length + 1);
 
                 knownTypes[knownTypes.Length - 1] = type;
 
                 DataContractSerializer ser = new DataContractSerializer(typeof(DocumentBase),
-                    DocumentManager.GetKnownDocumenTypes(),
+                    DocumentManager.GetKnownDocumentTypes(),
                     10000000, false, true, null);
 
                 DocumentBase res = (DocumentBase)ser.ReadObject(sm);
@@ -49,7 +52,7 @@ namespace primeira.Editor.Business
 
                 return res;
             }
-            catch
+            catch(Exception ex)
             {
                 MessageManager.Alert("File ", filename, " cannot be open.");
             }
@@ -57,5 +60,15 @@ namespace primeira.Editor.Business
             return null;
         }
 
+        #region IExtensibleDataObject Members
+
+        private ExtensionDataObject _extensionData;
+        public virtual ExtensionDataObject ExtensionData
+        {
+            get { return _extensionData; }
+            set { _extensionData = value; }
+        }
+
+        #endregion
     }
 }
