@@ -60,19 +60,22 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\primeira.Editor.Business\primeira.Editor.Business.csproj">
-      <Project>{60E195BA-125C-4DC4-A7B9-26C033CD1DCC}</Project>
-      <Name>primeira.Editor.Business</Name>
-    </ProjectReference>
     <ProjectReference Include="..\primeira.Editor.Components\primeira.Editor.Components.csproj">
       <Project>{F5E3F2D5-0629-4BEF-BC64-718E8483655E}</Project>
       <Name>primeira.Editor.Components</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\primeira.Editor\primeira.Editor.csproj">
+      <Project>{60E195BA-125C-4DC4-A7B9-26C033CD1DCC}</Project>
+      <Name>primeira.Editor</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MetaEditor.resx">
       <DependentUpon>MetaEditor.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\DataSources\MetaEditorDocument.datasource" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
