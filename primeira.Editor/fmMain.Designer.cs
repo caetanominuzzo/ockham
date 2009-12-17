@@ -32,12 +32,13 @@
             // 
             // fmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(531, 273);
+            this.ClientSize = new System.Drawing.Size(406, 233);
+            this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "fmMain";
             this.Text = "Ockham - Multi Purpose Editor";
+            this.Load += new System.EventHandler(this.fmMain_Load);
             this.ResumeLayout(false);
 
         }
