@@ -37,11 +37,11 @@ namespace primeira.Editor.Business
             get { return _tabcontrol; }
         }
 
-        public ITabButton CreateTabButton()
+        public ITabButton CreateTabButton(IEditor editor)
         {
             if (_tabcontrol != null)
             {
-                return _tabcontrol.CreateTabButton();
+                return _tabcontrol.CreateTabButton(editor);
             }
 
             return null;
@@ -51,13 +51,13 @@ namespace primeira.Editor.Business
 
         #region ActiveDocument
 
-        private IEditorBase _activeEditor = null;
+        private IEditor _activeEditor = null;
 
-        private List<IEditorBase> _openEditors = new List<IEditorBase>();
+        private List<IEditor> _openEditors = new List<IEditor>();
 
         int iChangeEditorIndex = -1;
 
-        public IEditorBase ActiveEditor
+        public IEditor ActiveEditor
         {
             get
             {
@@ -94,7 +94,7 @@ namespace primeira.Editor.Business
             {
                 _tabcontrol.HideTab(ActiveEditor);
                 DocumentManager.ToXml(ActiveEditor.Document, ActiveEditor.Filename);
-                _tabcontrol.CloseHidedTabs();
+                _tabcontrol.CloseHideTabs();
 
                 _openEditors.Remove(ActiveEditor);
 
@@ -118,9 +118,14 @@ namespace primeira.Editor.Business
                 _openEditors[_openEditors.Count-1].Selected = true;
         }
 
-        public IEditorBase GetDocumentByFilename(string filename)
+        /// <summary>
+        /// Get documents eventually already open in any open editor.
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns></returns>
+        public IEditor GetDocumentByFilename(string filename)
         {
-            foreach (IEditorBase d in _openEditors)
+            foreach (IEditor d in _openEditors)
             {
                 if (d.Filename.Equals(filename))
                     return d;
@@ -129,9 +134,9 @@ namespace primeira.Editor.Business
             return null;
         }
 
-        public IEnumerable<IEditorBase> GetEditorByOptions(DocumentDefinitionOptions options)
+        public IEnumerable<IEditor> GetEditorByOptions(DocumentDefinitionOptions options)
         {
-            var x = (from c in this._openEditors where (c.Document.GetDefinition.Options & options) == options select (IEditorBase)c); 
+            var x = (from c in this._openEditors where (c.Document.Definition.Options & options) == options select (IEditor)c); 
             return x;
         }
 

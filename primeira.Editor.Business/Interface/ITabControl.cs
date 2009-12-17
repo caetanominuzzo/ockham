@@ -7,12 +7,12 @@ namespace primeira.Editor.Business
 {
     public interface ITabControl
     {
-        void HideTab(IEditorBase tab);
+        void HideTab(IEditor tab);
 
-        void CloseHidedTabs();
+        void CloseHideTabs();
 
-        void AddTab(IEditorBase tab);
+        void AddTab(IEditor tab);
 
-        ITabButton CreateTabButton();
+        ITabButton CreateTabButton(IEditor editor);
     }
 }

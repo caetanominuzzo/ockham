@@ -6,9 +6,8 @@ using System.Drawing;
 
 namespace primeira.Editor.Business
 {
-    public delegate void SelectedDelegate(IEditorBase sender);
-
-    public interface IEditorBase
+    
+    public interface IEditor
     {
         ITabButton TabButton { get; }
 
@@ -21,8 +20,6 @@ namespace primeira.Editor.Business
         bool ShowCloseButton { get; }
 
         event SelectedDelegate OnSelected;
-
-        DateTime TimeOPen { get; }
 
     }
 

@@ -7,48 +7,16 @@ using System.Linq;
 
 namespace primeira.Editor.Business
 {
+
+    public delegate void SelectedDelegate(IEditor sender);
+
     public static class EditorManager
     {
-
         private static Type[] _defaultEditorCtor = new Type[2] { typeof(string), typeof(DocumentBase) };
 
-        internal static Type[] DefaultEditorCtor
+        private static IEditor CreateEditorByFilename(string filename)
         {
-            get { return _defaultEditorCtor; }
-        }
-
-        public static void RegisterEditors()
-        {
-            string[] dlls = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll");
-
-            Assembly ass = null;
-            foreach (string dll in dlls)
-            {
-                ass = Assembly.LoadFile(dll);
-                Type[] types = ass.GetTypes();
-
-                foreach (Type type in types)
-                {
-                    if (type.BaseType == typeof(DocumentBase))
-                        DocumentManager.RegisterKnownDocumentType(type);
-                }
-                
-            }
-        }
-
-        public static Type GetEditorTypeByFileVersionExtension(string extension)
-        {
-            DocumentDefinition t = DocumentManager.GetDocumentDefinitionByFileExtension(extension);
-
-            if (t != null)
-                return t.DefaultEditor;
-            
-            return null;
-        }
-
-        public static IEditorBase CreateEditorByFilename(string filename)
-        {
-            IEditorBase res = null;
+            IEditor res = null;
             DocumentBase doc = null;
 
             FileInfo f = new FileInfo(filename);
@@ -63,27 +31,49 @@ namespace primeira.Editor.Business
             {
                 string ext = Path.GetExtension(filename);
 
-                Type tt = EditorManager.GetEditorTypeByFileVersionExtension(ext);
+                Type tt = DocumentManager.GetDocumentDefinitionByFileExtension(ext).DefaultEditor;
 
                 if (tt == null)
                     return null;
 
-                res = (IEditorBase)tt.GetConstructor(DefaultEditorCtor).Invoke(new object[2] { filename, doc });
+                res = (IEditor)tt.GetConstructor(_defaultEditorCtor).Invoke(new object[2] { filename, doc });
             }
             else
             {
                 doc = DocumentManager.ToObject(filename);
 
-                if(doc != null)
-                    res = (IEditorBase)doc.GetDefinition.DefaultEditor.GetConstructor(DefaultEditorCtor).Invoke(new object[2] { filename, doc });
+                if (doc != null)
+                    res = (IEditor)doc.Definition.DefaultEditor.GetConstructor(_defaultEditorCtor).Invoke(new object[2] { filename, doc });
             }
 
-            return (IEditorBase)res;
+            return (IEditor)res;
         }
-
-        public static IEditorBase LoadEditor(string FileName)
+ 
+        public static void RegisterEditors()
         {
-            IEditorBase res = TabManager.GetInstance().GetDocumentByFilename(FileName);
+            string pluginDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "");
+
+            string[] dlls = Directory.GetFiles(pluginDir, "*.dll", SearchOption.AllDirectories);
+
+            Assembly ass = null;
+            foreach (string dll in dlls)
+            {
+                ass = Assembly.LoadFile(dll);
+
+                Type[] types = ass.GetTypes();
+
+
+                foreach (Type type in types)
+                {
+                    if (type.BaseType == typeof(DocumentBase))
+                        DocumentManager.RegisterDocument(type);
+                }
+            }
+        }
+        
+        public static IEditor LoadEditor(string filename)
+        {
+            IEditor res = TabManager.GetInstance().GetDocumentByFilename(filename);
 
             if (res != null)
             {
@@ -93,9 +83,9 @@ namespace primeira.Editor.Business
 
             if (res == null)
             {
-                res = EditorManager.CreateEditorByFilename(FileName);
+                res = EditorManager.CreateEditorByFilename(filename);
 
-                if (res != null && (res.Document.GetDefinition.Options & DocumentDefinitionOptions.TabControl) != DocumentDefinitionOptions.TabControl)
+                if (res != null && (res.Document.Definition.Options & DocumentDefinitionOptions.TabControl) != DocumentDefinitionOptions.TabControl)
                     DocumentManager.AddDocument(res);
             }
 
