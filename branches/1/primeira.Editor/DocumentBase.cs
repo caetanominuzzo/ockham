@@ -6,7 +6,7 @@ using System.Xml;
 using System.Reflection.Emit;
 using System.Threading;
 
-namespace primeira.Editor.Business
+namespace primeira.Editor
 {
     [DataContract()]
     public abstract class DocumentBase : IExtensibleDataObject 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace primeira.Editor.Business
+namespace primeira.Editor
 {
         
     public class DocumentDefinition

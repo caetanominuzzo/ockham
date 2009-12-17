@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace primeira.Editor.Business
+namespace primeira.Editor
 {
     public interface ITabControl
     {
