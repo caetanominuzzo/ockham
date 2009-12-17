@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Runtime.Serialization;
 using System.IO;
 using System.Collections.Generic;
-using primeira.Editor.Business;
+using primeira.Editor;
 
 namespace primeira.Editor
 {
@@ -14,13 +14,13 @@ namespace primeira.Editor
             new DocumentDefinition()
             {
                 Name = "File Browser Configuration",
-                DefaultName = "default",
+                DefaultFileName = "default",
                 Description = "File & Tab Operations",
-                Extension = ".filebrowser",
+                DefaultFileExtension = ".filebrowser",
                 Id = new Guid("513ff96c-0d23-44f4-82ab-0dea5a62dcd3"),
                 Icon = Image.FromFile(@"D:\Desenv\Ockham\branches\1\primeira.Editor.FileBrowserEditor\Resources\folder_noborder.gif"),
                 DefaultEditor = typeof(FileBrowserEditor),
-                Options = (DocumentDefinitionOptions.DontShowLabel | DocumentDefinitionOptions.TimerSaver | DocumentDefinitionOptions.KeepOnCloseTabs)
+                Options = (DocumentDefinitionOptions.DontShowLabel | DocumentDefinitionOptions.TimerSaver | DocumentDefinitionOptions.NeverClose)
             };
 
         public static DocumentDefinition DocumentDefinition
@@ -28,7 +28,7 @@ namespace primeira.Editor
             get { return _definition; }
         }
 
-        public override DocumentDefinition GetDefinition
+        public override DocumentDefinition Definition
         {
             get { return _definition; }
         }

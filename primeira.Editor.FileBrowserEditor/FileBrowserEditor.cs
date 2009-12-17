@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Drawing.Drawing2D;
-using primeira.Editor.Business;
+using primeira.Editor;
 using primeira.Editor.Components;
 
 namespace primeira.Editor
@@ -28,16 +28,13 @@ namespace primeira.Editor
         {
             InitializeComponent();
 
-            this.TabButton.Size = new Size(40, 40);
+            this.TabButton.SetWidth(40);
 
-            this.TabButton.SetToolTip("File Tab");
+            this.TabButton.SetText("File Tab");
 
             this.ShowCloseButton = false;
 
             this.OnSelected += new SelectedDelegate(FileBrowser_OnSelected);
-
-            this.TabButton.SelectedImage = Image.FromFile(@"D:\Desenv\Neural Network\Imgs.png");
-            this.TabButton.UnselectedImage = Image.FromFile(@"D:\Desenv\Neural Network\Imgs.png");
 
             m_file = Image.FromFile(@"D:\Desenv\Neural Network\Imgs.png");
 
@@ -132,7 +129,7 @@ namespace primeira.Editor
 
         #region Event Handlers
 
-        private void FileBrowser_OnSelected(IEditorBase sender)
+        private void FileBrowser_OnSelected(IEditor sender)
         {
             createQuickLaunch();
 
@@ -205,7 +202,7 @@ namespace primeira.Editor
 
             foreach(DocumentDefinition def in defs)
             {
-                files = Directory.GetFiles(directoryPath,"*"+ def.Extension);
+                files = Directory.GetFiles(directoryPath,"*"+ def.DefaultFileExtension);
 
                 foreach (string file in files)
                 {
