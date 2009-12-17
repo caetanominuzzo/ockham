@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 
-namespace primeira.Editor.Business
+namespace primeira.Editor
 {
     
     public interface IEditor

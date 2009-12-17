@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Linq;
 
-namespace primeira.Editor.Business
+namespace primeira.Editor
 {
 
     public delegate void SelectedDelegate(IEditor sender);

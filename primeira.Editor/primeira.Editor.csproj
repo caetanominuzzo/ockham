@@ -8,8 +8,8 @@
     <ProjectGuid>{60E195BA-125C-4DC4-A7B9-26C033CD1DCC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>primeira.Editor.Business</RootNamespace>
-    <AssemblyName>primeira.Editor.Business</AssemblyName>
+    <RootNamespace>primeira.Editor</RootNamespace>
+    <AssemblyName>primeira.Editor</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

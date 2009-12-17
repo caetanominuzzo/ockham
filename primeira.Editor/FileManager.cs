@@ -3,7 +3,7 @@ using System.IO;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace primeira.Editor.Business
+namespace primeira.Editor
 {
     public static partial class FileManager
     {
