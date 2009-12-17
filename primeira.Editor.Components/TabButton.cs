@@ -6,77 +6,147 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.ComponentModel;
-using primeira.Editor.Business;
+using System.IO;
+using primeira.Editor;
 
 namespace primeira.Editor.Components
 {
-    public class TabButton : Button, ITabButton
+    public class TabButton : UserControl, ITabButton
     {
-        private Image m_image = Image.FromFile(@"D:\Desenv\Neural Network\Imgs.png");
 
-        private static Image _defaultSelectedImage = Image.FromFile(@"D:\Desenv\Neural Network\Imgs.png");
+        private IEditor _editor;
 
-        private static Image _defaultUnselectedImage = Image.FromFile(@"D:\Desenv\Neural Network\Imgs.png");
+        private IContainer components;
+        private string _tabTitle;
+        private Image[,] _imgs;
+       
 
-        private Image _selectedImage = _defaultSelectedImage;
-
-        private Image _unselectedImage = _defaultUnselectedImage;
-
-        public Image SelectedImage
+        public string TabTitle
         {
-            get { return _selectedImage; }
-            set { _selectedImage = value; }
+            get { return _tabTitle; }
         }
 
-        public Image UnselectedImage
+        public void SetWidth(int width)
         {
-            get { return _unselectedImage; }
-            set { _unselectedImage = value; }
+            if(Parent != null)
+                this.Parent.SuspendLayout();
+
+            this.Width = width;
+
+            if (Parent != null) 
+                this.Parent.ResumeLayout(false);
         }
 
-        public TabButton() : base()
+        public TabButton(IEditor editor)
+            : base()
         {
+            
+            _imgs = new Image[2, 3];
+            _imgs[0, 0] = Image.FromFile(@"D:\Desenv\Ockham\branches\1\primeira.Editor.Components\tab\left_unselected.png");
+            _imgs[0, 1] = Image.FromFile(@"D:\Desenv\Ockham\branches\1\primeira.Editor.Components\tab\unselected.png");
+            _imgs[0, 2] = Image.FromFile(@"D:\Desenv\Ockham\branches\1\primeira.Editor.Components\tab\right_unselected.png");
+            _imgs[1, 0] = Image.FromFile(@"D:\Desenv\Ockham\branches\1\primeira.Editor.Components\tab\left_selected.png");
+            _imgs[1, 1] = Image.FromFile(@"D:\Desenv\Ockham\branches\1\primeira.Editor.Components\tab\selected.png");
+            _imgs[1, 2] = Image.FromFile(@"D:\Desenv\Ockham\branches\1\primeira.Editor.Components\tab\right_selected.png");
+            
             InitializeComponent();
 
+            this._editor = editor;
+
             this.Cursor = Cursors.Hand;
-            this.Dock = DockStyle.Left;
+
             this.Width = 150;
-            this.MaximumSize = new Size(150, 40);
-            this.BackgroundImage = Unselectedimage;
-            this.BackgroundImageLayout = ImageLayout.Stretch;
-            this.Font = new Font(SystemFonts.CaptionFont.FontFamily, 10);
-            this.ForeColor = Color.Gray;
-            this.UseCompatibleTextRendering = false;
+            this.MaximumSize = new Size(150, 25);
+            this.MinimumSize = new Size(40, 25);
+            this.Margin = new Padding(2, this.Margin.Top, 0, this.Margin.Bottom);
+            this.TabStop = true;
+            
         }
 
-        public static Image Selectedimage = Image.FromFile(@"D:\Desenv\Neural Network\Imgs.png");
-
-        public static Image Unselectedimage = Image.FromFile(@"D:\Desenv\Neural Network\Imgs.png");
+        void childs_Click(object sender, EventArgs e)
+        {
+            this.OnClick(e);
+        }
 
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            this._toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
             // TabButton
             // 
-            this.FlatAppearance.BorderSize = 0;
-            this.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Padding = new System.Windows.Forms.Padding(10, 5, 5, 5);
-            this.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.TextAlign = ContentAlignment.MiddleCenter;
-            this.AutoEllipsis = false;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.Name = "TabButton";
+            this.Size = new System.Drawing.Size(140, 110);
             this.ResumeLayout(false);
 
-            _toolTip = new ToolTip();
+        }
+
+        private int _iSelectedOffSet = 0;
+        private bool _hideLabel;
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            e.Graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.None;
+
+            _iSelectedOffSet = Convert.ToInt16(this._editor.Selected);
+
+            e.Graphics.DrawImage(_imgs[_iSelectedOffSet, 0], 0, 0, 5, _imgs[_iSelectedOffSet, 0].Height);
+            e.Graphics.DrawImage(_imgs[_iSelectedOffSet, 1], 5, 0, (int)((this.Width - 10) * 1.33), _imgs[_iSelectedOffSet, 1].Height);
+            e.Graphics.DrawImage(_imgs[_iSelectedOffSet, 2], this.Width - 5, 0, 5, _imgs[_iSelectedOffSet, 2].Height);
+
+            _hideLabel = ((this._editor.Document.Definition.Options & DocumentDefinitionOptions.DontShowLabel) == DocumentDefinitionOptions.DontShowLabel) || this.Width == 49;
+
+            e.Graphics.DrawImageUnscaled(this._editor.Document.Definition.Icon, _hideLabel? 12 : 6, 4);
+            
+            if(!this._hideLabel)
+                e.Graphics.DrawString(MeasureFromIDC(), _font, SystemBrushes.ControlText, 21, 5);
         }
 
         private ToolTip _toolTip;
 
-        public void SetToolTip(string tooltip)
+        public void SetText(string filename)
         {
-            _toolTip.SetToolTip(this, tooltip);
+            _toolTip.SetToolTip(this, filename);
+            this._tabTitle = filename;
+        }
 
+        //Needed to avoid creating graphics dynamically. Used in MeasureFromIDC below.
+        private static Control _control;
+        private static Graphics _graphics;
+        private static Font _font;
+        public string MeasureFromIDC()
+        {
+            if (_control == null)
+            {
+                _control = new Control();
+                _font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                _graphics = _control.CreateGraphics();
+            }
+
+            string value = _tabTitle;
+
+            Size Size = new Size(
+                        this.Width - 20,
+                        this.Height); 
+
+            char[] ss = new char[value.Length];
+
+            value.CopyTo(0, ss, 0, value.Length);
+
+            string s = new string(ss);
+            s = s.Replace(Path.GetExtension(s), "");
+
+            TextFormatFlags t = TextFormatFlags.ModifyString | TextFormatFlags.PathEllipsis | TextFormatFlags.SingleLine | TextFormatFlags.TextBoxControl | TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter;
+
+            TextRenderer.MeasureText(_graphics, s, _font, Size, t);
+            int i = s.IndexOf("\0");
+            if (i > -1)
+                s = s.Substring(0, i);
+
+            return s;
         }
 
     }

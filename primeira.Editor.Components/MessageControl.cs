@@ -6,7 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using primeira.Editor.Business;
+using primeira.Editor;
 
 namespace primeira.Editor.Components
 {
