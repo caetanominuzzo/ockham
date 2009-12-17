@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DwmHelper.cs" />
     <Compile Include="fmMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -94,6 +95,10 @@
     <ProjectReference Include="..\primeira.Editor.MetaEditor\primeira.Editor.MetaEditor.csproj">
       <Project>{BBE46FF0-457D-489D-82ED-2AF19FE8693B}</Project>
       <Name>primeira.Editor.MetaEditor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\primeira.Editor.ShortcutConfigEditor\primeira.Editor.ShortcutConfigEditor.csproj">
+      <Project>{F6081561-B784-42B7-ACCC-04156E85FEE5}</Project>
+      <Name>primeira.Editor.ShortcutConfigEditor</Name>
     </ProjectReference>
     <ProjectReference Include="..\primeira.Editor.TabControlEditor\primeira.Editor.TabControlEditor.csproj">
       <Project>{CF52C6E4-2866-47CD-8F50-2584DFBD8938}</Project>
