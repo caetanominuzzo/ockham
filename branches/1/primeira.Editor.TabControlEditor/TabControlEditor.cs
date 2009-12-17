@@ -7,38 +7,47 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
-using primeira.Editor.Business;
+using primeira.Editor;
 using primeira.Editor.Components;
 
-namespace primeira.Editor.TabControlEditor
+namespace primeira.Editor
 {
-    public partial class TabControlEditor : EditorBase, ITabControl
+    public partial class TabControlEditor : EditorBase, ITabControl, IMessageControl
     {
-
+        
         public TabControlEditor(string filename, DocumentBase data)
             : base(filename, data, typeof(TabControlDocument))
         {
             InitializeComponent();
         }
 
-        public void AddTab(IEditorBase editor)
+        public void AddTab(IEditor editor)
         {
+            this.pnTabArea.SuspendLayout();
+
             this.pnDocArea.Controls.Add((Control)editor);
 
             this.pnTabArea.Controls.Add((TabButton)editor.TabButton);
 
+            ToolStripItem t = this.menTabs.Items.Add(editor.TabButton.TabTitle, editor.Document.Definition.Icon, toolStripMenuItem_Click);
+            t.Tag = editor.Filename;
+
             editor.OnSelected += new SelectedDelegate(editor_OnSelected);
 
-            //Firsts to the left
-            ((TabButton)editor.TabButton).BringToFront();
-
-            this.ResumeLayout();
+            this.pnTabArea.ResumeLayout(true);
         }
 
-        void editor_OnSelected(IEditorBase sender)
+        void editor_OnSelected(IEditor sender)
         {
-            pnCloseArea.Visible = sender.ShowCloseButton;
+            MessageManager.Alert("open: " + sender.Filename);
 
+            btnClose.Enabled = sender.ShowCloseButton;
+
+            if (sender.ShowCloseButton)
+                btnClose.Image = Image.FromFile(@"D:\Desenv\Ockham\branches\1\primeira.Editor.TabControlEditor\close5.gif");
+            else
+                btnClose.Image = Image.FromFile(@"D:\Desenv\Ockham\branches\1\primeira.Editor.TabControlEditor\close5_disabled.gif");
+            btnClose.Refresh();
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -46,28 +55,32 @@ namespace primeira.Editor.TabControlEditor
             TabManager.GetInstance().CloseEditor();
         }
 
-        public void HideTab(IEditorBase tab)
+        public void HideTab(IEditor tab)
         {
             ((Control)tab).Visible = false;
             ((TabButton)tab.TabButton).Visible = false;
+            menTabs.Items.RemoveByKey(tab.TabButton.TabTitle);
         }
 
-        public void CloseHidedTabs()
+        public void CloseHideTabs()
         {
-            foreach (Control c in pnTabArea.Controls)
+            Control c;
+            for(int i = 0; i < pnTabArea.Controls.Count; i++)
             {
+                c = pnTabArea.Controls[i];
                 if (!c.Visible)
                 {
                     pnTabArea.Controls.Remove(c);
+                    menTabs.Items.RemoveAt(i);
                     c.Dispose();
                     break;
                 }
             }
         }
 
-        public ITabButton CreateTabButton()
+        public ITabButton CreateTabButton(IEditor editor)
         {
-            return new TabButton();
+            return new TabButton(editor);
         }
 
         private void TabControlEditor_Load(object sender, EventArgs e)
@@ -87,10 +100,14 @@ namespace primeira.Editor.TabControlEditor
             NonModalMessage.GetInstance(message, pnDocArea);
         }
 
-        void tmrNonModalMessage_Tick(object sender, EventArgs e)
+        private void btnShowTabs_Click(object sender, EventArgs e)
         {
-            lblNonModalMessage.Visible = false;
-            tmrNonModalMessage.Stop();
+            menTabs.Show((Control)sender, 0, 20);
+        }
+
+        private void toolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EditorManager.LoadEditor((string)((ToolStripItem)sender).Tag);
         }
     }
 }
