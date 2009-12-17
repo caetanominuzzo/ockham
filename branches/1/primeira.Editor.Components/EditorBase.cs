@@ -8,17 +8,15 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Runtime.Serialization;
-using primeira.Editor.Business;
+using primeira.Editor;
 
 namespace primeira.Editor.Components
 {
 
-    public abstract class EditorBase : UserControl, IEditorBase
+    public class EditorBase : UserControl, IEditor
     {
 
         #region Fields
-
-
 
         private bool _selected = false;
 
@@ -56,7 +54,7 @@ namespace primeira.Editor.Components
                     BringToFront();
 
                 if (TabButton != null)
-                    TabButton.BackgroundImage = value ? TabButton.SelectedImage : TabButton.UnselectedImage;
+                    this.TabButton.Invalidate();
 
                 if (_selected && OnSelected != null)
                     OnSelected(this);
@@ -66,6 +64,10 @@ namespace primeira.Editor.Components
         #endregion
 
         #region Ctor
+
+        public EditorBase()
+        {
+        }
       
         public EditorBase(string filename, DocumentBase data, Type documentType)
         {
@@ -80,9 +82,13 @@ namespace primeira.Editor.Components
 
             this.BorderStyle = BorderStyle.None;
 
-            this.OnChanged += new ChangedDelegate(EditorBase_OnChanged);
+            this.AutoScroll = true;
 
-            this.TimeOPen = DateTime.Now;
+            this.Font = new Font("SegoeUI", 9);
+
+            this.BackColor = Color.White;
+
+            this.OnChanged += new ChangedDelegate(EditorBase_OnChanged);
 
             InitializeComponent();
 
@@ -90,7 +96,7 @@ namespace primeira.Editor.Components
 
         private void InitializeComponent()
         {
-            if ((Document.GetDefinition.Options & DocumentDefinitionOptions.TimerSaver) == DocumentDefinitionOptions.TimerSaver)
+            if ((Document.Definition.Options & DocumentDefinitionOptions.TimerSaver) == DocumentDefinitionOptions.TimerSaver)
             {
                 _saveTimer = new Timer();
                 _saveTimer.Interval = 1000;
@@ -101,24 +107,14 @@ namespace primeira.Editor.Components
 
             if (TabManager.GetInstance().TabControl != null)
             {
-                TabButton = (TabButton)TabManager.GetInstance().CreateTabButton();
+                TabButton = (TabButton)TabManager.GetInstance().CreateTabButton(this);
 
-                TabButton.Tag = this;
-
-                TabButton.Image = Document.GetDefinition.Icon;
-
-                if ((this.Document.GetDefinition.Options & DocumentDefinitionOptions.DontShowLabel) != DocumentDefinitionOptions.DontShowLabel)
+                if ((this.Document.Definition.Options & DocumentDefinitionOptions.DontShowLabel) == DocumentDefinitionOptions.DontShowLabel)
                 {
-                    this.TabButton.Text = this.Filename;
-
-                    FileManager.MeasureFromIDC((Button)this.TabButton);
-                }
-                else
-                {
-                    this.TabButton.ImageAlign = ContentAlignment.MiddleCenter;
+                    this.TabButton.SetWidth(40);
                 }
 
-                this.TabButton.SetToolTip(this.Filename);
+                this.TabButton.SetText(this.Filename);
 
                 TabButton.Click += new EventHandler(TabButton_Click);
             }
@@ -182,11 +178,5 @@ namespace primeira.Editor.Components
         }
 
         #endregion
-
-        public DateTime TimeOPen
-        {
-            get;
-            private set;
-        }
     }
 }

@@ -26,8 +26,7 @@ namespace primeira.Editor.Components
 
             this.BackColor = Color.FromArgb(255, 240, 180);
             this.TextAlign = ContentAlignment.MiddleLeft;
-            this.Font = new Font(this.Font.FontFamily, 9);
-            this.ForeColor = Color.DimGray;
+            this.Font = new Font("SegoeUI", 9);
         }
 
         public new void Dispose()
