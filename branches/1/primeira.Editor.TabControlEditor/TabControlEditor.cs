@@ -12,13 +12,15 @@ using primeira.Editor.Components;
 
 namespace primeira.Editor
 {
-    public partial class TabControlEditor : EditorBase, ITabControl, IMessageControl
+    public partial class TabControlEditor : EditorBase, ITabControl, IMessageControl, IShorcutEscopeProvider
     {
         
         public TabControlEditor(string filename, DocumentBase data)
             : base(filename, data, typeof(TabControlDocument))
         {
             InitializeComponent();
+
+            ShortcutManager.LoadFromForm(this);
         }
 
         public void AddTab(IEditor editor)

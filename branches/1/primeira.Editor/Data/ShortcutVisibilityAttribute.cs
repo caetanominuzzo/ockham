@@ -7,55 +7,55 @@ namespace primeira.Editor
 {
     public class ShortCutVisibilityAttribute : Attribute
     {
-        private string fName;
-        private string fDescription;
-        private Keys fDefaultKey;
-        private KeyModifiers fDefaultKeyModifiers;
-        private string fEscope;
+        private string _name;
+        private string _description;
+        private Keys _defaultKey;
+        private KeyModifiers _defaultKeyModifiers;
+        private string _escope;
 
         public string Escope
         {
-            get { return fEscope; }
-            set { fEscope = value; }
+            get { return _escope; }
+            set { _escope = value; }
         }
 
 
         public Keys DefaultKey
         {
-            get { return fDefaultKey; }
-            set { fDefaultKey = value; }
+            get { return _defaultKey; }
+            set { _defaultKey = value; }
         }
 
         public KeyModifiers DefaultKeyModifiers
         {
-            get { return fDefaultKeyModifiers; }
-            set { fDefaultKeyModifiers = value; }
+            get { return _defaultKeyModifiers; }
+            set { _defaultKeyModifiers = value; }
         }
 
         public string Name
         {
-            get { return fName; }
-            set { fName = value; }
+            get { return _name; }
+            set { _name = value; }
         }
 
         public string Description
         {
-            get { return fDescription; }
-            set { fDescription = value; }
+            get { return _description; }
+            set { _description = value; }
         }
 
-        public ShortCutVisibilityAttribute(string aName, string aDescription, string aEscope, Keys aDefaultKey)
+        public ShortCutVisibilityAttribute(string name, string description, string escope, Keys defaultKey)
         {
-            Name = aName;
-            Description = aDescription;
-            DefaultKey = aDefaultKey;
-            Escope = aEscope;
+            Name = name;
+            Description = description;
+            DefaultKey = defaultKey;
+            Escope = escope;
         }
 
-        public ShortCutVisibilityAttribute(string aName, string aDescription, string aEscope, Keys aDefaultKey, KeyModifiers aDefaultKeyModifiers)
-            : this(aName, aDescription, aEscope, aDefaultKey)
+        public ShortCutVisibilityAttribute(string name, string description, string escope, Keys defaultKey, KeyModifiers defaultKeyModifiers)
+            : this(name, description, escope, defaultKey)
         {
-            DefaultKeyModifiers = aDefaultKeyModifiers;
+            DefaultKeyModifiers = defaultKeyModifiers;
         }
     }
 }

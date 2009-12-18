@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.IO;
 using primeira.Editor.Components;
 
-namespace primeira.Editor.Editors.FileBrowser
+namespace primeira.Editor.FileBrowserEditorComponents
 {
     public partial class FolderBrowser : UserControl
     {

@@ -18,7 +18,7 @@ namespace primeira.Editor
                 DefaultFileExtension = ".tabcontrol",
                 Id = new Guid("513ff96c-0d23-44f4-82ab-0dea5a62dcd3"),
                 DefaultEditor = typeof(TabControlEditor),
-                Options = DocumentDefinitionOptions.TabControl,
+                Options = DocumentDefinitionOptions.TabControl | DocumentDefinitionOptions.OpenFromTypeByDefaultName,
             };
 
         public static DocumentDefinition DocumentDefinition

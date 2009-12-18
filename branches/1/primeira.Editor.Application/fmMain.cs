@@ -6,8 +6,10 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Runtime.Serialization;
 using primeira.Editor.Components;
 using primeira.Editor;
+
 
 
 namespace primeira.Editor
@@ -17,8 +19,6 @@ namespace primeira.Editor
 
 
         TabControlEditor _tabControl;
-
-        FileBrowserEditor _fileBrowser;
 
         public fmMain()
         {
@@ -35,7 +35,7 @@ namespace primeira.Editor
             #region The "Tabs Editor", also: Message Control
 
             //Loads a file with tabs default configuration
-            IEditor tmp = EditorManager.LoadEditor("default.tabcontrol");
+            IEditor tmp = EditorManager.LoadEditor(typeof(TabControlDocument));
 
             _tabControl = (TabControlEditor)tmp;
 
@@ -48,21 +48,16 @@ namespace primeira.Editor
             #endregion
 
             //Loads a file with file browser default configuration
-            _fileBrowser = (FileBrowserEditor)EditorManager.LoadEditor("default.filebrowser");
+            tmp = (FileBrowserEditor)EditorManager.LoadEditor(typeof(FileBrowserDocument));
 
-            //Define the _fileBrowser as the currente instance file browser control
-            FileManager.SetRecentManager(_fileBrowser);
+            //Define the _fileBrowser as the currente instance recent files browser control
+            FileManager.SetRecentManager((IRecentFileControl)tmp);
 
             ShortcutManager.LoadFromForm(this);
 
-            ShortcutManager.EscopeProvider = this;
-        }
+            ShortcutManager.ParentEscopeProvider = this;
 
-        [ShortCutVisibility("Nome", "", "", Keys.A, KeyModifiers.Alt)]
-        public void show()
-        {
-            ShortcutManager.ShowConfig();
-          //  MessageManager.Alert("asd");
+            ShortcutManager.SetShortcutConfigDocumentType(typeof(ShortcutConfigDocument));
         }
 
         #region IShorcutEscopeProvider Members
@@ -74,7 +69,7 @@ namespace primeira.Editor
 
         public bool IsAtiveByEscope(string escope)
         {
-            return (escope == string.Empty);
+            throw new NotImplementedException();
         }
 
         #endregion

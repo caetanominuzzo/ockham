@@ -73,23 +73,43 @@ namespace primeira.Editor
         
         public static IEditor LoadEditor(string filename)
         {
-            IEditor res = TabManager.GetInstance().GetDocumentByFilename(filename);
-
-            if (res != null)
+            try
             {
-                res.Selected = true;
+                IEditor res = TabManager.GetInstance().GetDocumentByFilename(filename);
+
+                if (res != null)
+                {
+                    res.Selected = true;
+                    return res;
+                }
+
+                if (res == null)
+                {
+                    res = EditorManager.CreateEditorByFilename(filename);
+
+                    if (res != null && (res.Document.Definition.Options & DocumentDefinitionOptions.TabControl) != DocumentDefinitionOptions.TabControl)
+                        DocumentManager.AddDocument(res);
+                }
+
                 return res;
             }
-
-            if (res == null)
+            catch (Exception ex)
             {
-                res = EditorManager.CreateEditorByFilename(filename);
-
-                if (res != null && (res.Document.Definition.Options & DocumentDefinitionOptions.TabControl) != DocumentDefinitionOptions.TabControl)
-                    DocumentManager.AddDocument(res);
+                MessageManager.Alert("File ", filename, " cannot be open.\n", ex.Message);
             }
 
-            return res;
+            return null;
+        }
+
+        public static IEditor LoadEditor(Type documentType)
+        {
+            DocumentDefinition dd = DocumentManager.GetDocumentDefinitionByClrType(documentType);
+            if ((dd.Options & DocumentDefinitionOptions.OpenFromTypeByDefaultName) == DocumentDefinitionOptions.OpenFromTypeByDefaultName)
+            {
+                return LoadEditor(dd.DefaultFileName + dd.DefaultFileExtension);
+            }
+
+            return null;
         }
 
     }

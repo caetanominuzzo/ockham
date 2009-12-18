@@ -35,6 +35,8 @@ namespace primeira.Editor
         ShowIQuickLauchnOpen = 32,
         //Indicate this is the odd TabControl editor
         TabControl = 64,
+        //Used for open default.tabcontrol and default.filebrowser
+        OpenFromTypeByDefaultName = 128,
         //Default option for users editors
         UserFile = NeverClose | TimerSaver | ShowInRecents | ShowInQuickLauchDraft | ShowIQuickLauchnOpen,
     }

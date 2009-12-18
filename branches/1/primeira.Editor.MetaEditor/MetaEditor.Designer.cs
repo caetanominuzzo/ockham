@@ -1,4 +1,4 @@
-﻿namespace primeira.Editor.MetaEditor
+﻿namespace primeira.Editor
 {
     partial class MetaEditor
     {

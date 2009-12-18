@@ -8,7 +8,7 @@
     <ProjectGuid>{CF52C6E4-2866-47CD-8F50-2584DFBD8938}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>primeira.Editor.TabControlEditor</RootNamespace>
+    <RootNamespace>primeira.Editor</RootNamespace>
     <AssemblyName>primeira.Editor.TabControlEditor</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -56,6 +56,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="TabControlEditor.Shortcut.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="TabControlDocument.cs" />
     <Compile Include="TabControlEditor.cs">
       <SubType>UserControl</SubType>
@@ -68,6 +71,10 @@
     <ProjectReference Include="..\primeira.Editor.Components\primeira.Editor.Components.csproj">
       <Project>{F5E3F2D5-0629-4BEF-BC64-718E8483655E}</Project>
       <Name>primeira.Editor.Components</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\primeira.Editor.FileBrowserEditor\primeira.Editor.FileBrowserEditor.csproj">
+      <Project>{209D2421-5C0D-45B5-8C5D-41F414FCA6A7}</Project>
+      <Name>primeira.Editor.FileBrowserEditor</Name>
     </ProjectReference>
     <ProjectReference Include="..\primeira.Editor\primeira.Editor.csproj">
       <Project>{60E195BA-125C-4DC4-A7B9-26C033CD1DCC}</Project>

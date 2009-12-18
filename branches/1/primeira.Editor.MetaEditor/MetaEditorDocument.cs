@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 using System.Drawing;
 using primeira.Editor;
 
-namespace primeira.Editor.MetaEditor
+namespace primeira.Editor
 {
     [DataContract()]
     public class MetaEditorDocument : DocumentBase

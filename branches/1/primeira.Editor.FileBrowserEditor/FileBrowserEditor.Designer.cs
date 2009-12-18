@@ -61,7 +61,7 @@
             this.ColHardFilename = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColFileVersion = new System.Windows.Forms.DataGridViewTextBoxColumn();
             //this.tabButton1 = new primeira.Editor.Components.TabButton();
-            this.folderBrowser1 = new primeira.Editor.Editors.FileBrowser.FolderBrowser();
+            this.folderBrowser1 = new primeira.Editor.FileBrowserEditorComponents.FolderBrowser();
             this.panel4.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgDirFiles)).BeginInit();
@@ -451,7 +451,7 @@
             this.folderBrowser1.Name = "folderBrowser1";
             this.folderBrowser1.Size = new System.Drawing.Size(10, 46);
             this.folderBrowser1.TabIndex = 7;
-            this.folderBrowser1.OnDirectoryChange += new primeira.Editor.Editors.FileBrowser.FolderBrowser.OnDirectoryChangeDelegate(this.folderBrowser1_OnDirectoryChange);
+            this.folderBrowser1.OnDirectoryChange += new primeira.Editor.FileBrowserEditorComponents.FolderBrowser.OnDirectoryChangeDelegate(this.folderBrowser1_OnDirectoryChange);
             // 
             // FileBrowserEditor
             // 
@@ -495,7 +495,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
-        private primeira.Editor.Editors.FileBrowser.FolderBrowser folderBrowser1;
+        private primeira.Editor.FileBrowserEditorComponents.FolderBrowser folderBrowser1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.DataGridView dgDirFiles;
         private System.Windows.Forms.DataGridViewImageColumn dataGridViewImageColumn2;

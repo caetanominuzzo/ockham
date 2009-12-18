@@ -12,7 +12,7 @@ using Microsoft.CSharp;
 using System.CodeDom.Compiler;
 
 
-namespace primeira.Editor.MetaEditor
+namespace primeira.Editor
 {
     public partial class MetaEditor : EditorBase
     {
