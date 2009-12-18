@@ -1,4 +1,4 @@
-﻿namespace primeira.Editor.Editors.FileBrowser
+﻿namespace primeira.Editor.FileBrowserEditorComponents
 {
     partial class BorderTextBox
     {

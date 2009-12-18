@@ -1,6 +1,6 @@
 ﻿using primeira.Editor.Components;
 
-namespace primeira.Editor.Editors.FileBrowser
+namespace primeira.Editor.FileBrowserEditorComponents
 {
     partial class FolderBrowser
     {
@@ -32,7 +32,7 @@ namespace primeira.Editor.Editors.FileBrowser
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FolderBrowser));
             this.editorBaseButton1 = new primeira.Editor.Components.EditorBaseButton();
-            this.borderTextBox1 = new primeira.Editor.Editors.FileBrowser.BorderTextBox();
+            this.borderTextBox1 = new primeira.Editor.FileBrowserEditorComponents.BorderTextBox();
             this.SuspendLayout();
             // 
             // editorBaseButton1

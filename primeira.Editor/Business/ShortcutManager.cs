@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Runtime.InteropServices;
-using System.ComponentModel;
 using System.Windows.Forms;
-using Shortcut = primeira.Editor;
 using System.Reflection;
 
 namespace primeira.Editor
@@ -20,21 +17,21 @@ namespace primeira.Editor
         private static IntPtr _parentHandle = (IntPtr)0;
 
         [DllImport("user32.dll", SetLastError = true)]
-        public static extern bool RegisterHotKey(IntPtr hWnd, int id, KeyModifiers fsModifiers, Keys vk);
+        internal static extern bool RegisterHotKey(IntPtr hWnd, int id, KeyModifiers fsModifiers, Keys vk);
 
         [DllImport("user32.dll", SetLastError = true)]
-        public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+        private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern int GlobalAddAtom(string LPCTSTR);
+        private static extern int GlobalAddAtom(string LPCTSTR);
 
         #endregion
+
+        private static Type _shortcutConfigDocumentType;
 
         private static List<Shortcut> _shortcuts = new List<Shortcut>();
 
         private static List<ShortcutCommand> _commands = new List<ShortcutCommand>();
-
-        public static IShorcutEscopeProvider EscopeProvider { get; set; }
 
         internal static ShortcutCommand[] Commands
         {
@@ -46,6 +43,8 @@ namespace primeira.Editor
             get { return _shortcuts.ToArray(); }
         }
 
+        public static Control ParentEscopeProvider { get; set; }
+
         public bool PreFilterMessage(ref Message m)
         {
             switch (m.Msg)
@@ -53,9 +52,9 @@ namespace primeira.Editor
                 case WM_HOTKEY:
                     foreach (Shortcut p in _shortcuts)
                     {
-                        if (p.AtomID == (int)m.WParam && EscopeProvider != null && EscopeProvider.IsAtiveByEscope(p.Escope))
+                        if (p.AtomID == (int)m.WParam && VerifyEscope(ParentEscopeProvider, p.Escope))
                         {
-                            p.Command.Method.Invoke(p.Command.Object, new object[0]);
+                            p.Command.Method.Invoke(p.Command.Target, new object[0]);
                             return true;
                         }
                     }
@@ -64,22 +63,38 @@ namespace primeira.Editor
             return false;
         }
 
+        public static bool VerifyEscope(Control control, string escope)
+        {
+            if (escope == BasicEscopes.Global)
+                return true;
 
-        internal static ShortcutCommand AddCommand(string name, string description, MethodInfo method, Object aObject, string escope)
+            var container = (ContainerControl)control;
+
+            if(container == null)
+                return false;
+
+            if (control.GetType().GetInterfaces().Contains(typeof(IShorcutEscopeProvider)))
+                if (((IShorcutEscopeProvider)control).IsAtiveByEscope(escope))
+                    return true;
+ 
+            return VerifyEscope(container.ActiveControl, escope); 
+        }
+
+        internal static ShortcutCommand AddCommand(string name, string description, MethodInfo method, Object target, string escope)
         {
             ShortcutCommand c = new ShortcutCommand();
 
             c.Name = name;
             c.Description = description;
             c.Method = method;
-            c.Object = aObject;
+            c.Target = target;
             c.Escope = escope;
             _commands.Add(c);
 
             return c;
         }
 
-        internal static void AddShortcut(string escope, Keys key, KeyModifiers keyModifiers, ShortcutCommand command)
+        internal static Shortcut AddShortcut(string escope, Keys key, KeyModifiers keyModifiers, ShortcutCommand command)
         {
             Shortcut s = new Shortcut();
 
@@ -91,13 +106,16 @@ namespace primeira.Editor
             _shortcuts.Add(s);
 
             s.Register(_parentHandle);
+
+            return s;
         }
 
-        public static void LoadFromForm(Form aForm)
+        public static void LoadFromForm(Control control)
         {
             Application.AddMessageFilter(new ShortcutManager());
-            _parentHandle = aForm.Handle;
-            foreach (MethodInfo m in aForm.GetType().GetMethods())
+            _parentHandle = control.Handle;
+
+            foreach (MethodInfo m in control.GetType().GetMethods())
             {
                 foreach (object o in m.GetCustomAttributes(false))
                     if (o is ShortCutVisibilityAttribute)
@@ -116,7 +134,7 @@ namespace primeira.Editor
                         }
 
                         if (command == null)
-                            command = AddCommand(v.Name, v.Description, m, aForm, v.Escope);
+                            command = AddCommand(v.Name, v.Description, m, control, v.Escope);
 
                         AddShortcut(v.Escope, v.DefaultKey, v.DefaultKeyModifiers, command);
                     }
@@ -124,13 +142,13 @@ namespace primeira.Editor
 
         }
 
-        public void Assign(string aName, string aEscope, Keys aKey, KeyModifiers aKeyModifiers)
+        public void Assign(string name, string escope, Keys key, KeyModifiers keyModifiers)
         {
             Shortcut shortcut = new Shortcut();
 
             foreach (Shortcut p in _shortcuts)
             {
-                if (p.Key == aKey && p.KeyModifier == aKeyModifiers && p.Escope == aEscope)
+                if (p.Key == key && p.KeyModifier == keyModifiers && p.Escope == escope)
                 {
                     Unassign(p);
                     shortcut = p;
@@ -142,7 +160,7 @@ namespace primeira.Editor
 
             foreach (ShortcutCommand p in _commands)
             {
-                if (p.Name == aName)
+                if (p.Name == name)
                 {
                     command = p;
                     break;
@@ -150,32 +168,34 @@ namespace primeira.Editor
                 }
             }
 
-            AddShortcut(aEscope, aKey, aKeyModifiers, command);
+            AddShortcut(escope, key, keyModifiers, command);
 
         }
 
-        internal void Unassign(Shortcut aShorcut)
+        internal void Unassign(Shortcut shorcut)
         {
-
-            _shortcuts.Remove(aShorcut);
+            _shortcuts.Remove(shorcut);
 
             //Verify if another command is using that atomID.
             //If not unregister key
             foreach (Shortcut p in _shortcuts)
             {
-                if (p.AtomID == aShorcut.AtomID)
+                if (p.AtomID == shorcut.AtomID)
                     return;
             }
 
-            UnregisterHotKey(_parentHandle, aShorcut.AtomID);
+            UnregisterHotKey(_parentHandle, shorcut.AtomID);
 
+        }
+
+        public static void SetShortcutConfigDocumentType(Type editor)
+        {
+            _shortcutConfigDocumentType = editor;
         }
 
         public static void ShowConfig()
         {
-            EditorManager.LoadEditor("default.shortcut");
-         //   fmShortcutConfig p = new fmShortcutConfig(this);
-        //    p.ShowDialog();
+            EditorManager.LoadEditor(_shortcutConfigDocumentType);
         }
 
     }

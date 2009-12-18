@@ -54,7 +54,7 @@ namespace primeira.Editor
             }
             catch(Exception ex)
             {
-                MessageManager.Alert("File ", filename, " cannot be open.");
+                MessageManager.Alert("There is an error while deserializing file ", filename, ".\n", ex.Message);
             }
             
             return null;

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace primeira.Editor.Editors.FileBrowser
+namespace primeira.Editor.FileBrowserEditorComponents
 {
     public partial class BorderTextBox : UserControl
     {

@@ -22,7 +22,7 @@ namespace primeira.Editor
 
         #region DocumentDefinition & DocumentType
 
-        private static DocumentDefinition GetDocumentDefinitionByClrType(Type documentType)
+        internal static DocumentDefinition GetDocumentDefinitionByClrType(Type documentType)
         {
             PropertyInfo pDef = documentType.GetProperty("DocumentDefinition");
 

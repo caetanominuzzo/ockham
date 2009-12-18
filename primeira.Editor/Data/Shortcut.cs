@@ -15,15 +15,16 @@ namespace primeira.Editor
 
         public new string ToString()
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(this.KeyModifier.ToString());
-            sb.Append("+");
-            sb.Append(this.Key.ToString());
-            sb.Append(" (");
-            sb.Append(Escope);
-            sb.Append(")");
+            return string.Format("{0}+ ({1})", this.KeyModifier, this.Key);
 
-            return sb.ToString();
+            //StringBuilder sb = new StringBuilder();
+            //sb.Append(this.KeyModifier.ToString());
+            //sb.Append("+");
+            //sb.Append(this.Key.ToString());
+            //sb.Append(" (");
+            //sb.Append(Escope);
+            //sb.Append(")");
+            //return sb.ToString();
         }
 
         public void Register(IntPtr ParentHandle)
@@ -40,6 +41,10 @@ namespace primeira.Editor
         Control = 2,
         Shift = 4,
         Windows = 8
+    }
 
+    public static class BasicEscopes
+    {
+        public const string Global = "Global";
     }
 }

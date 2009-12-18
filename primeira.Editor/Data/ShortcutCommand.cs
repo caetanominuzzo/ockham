@@ -10,7 +10,7 @@ namespace primeira.Editor
         internal string Name;
         internal string Description;
         internal MethodInfo Method;
-        internal object Object;
+        internal object Target;
         internal string Escope;
     }
 }

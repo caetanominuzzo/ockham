@@ -20,7 +20,7 @@ namespace primeira.Editor
                 Id = new Guid("513ff96c-0d23-44f4-82ab-0dea5a62dcd3"),
                 Icon = Image.FromFile(@"D:\Desenv\Ockham\branches\1\primeira.Editor.FileBrowserEditor\Resources\folder_noborder.gif"),
                 DefaultEditor = typeof(FileBrowserEditor),
-                Options = (DocumentDefinitionOptions.DontShowLabel | DocumentDefinitionOptions.TimerSaver | DocumentDefinitionOptions.NeverClose)
+                Options = (DocumentDefinitionOptions.DontShowLabel | DocumentDefinitionOptions.TimerSaver | DocumentDefinitionOptions.NeverClose | DocumentDefinitionOptions.OpenFromTypeByDefaultName)
             };
 
         public static DocumentDefinition DocumentDefinition
