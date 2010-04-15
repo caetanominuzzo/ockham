@@ -6,8 +6,6 @@ namespace primeira.Editor
 {
     public interface IShorcutEscopeProvider
     {
-        bool IsAtiveByControl(string controlName);
-
         bool IsAtiveByEscope(string escope);
     }
 }

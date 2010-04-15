@@ -5,31 +5,24 @@ using System.Windows.Forms;
 
 namespace primeira.Editor
 {
-    internal class Shortcut
+    public class Shortcut
     {
         internal int AtomID;
-        internal Keys Key;
-        internal KeyModifiers KeyModifier;
-        internal string Escope;
-        internal ShortcutCommand Command;
+        public Keys Key;
+        public KeyModifiers KeyModifier;
+        public string Escope;
+        public ShortcutCommand Command;
+        internal KeyEvent Event;
 
         public new string ToString()
         {
             return string.Format("{0}+ ({1})", this.KeyModifier, this.Key);
-
-            //StringBuilder sb = new StringBuilder();
-            //sb.Append(this.KeyModifier.ToString());
-            //sb.Append("+");
-            //sb.Append(this.Key.ToString());
-            //sb.Append(" (");
-            //sb.Append(Escope);
-            //sb.Append(")");
-            //return sb.ToString();
         }
 
         public void Register(IntPtr ParentHandle)
         {
-            ShortcutManager.RegisterHotKey(ParentHandle, AtomID, KeyModifier, Key);
+            if(Event == KeyEvent.HotKey)
+                ShortcutManager.RegisterHotKey(ParentHandle, AtomID, KeyModifier, Key);
         }
     }
 
@@ -41,6 +34,13 @@ namespace primeira.Editor
         Control = 2,
         Shift = 4,
         Windows = 8
+    }
+
+    public enum KeyEvent
+    {
+        HotKey = 0x0312,
+        KeyDown = 0x100,
+        KeyUp = 0x101
     }
 
     public static class BasicEscopes

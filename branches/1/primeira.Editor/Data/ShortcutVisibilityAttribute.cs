@@ -5,54 +5,41 @@ using System.Windows.Forms;
 
 namespace primeira.Editor
 {
-    public class ShortCutVisibilityAttribute : Attribute
+    public class ShortcutVisibilityAttribute : Attribute
     {
-        private string _name;
-        private string _description;
-        private Keys _defaultKey;
-        private KeyModifiers _defaultKeyModifiers;
-        private string _escope;
+        public string Escope { get; set; }
 
-        public string Escope
+        public Keys DefaultKey{ get; set; }
+
+        public KeyModifiers DefaultKeyModifiers{ get; set; }
+
+        public string Name{ get; set; }
+
+        public string Description{ get; set; }
+
+        public KeyEvent Event { get; set; }
+
+        public ShortcutVisibilityAttribute()
         {
-            get { return _escope; }
-            set { _escope = value; }
+            if (Escope == string.Empty)
+                Escope = BasicEscopes.Global;
+
+            if (Event == 0)
+                Event = KeyEvent.HotKey;
+
         }
 
-
-        public Keys DefaultKey
-        {
-            get { return _defaultKey; }
-            set { _defaultKey = value; }
-        }
-
-        public KeyModifiers DefaultKeyModifiers
-        {
-            get { return _defaultKeyModifiers; }
-            set { _defaultKeyModifiers = value; }
-        }
-
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
-
-        public string Description
-        {
-            get { return _description; }
-            set { _description = value; }
-        }
-
-        public ShortCutVisibilityAttribute(string name, string description, string escope, Keys defaultKey)
+        public ShortcutVisibilityAttribute(string name, string description, string escope, Keys defaultKey)
+            :this()
         {
             Name = name;
             Description = description;
             DefaultKey = defaultKey;
             Escope = escope;
+            
         }
 
-        public ShortCutVisibilityAttribute(string name, string description, string escope, Keys defaultKey, KeyModifiers defaultKeyModifiers)
+        public ShortcutVisibilityAttribute(string name, string description, string escope, Keys defaultKey, KeyModifiers defaultKeyModifiers)
             : this(name, description, escope, defaultKey)
         {
             DefaultKeyModifiers = defaultKeyModifiers;

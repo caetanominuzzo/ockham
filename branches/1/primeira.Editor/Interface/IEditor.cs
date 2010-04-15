@@ -9,18 +9,15 @@ namespace primeira.Editor
     
     public interface IEditor
     {
-        ITabButton TabButton { get; }
-
         DocumentBase Document { get; }
 
         string Filename { get; }
 
         bool Selected { get; set;  }
 
-        bool ShowCloseButton { get; }
-
         event SelectedDelegate OnSelected;
 
+        bool HasOption(DocumentDefinitionOptions Option);
     }
 
 }

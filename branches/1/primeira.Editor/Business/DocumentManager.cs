@@ -9,82 +9,74 @@ using System.Windows.Forms;
 
 namespace primeira.Editor
 {
-
     public static class DocumentManager
     {
         #region Fields
 
         private static List<Type> _knownDocumentType = new List<Type>();
         
-        private static List<DocumentDefinition> _knownDocumentDefinition = new List<DocumentDefinition>();
+        private static List<DocumentDefinitionAttribute> _knownDocumentDefinition = new List<DocumentDefinitionAttribute>();
+
+        private static string _baseDir = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
         #endregion
 
-        #region DocumentDefinition & DocumentType
+        #region DocumentDefinitionAttribute & DocumentType
 
-        internal static DocumentDefinition GetDocumentDefinitionByClrType(Type documentType)
-        {
-            PropertyInfo pDef = documentType.GetProperty("DocumentDefinition");
-
-            if (pDef == null)
-            {
-                MessageManager.Alert("Missing DocumentDefinition Property in ", documentType.Name, " Class.");
-                return null;
-            }
-
-            return (DocumentDefinition)pDef.GetValue(null, null);
-        }
-
-        private static DocumentDefinition GetDocumentDefinitionByEditorType(Type editorType)
+        private static DocumentDefinitionAttribute GetDocumentDefinitionByFileExtension(string extension)
         {
             try
             {
-                return (from x in _knownDocumentDefinition where x.DefaultEditor == editorType select (DocumentDefinition)x).FirstOrDefault();
+                DocumentDefinitionAttribute tmp = (from x in _knownDocumentDefinition where x.DefaultFileExtension == extension select (DocumentDefinitionAttribute)x).FirstOrDefault();
+
+                if(tmp != null)
+                    return tmp;
+                throw new Exception();
             }
             catch
             {
-                MessageManager.Alert("No DocumentDefinition found for ", editorType.Name, " Class");
+                MessageManager.Alert("No Editor found for *", extension, " files.");
                 return null;
             }
         }
 
-        internal static DocumentDefinition GetDocumentDefinitionByFileExtension(string extension)
-        {
-            try
-            {
-                return (from x in _knownDocumentDefinition where x.DefaultFileExtension == extension select (DocumentDefinition)x).FirstOrDefault();
-            }
-            catch
-            {
-                MessageManager.Alert("No Editor Class found for *", extension, " files.");
-                return null;
-            }
-        }
-
-        internal static Type[] GetKnownDocumentTypes()
+        public static Type[] GetKnownDocumentTypes()
         {
             return _knownDocumentType.ToArray();
         }
 
-        public static DocumentDefinition GetDocumentDefinitionByFilename(string filename)
+        public static DocumentDefinitionAttribute[] GetDocumentDefinition()
+        {
+            return _knownDocumentDefinition.ToArray();
+        } 
+
+        public static DocumentDefinitionAttribute GetDocumentDefinitionByClrType(Type documentType)
+        {
+            object[] attribs = documentType.GetCustomAttributes(typeof(DocumentDefinitionAttribute), false);
+
+            if (attribs.Length == 0)
+            {
+                MessageManager.Alert("Missing DocumentDefinitionAttribute Definition property in ", documentType.Name, " Class.");
+                return null;
+            }
+
+            return (DocumentDefinitionAttribute)attribs[0];
+        }
+
+        public static DocumentDefinitionAttribute GetDocumentDefinitionByFilename(string filename)
         {
             string ext = Path.GetExtension(filename);
 
             return GetDocumentDefinitionByFileExtension(ext);
         }
 
-        public static DocumentDefinition[] GetKnowDocumentDefinition()
-        {
-            return _knownDocumentDefinition.ToArray();
-        }
-
         /// <summary>
-        /// Add the document CLR type and its DocumentDefinition to registered documents list.
+        /// Adds the document CLR type and it DocumentDefinitionAttribute to registered documents list.
         /// </summary>
         /// <param name="documentType">The document CLR type.</param>
-        public static void RegisterDocument(Type documentType)
+        internal static void RegisterDocument(Type documentType)
         {
-            DocumentDefinition def = GetDocumentDefinitionByClrType(documentType);
+            DocumentDefinitionAttribute def = GetDocumentDefinitionByClrType(documentType);
 
             if (def != null)
             {
@@ -101,7 +93,7 @@ namespace primeira.Editor
         {
             StringBuilder sb = new StringBuilder();
 
-            foreach (DocumentDefinition d in _knownDocumentDefinition)
+            foreach (DocumentDefinitionAttribute d in _knownDocumentDefinition)
             {
                 if ((d.Options & DocumentDefinitionOptions.ShowIQuickLauchnOpen) == DocumentDefinitionOptions.ShowIQuickLauchnOpen)
                     sb.Append(string.Format("{0} (*{1})|*{1}|", d.Name, d.DefaultFileExtension));
@@ -112,10 +104,10 @@ namespace primeira.Editor
             return sb.ToString();
         }
 
-        public static int GetDialogFilterIndex(DocumentDefinition FileVersion)
+        public static int GetDialogFilterIndex(DocumentDefinitionAttribute FileVersion)
         {
             int i = 0;
-            foreach (DocumentDefinition d in _knownDocumentDefinition)
+            foreach (DocumentDefinitionAttribute d in _knownDocumentDefinition)
             {
                 if ((d.Options & DocumentDefinitionOptions.ShowIQuickLauchnOpen) == DocumentDefinitionOptions.ShowIQuickLauchnOpen)
                     continue;
@@ -145,30 +137,8 @@ namespace primeira.Editor
         #endregion
 
         #region New, Open & Save Document
-
-        internal static void AddDocument(IEditor editor)
-        {
-            if(TabManager.GetInstance().TabControl != null)
-                TabManager.GetInstance().TabControl.AddTab(editor);
-
-            if ((editor.Document.Definition.Options & DocumentDefinitionOptions.ShowInRecents) == DocumentDefinitionOptions.ShowInRecents)
-            {
-                    if(FileManager.Recent != null)
-                        FileManager.Recent.AddRecent(editor.Filename);
-            }
-
-            editor.OnSelected += new SelectedDelegate(TabControl_OnSelected);
-
-            editor.Selected = true;
-        }
-
-        static void TabControl_OnSelected(IEditor sender)
-        {
-            TabManager.GetInstance().ActiveEditor = (IEditor)sender;
-        }
-
-
-        public static void OpenOrCreateDocument(bool NewFile, DocumentDefinition FileVersion)
+        
+        public static void OpenOrCreateDocument(bool NewFile, DocumentDefinitionAttribute FileVersion)
         {
             OpenFileDialog s = new OpenFileDialog();
 
@@ -194,21 +164,14 @@ namespace primeira.Editor
                 if (!File.Exists(ss))
                     File.Create(ss).Close();
 
-                LoadDocument(ss);
+                EditorManager.LoadEditor(ss);
             }
         }
-
-        private static string _baseDir = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
         public static string BaseDir
         {
             get { return _baseDir; }
             private set { _baseDir = value; }
-        }
-
-        internal static DocumentBase LoadDocument(string filename)
-        {
-            return EditorManager.LoadEditor(filename).Document;
         }
 
         #endregion

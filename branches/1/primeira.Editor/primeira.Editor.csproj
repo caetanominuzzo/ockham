@@ -51,24 +51,36 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\DocumentBase.cs" />
+    <Compile Include="Business\EditorContainerManager.cs" />
+    <Compile Include="Business\PluginManager.cs" />
     <Compile Include="Business\ShortcutManager.cs" />
-    <Compile Include="Data\DocumentDefinition.cs" />
+    <Compile Include="Data\DocumentDefinitionAttribute.cs" />
     <Compile Include="Business\DocumentManager.cs" />
     <Compile Include="Business\EditorManager.cs" />
     <Compile Include="Business\FileManager.cs" />
+    <Compile Include="Data\EditorDefinitionAttribute.cs" />
+    <Compile Include="Data\PluginDefinitionAttribute.cs" />
+    <Compile Include="Data\PluginDefinitions.cs" />
+    <Compile Include="Data\PluginDependencyException.cs" />
+    <Compile Include="Data\PluginInitializeAttribute.cs" />
     <Compile Include="Data\Shortcut.cs" />
     <Compile Include="Data\ShortcutCommand.cs" />
     <Compile Include="Data\ShortcutVisibilityAttribute.cs" />
     <Compile Include="Interface\IEditor.cs" />
+    <Compile Include="Interface\IEditorContainer.cs" />
     <Compile Include="Interface\IMessageControl.cs" />
+    <Compile Include="Interface\IPlugin.cs" />
     <Compile Include="Interface\IRecentFileControl.cs" />
     <Compile Include="Interface\IRevision.cs" />
     <Compile Include="Interface\IShorcutEscopeProvider.cs" />
-    <Compile Include="Interface\ITabButton.cs" />
-    <Compile Include="Interface\ITabControl.cs" />
     <Compile Include="Business\MessageManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Business\TabManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\3rd Party\UndoRedoFramework\UndoRedoFramework.csproj">
+      <Project>{641578C7-4522-4158-867A-30AECBB3EE73}</Project>
+      <Name>UndoRedoFramework</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

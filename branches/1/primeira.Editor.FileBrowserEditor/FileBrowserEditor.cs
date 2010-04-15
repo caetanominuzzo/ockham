@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Drawing.Drawing2D;
-using primeira.Editor;
 using primeira.Editor.Components;
 
 namespace primeira.Editor
 {
+    [EditorDefinition(DocumentType = typeof(FileBrowserDocument))]
+    [PluginDefinition(PluginDefinitions.WaitEditorContainer | PluginDefinitions.SystemDelayedInitializationPlugin)]
     public partial class FileBrowserEditor :  EditorBase, IRecentFileControl
     {
         #region Fields
@@ -28,11 +25,9 @@ namespace primeira.Editor
         {
             InitializeComponent();
 
-            this.TabButton.SetWidth(40);
+            FileManager.SetRecentManager(this);
 
-            this.TabButton.SetText("File Tab");
-
-            this.ShowCloseButton = false;
+            ShortcutManager.LoadFromForm(this);
 
             this.OnSelected += new SelectedDelegate(FileBrowser_OnSelected);
 
@@ -42,36 +37,43 @@ namespace primeira.Editor
 
         private Image GetDraftImage(Image image)
         {
-            Bitmap b = new Bitmap(image.Width, image.Height - 1, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            Rectangle r = new Rectangle(0, 0, image.Width, image.Height - 1);
+            try
+            {
+                Bitmap b = new Bitmap(image.Width, image.Height - 1, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                Rectangle r = new Rectangle(0, 0, image.Width, image.Height - 1);
 
-            LinearGradientBrush brush = new LinearGradientBrush(r, Color.FromArgb(10, 255, 255, 255), Color.FromArgb(230, 255, 255, 255), 90);
-            
-            Graphics g = Graphics.FromImage(b);
+                LinearGradientBrush brush = new LinearGradientBrush(r, Color.FromArgb(10, 255, 255, 255), Color.FromArgb(230, 255, 255, 255), 90);
 
-            Pen p = new Pen(Color.White);
+                Graphics g = Graphics.FromImage(b);
 
-            g.DrawImage(image, 0, 0);
+                Pen p = new Pen(Color.White);
 
-            g.FillRectangle(brush, r);
+                g.DrawImage(image, 0, 0);
 
-            b.MakeTransparent(Color.White);
+                g.FillRectangle(brush, r);
 
-            return (Image)b;
+                b.MakeTransparent(Color.White);
+
+                return (Image)b;
+            }
+            catch
+            {
+                return new Bitmap(1, 1);
+            }
         }
 
         private void createQuickLaunch()
         {
             dgQuickLauch.Rows.Clear();
 
-            DocumentDefinition[] defs = DocumentManager.GetKnowDocumentDefinition();
+            DocumentDefinitionAttribute[] defs = DocumentManager.GetDocumentDefinition();
 
-            foreach (DocumentDefinition def in defs)
+            foreach (DocumentDefinitionAttribute def in defs)
             {
                 if ((def.Options & DocumentDefinitionOptions.ShowInQuickLauchDraft) == DocumentDefinitionOptions.ShowInQuickLauchDraft)
                 {
                     int i = dgQuickLauch.Rows.Add(
-                            new object[] { GetDraftImage(def.Icon), 
+                            new object[] { GetDraftImage(EditorManager.GetManifestResourceFileIcon(def.DefaultFileExtension)),
                             string.Format("Draft {0} File ", def.Name),
                             "draft", 0, "", def });
 
@@ -79,12 +81,12 @@ namespace primeira.Editor
                 }
             }
 
-            foreach (DocumentDefinition def in defs)
+            foreach (DocumentDefinitionAttribute def in defs)
             {
                 if ((def.Options & DocumentDefinitionOptions.ShowIQuickLauchnOpen) == DocumentDefinitionOptions.ShowIQuickLauchnOpen)
                 {
                     int i = dgQuickLauch.Rows.Add(
-                            new object[] { def.Icon, 
+                            new object[] {  EditorManager.GetManifestResourceFileIcon(def.DefaultFileExtension),
                             string.Format("Open or Create {0} File ", def.Name),
                             "", 0, "", def });
 
@@ -104,7 +106,7 @@ namespace primeira.Editor
             Size s = new Size(dgRecentFiles.Columns[1].Width, dgRecentFiles.RowTemplate.Height);
             Font f = dgRecentFiles.DefaultCellStyle.Font;
             DateTime d = DateTime.Now;
-            DocumentDefinition docDef;
+            DocumentDefinitionAttribute docDef;
             TimeSpan lastWrite;
 
             foreach (string file in files)
@@ -117,7 +119,7 @@ namespace primeira.Editor
 
                     dgRecentFiles.Rows.Add(
                     new object[] { 
-                        docDef==null? m_file : docDef.Icon,
+                        docDef==null? null :  EditorManager.GetManifestResourceFileIcon(docDef.DefaultFileExtension),
                         file, FileManager.LastWrite(lastWrite), (int)lastWrite.TotalSeconds, file, null });
                 }
             }
@@ -126,6 +128,14 @@ namespace primeira.Editor
         }
 
         #endregion
+
+        [PluginInitialize()]
+        public static void RegisterEditor()
+        {
+            EditorManager.RegisterEditor(typeof(FileBrowserEditor));
+
+            EditorManager.LoadEditor(typeof(FileBrowserDocument));
+        }   
 
         #region Event Handlers
 
@@ -157,19 +167,19 @@ namespace primeira.Editor
                 EditorManager.LoadEditor(dgDirFiles.Rows[e.RowIndex].Cells[4].Value.ToString());
             }
             else if (sender == dgRecentFiles)
-                EditorManager.LoadEditor(dgRecentFiles.Rows[e.RowIndex].Cells[4].Value.ToString());
+               EditorManager.LoadEditor(dgRecentFiles.Rows[e.RowIndex].Cells[4].Value.ToString());
             else
             {
                 if(dgQuickLauch.Rows[e.RowIndex].Cells[2].Value.ToString() == "draft")
                 {
-                    string s = FileManager.GetNewFile((DocumentDefinition)dgQuickLauch.Rows[e.RowIndex].Cells[5].Value, DocumentManager.BaseDir);
+                    string s = FileManager.GetNewFile((DocumentDefinitionAttribute)dgQuickLauch.Rows[e.RowIndex].Cells[5].Value, DocumentManager.BaseDir);
                     s = Path.Combine(DocumentManager.BaseDir, s);
                     File.Create(s).Close();
                     EditorManager.LoadEditor(s);
                 }
                 else
                 {
-                    DocumentManager.OpenOrCreateDocument(true, (DocumentDefinition)dgQuickLauch.Rows[e.RowIndex].Cells[5].Value);
+                    DocumentManager.OpenOrCreateDocument(true, (DocumentDefinitionAttribute)dgQuickLauch.Rows[e.RowIndex].Cells[5].Value);
                 }
             }
         }
@@ -196,11 +206,11 @@ namespace primeira.Editor
         {
             dgDirFiles.Rows.Clear();
 
-            DocumentDefinition[] defs = DocumentManager.GetKnowDocumentDefinition();
+            DocumentDefinitionAttribute[] defs = DocumentManager.GetDocumentDefinition();
             string[] files;
             DateTime d = DateTime.Now;
 
-            foreach(DocumentDefinition def in defs)
+            foreach(DocumentDefinitionAttribute def in defs)
             {
                 files = Directory.GetFiles(directoryPath,"*"+ def.DefaultFileExtension);
 
@@ -224,6 +234,13 @@ namespace primeira.Editor
 
             if (dgQuickLauch.SelectedRows.Count == 1)
                 dgQuickLauch.SelectedRows[0].Selected = false;
+        }
+
+
+        [ShortcutVisibility("File Browser", "Shows the File Browser tab", BasicEscopes.Global, Keys.T, KeyModifiers.Control)]
+        public void show()
+        {
+            EditorManager.LoadEditor(this.DefaultFileName).Selected = true;
         }
     }
 }
