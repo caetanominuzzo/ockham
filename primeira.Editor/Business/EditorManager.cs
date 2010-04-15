@@ -4,17 +4,35 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Linq;
+using System.Drawing;
 
 namespace primeira.Editor
 {
-
     public delegate void SelectedDelegate(IEditor sender);
 
     public static class EditorManager
     {
-        private static Type[] _defaultEditorCtor = new Type[2] { typeof(string), typeof(DocumentBase) };
+        #region Register & Load
 
-        private static IEditor CreateEditorByFilename(string filename)
+        private static List<Type> _registeredEditors;
+
+        public static void RegisterEditor(Type type)
+        {
+            if (_registeredEditors == null)
+                _registeredEditors = new List<Type>();
+
+            if (!_registeredEditors.Contains(type))
+            {
+                _registeredEditors.Add(type);
+
+                EditorDefinitionAttribute[] dd = (EditorDefinitionAttribute[])type.GetCustomAttributes(typeof(EditorDefinitionAttribute), false);
+
+                foreach (EditorDefinitionAttribute d in dd)
+                    DocumentManager.RegisterDocument(d.DocumentType);
+            }
+        }
+
+        public static IEditor CreateEditorByFilename(string filename)
         {
             IEditor res = null;
             DocumentBase doc = null;
@@ -29,67 +47,53 @@ namespace primeira.Editor
 
             if (f.Length == 0)
             {
-                string ext = Path.GetExtension(filename);
+                DocumentDefinitionAttribute dd = DocumentManager.GetDocumentDefinitionByFilename(filename);
 
-                Type tt = DocumentManager.GetDocumentDefinitionByFileExtension(ext).DefaultEditor;
-
-                if (tt == null)
+                if (dd == null)
+                {
+                    MessageManager.Alert("There is no editor for that file type.");
                     return null;
+                }
 
-                res = (IEditor)tt.GetConstructor(_defaultEditorCtor).Invoke(new object[2] { filename, doc });
+                res = (IEditor)dd.DefaultEditor.GetConstructor(_defaultEditorCtor).Invoke(new object[2] { filename, doc });
             }
             else
             {
                 doc = DocumentManager.ToObject(filename);
 
                 if (doc != null)
-                    res = (IEditor)doc.Definition.DefaultEditor.GetConstructor(_defaultEditorCtor).Invoke(new object[2] { filename, doc });
+                    res = (IEditor)DocumentManager.GetDocumentDefinitionByClrType(doc.GetType()).DefaultEditor.GetConstructor(_defaultEditorCtor).Invoke(new object[2] { filename, doc });
             }
 
-            return (IEditor)res;
+            return res;
         }
- 
-        public static void RegisterEditors()
-        {
-            string pluginDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "");
 
-            string[] dlls = Directory.GetFiles(pluginDir, "*.dll", SearchOption.AllDirectories);
+        private static Type[] _defaultEditorCtor = new Type[2] { typeof(string), typeof(DocumentBase) };
 
-            Assembly ass = null;
-            foreach (string dll in dlls)
-            {
-                ass = Assembly.LoadFile(dll);
-
-                Type[] types = ass.GetTypes();
-
-
-                foreach (Type type in types)
-                {
-                    if (type.BaseType == typeof(DocumentBase))
-                        DocumentManager.RegisterDocument(type);
-                }
-            }
-        }
-        
+        /// <summary>
+        /// Load the specified file in the registered editor.
+        /// If the file is already open its tab is selected.
+        /// </summary>
+        /// <param name="filename">The file to open.</param>
+        /// <returns>The editor with file loaded.</returns>
         public static IEditor LoadEditor(string filename)
         {
             try
             {
-                IEditor res = TabManager.GetInstance().GetDocumentByFilename(filename);
+                //Verify if the file is already open
+                IEditor res = EditorContainerManager.GetOpenEditorByFilename(filename);
 
                 if (res != null)
                 {
-                    res.Selected = true;
+                    EditorContainerManager.AddEditor(res);
                     return res;
                 }
 
-                if (res == null)
-                {
-                    res = EditorManager.CreateEditorByFilename(filename);
+                //Load a new editor
+                res = EditorManager.CreateEditorByFilename(filename);
 
-                    if (res != null && (res.Document.Definition.Options & DocumentDefinitionOptions.TabControl) != DocumentDefinitionOptions.TabControl)
-                        DocumentManager.AddDocument(res);
-                }
+                if (res != null)
+                    EditorContainerManager.AddEditor(res);
 
                 return res;
             }
@@ -101,16 +105,62 @@ namespace primeira.Editor
             return null;
         }
 
+        /// <summary>
+        /// Load the specified document type with default filename.
+        /// The document must has OpenFromTypeByDefaultName option.
+        /// </summary>
+        /// <param name="documentType">The CLR type of the document to open.</param>
+        /// <returns>The editor with the default file loaded.</returns>
         public static IEditor LoadEditor(Type documentType)
         {
-            DocumentDefinition dd = DocumentManager.GetDocumentDefinitionByClrType(documentType);
-            if ((dd.Options & DocumentDefinitionOptions.OpenFromTypeByDefaultName) == DocumentDefinitionOptions.OpenFromTypeByDefaultName)
+            DocumentDefinitionAttribute dd = DocumentManager.GetDocumentDefinitionByClrType(documentType);
+
+            if ((dd.Options & DocumentDefinitionOptions.OpenFromTypeDefaultName) == DocumentDefinitionOptions.OpenFromTypeDefaultName)
             {
                 return LoadEditor(dd.DefaultFileName + dd.DefaultFileExtension);
             }
 
             return null;
         }
+    
 
+        #endregion
+
+        #region Get Editor Data
+
+        public static Image GetManifestResourceFileIcon(string extension)
+        {
+            return GetManifestResourceFileIcon(GetEditorTypeByFileExtension(extension));
+        }
+
+        public static Image GetManifestResourceFileIcon(Type type)
+        {
+            try
+            {
+                Stream stream = type.Assembly.GetManifestResourceStream(type.Namespace + ".Resources.File.ico");
+
+                if (stream == null)
+                    return null;
+
+                return Image.FromStream(stream);
+            }
+
+            catch { }
+
+            return null;
+        }
+
+        public static Type GetEditorTypeByFileExtension(string extension)
+        {
+            var x = (from c in _registeredEditors
+                     where ((EditorDefinitionAttribute[])c.GetCustomAttributes(typeof(EditorDefinitionAttribute), false)).Count<EditorDefinitionAttribute>(z =>
+                         DocumentManager.GetDocumentDefinitionByClrType(z.DocumentType).DefaultFileExtension == extension) > 0
+                     select c).First();
+
+            
+            return (Type)x;
+        }
+
+        #endregion
     }
 }

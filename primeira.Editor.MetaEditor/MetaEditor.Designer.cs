@@ -107,6 +107,9 @@
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(495, 20);
             this.txtName.TabIndex = 3;
+            this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
+            this.txtName.Leave += new System.EventHandler(this.txtName_Leave);
+            this.txtName.Enter += new System.EventHandler(this.txtName_Enter);
             // 
             // panel2
             // 

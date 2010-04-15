@@ -87,25 +87,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\3rd Party\UndoRedoFramework\UndoRedoFramework.csproj">
+      <Project>{641578C7-4522-4158-867A-30AECBB3EE73}</Project>
+      <Name>UndoRedoFramework</Name>
+    </ProjectReference>
     <ProjectReference Include="..\primeira.Editor.Components\primeira.Editor.Components.csproj">
       <Project>{F5E3F2D5-0629-4BEF-BC64-718E8483655E}</Project>
       <Name>primeira.Editor.Components</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\primeira.Editor.FileBrowserEditor\primeira.Editor.FileBrowserEditor.csproj">
-      <Project>{209D2421-5C0D-45B5-8C5D-41F414FCA6A7}</Project>
-      <Name>primeira.Editor.FileBrowserEditor</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\primeira.Editor.MetaEditor\primeira.Editor.MetaEditor.csproj">
-      <Project>{BBE46FF0-457D-489D-82ED-2AF19FE8693B}</Project>
-      <Name>primeira.Editor.MetaEditor</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\primeira.Editor.ShortcutConfigEditor\primeira.Editor.ShortcutConfigEditor.csproj">
-      <Project>{F6081561-B784-42B7-ACCC-04156E85FEE5}</Project>
-      <Name>primeira.Editor.ShortcutConfigEditor</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\primeira.Editor.TabControlEditor\primeira.Editor.TabControlEditor.csproj">
-      <Project>{CF52C6E4-2866-47CD-8F50-2584DFBD8938}</Project>
-      <Name>primeira.Editor.TabControlEditor</Name>
     </ProjectReference>
     <ProjectReference Include="..\primeira.Editor\primeira.Editor.csproj">
       <Project>{60E195BA-125C-4DC4-A7B9-26C033CD1DCC}</Project>

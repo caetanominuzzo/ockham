@@ -8,16 +8,18 @@
     <ProjectGuid>{BBE46FF0-457D-489D-82ED-2AF19FE8693B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>primeira.Editor.MetaEditor</RootNamespace>
+    <RootNamespace>primeira.Editor</RootNamespace>
     <AssemblyName>primeira.Editor.MetaEditor</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\primeira.Editor.Application\bin\Debug\Addons\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -60,6 +62,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\3rd Party\UndoRedoFramework\UndoRedoFramework.csproj">
+      <Project>{641578C7-4522-4158-867A-30AECBB3EE73}</Project>
+      <Name>UndoRedoFramework</Name>
+    </ProjectReference>
     <ProjectReference Include="..\primeira.Editor.Components\primeira.Editor.Components.csproj">
       <Project>{F5E3F2D5-0629-4BEF-BC64-718E8483655E}</Project>
       <Name>primeira.Editor.Components</Name>
@@ -73,6 +79,9 @@
     <EmbeddedResource Include="MetaEditor.resx">
       <DependentUpon>MetaEditor.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\File.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

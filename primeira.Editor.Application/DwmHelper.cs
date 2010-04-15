@@ -17,7 +17,7 @@ namespace primeira.Editor
             public int cyTopHeight;
             public int cyBottomHeight;
         }
-
+        
         [DllImport("dwmapi.dll")]
         private static extern int DwmExtendFrameIntoClientArea(
            IntPtr hWnd,
@@ -27,17 +27,20 @@ namespace primeira.Editor
 
         internal static void SeventishIt(Control control)
         {
+            control.BackColor = System.Drawing.Color.Black;
+
             MARGINS margins = new MARGINS();
             margins.cxLeftWidth = 0;
             margins.cxRightWidth = 0;
-            margins.cyTopHeight = 28;
+            margins.cyTopHeight = 33;
             margins.cyBottomHeight = 0;
 
             IntPtr hWnd = control.Handle;
             int result = DwmExtendFrameIntoClientArea(hWnd, ref margins);
 
-        }
 
+
+        }
 
     }
 }

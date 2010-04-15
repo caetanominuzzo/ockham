@@ -13,30 +13,19 @@ using primeira.Editor;
 namespace primeira.Editor.Components
 {
 
-    public class EditorBase : UserControl, IEditor
+    public class EditorBase : UserControl, IEditor, IPlugin
     {
-
         #region Fields
 
         private bool _selected = false;
 
         private Timer _saveTimer;
 
-        private bool _showCloseButton = true;
-
         #endregion
 
         #region Properties
 
         public string Filename { get; set; }
-
-        public ITabButton TabButton { get; private set; }
-
-        public bool ShowCloseButton
-        {
-            get { return _showCloseButton; }
-            protected set { _showCloseButton = value; }
-        }
 
         public DocumentBase Document { get; private set; }
 
@@ -52,12 +41,22 @@ namespace primeira.Editor.Components
 
                 if (value)
                     BringToFront();
-
-                if (TabButton != null)
-                    this.TabButton.Invalidate();
+                
+                Invalidate();
 
                 if (_selected && OnSelected != null)
                     OnSelected(this);
+            }
+        }
+
+        public Type DocumentType { get; private set; }
+
+        public string DefaultFileName
+        {
+            get
+            {
+                DocumentDefinitionAttribute dd = DocumentManager.GetDocumentDefinitionByClrType(this.Document.GetType());
+                return dd.DefaultFileName + dd.DefaultFileExtension;
             }
         }
 
@@ -90,48 +89,44 @@ namespace primeira.Editor.Components
 
             this.OnChanged += new ChangedDelegate(EditorBase_OnChanged);
 
+            this.DocumentType = documentType;
+
             InitializeComponent();
 
         }
-
+        
         private void InitializeComponent()
         {
-            if ((Document.Definition.Options & DocumentDefinitionOptions.TimerSaver) == DocumentDefinitionOptions.TimerSaver)
+            if(HasOption(DocumentDefinitionOptions.TimerSaver))
             {
                 _saveTimer = new Timer();
                 _saveTimer.Interval = 1000;
                 _saveTimer.Tick += new EventHandler(_saveTimer_Tick);
             }
 
-
-
-            if (TabManager.GetInstance().TabControl != null)
-            {
-                TabButton = (TabButton)TabManager.GetInstance().CreateTabButton(this);
-
-                if ((this.Document.Definition.Options & DocumentDefinitionOptions.DontShowLabel) == DocumentDefinitionOptions.DontShowLabel)
-                {
-                    this.TabButton.SetWidth(40);
-                }
-
-                this.TabButton.SetText(this.Filename);
-
-                TabButton.Click += new EventHandler(TabButton_Click);
-            }
         }
 
         #endregion
 
         #region Methods
 
+        protected void Close()
+        {
+            EditorContainerManager.CloseEditor(this);
+        }
+
         public void PrepareToClose()
         {
-
-            //Since if !DocumentDefinitionOptions.Virtual there is not _timer set;
+            //if !DocumentDefinitionOptions.Virtual there is not _timer set;
             if (_saveTimer != null)
-                _saveTimer.Stop();
+                _saveTimer.Dispose();
 
             DocumentManager.ToXml(this.Document, this.Filename);
+        }
+
+        public bool HasOption(DocumentDefinitionOptions Option)
+        {
+            return (DocumentManager.GetDocumentDefinitionByClrType(this.Document.GetType()).Options & Option) == Option;
         }
 
         #endregion
@@ -145,11 +140,6 @@ namespace primeira.Editor.Components
                 _saveTimer.Stop();
 
             DocumentManager.ToXml(this.Document, this.Filename);
-        }
-
-        private void TabButton_Click(object sender, EventArgs e)
-        {
-            this.Selected = true;
         }
 
         private void EditorBase_OnChanged()
@@ -167,6 +157,8 @@ namespace primeira.Editor.Components
         #region Events
 
         public event SelectedDelegate OnSelected;
+
+
 
         public delegate void ChangedDelegate();
         public event ChangedDelegate OnChanged;

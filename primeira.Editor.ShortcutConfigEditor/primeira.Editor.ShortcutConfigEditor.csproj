@@ -8,7 +8,7 @@
     <ProjectGuid>{F6081561-B784-42B7-ACCC-04156E85FEE5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>primeira.Editor.ShortCutConfigEditor</RootNamespace>
+    <RootNamespace>primeira.Editor</RootNamespace>
     <AssemblyName>primeira.Editor.ShortCutConfigEditor</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\primeira.Editor.Application\bin\Debug\Addons\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -76,6 +76,9 @@
     <EmbeddedResource Include="ShortcutConfigEditor.resx">
       <DependentUpon>ShortcutConfigEditor.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\File.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

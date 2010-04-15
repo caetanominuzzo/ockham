@@ -40,11 +40,41 @@ namespace primeira.Editor.Components
             set { m_image = value; }
         }
 
+        private static Color _parentFormBackColor = Color.Cyan;
+
+        private Form getParentForm(Control c)
+        {
+            if (c == null)
+                return null;
+            else if (c is Form)
+                return (Form)c;
+            else return getParentForm(c.Parent);
+        }
+
+        private Color getParentFormBackColor(Control c)
+        {
+            if (_parentFormBackColor == Color.Cyan)
+            {
+                Control tmp = getParentForm(c);
+                if (tmp == null)
+                    _parentFormBackColor = this.BackColor;
+                else
+                    _parentFormBackColor = tmp.BackColor;
+
+                //Windows 7 transparency
+                if (_parentFormBackColor == Color.Black)
+                    _parentFormBackColor = Color.Transparent;
+            }
+
+            return _parentFormBackColor;
+        }
+
         protected override void OnPaint(PaintEventArgs pevent)
         {
+
             Rectangle r = new Rectangle(0, 0, this.Width, this.Height);
 
-            pevent.Graphics.Clear(this.BackColor);
+            pevent.Graphics.Clear(getParentFormBackColor(this));
 
             if (m_image != null)
             {

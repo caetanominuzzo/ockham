@@ -8,33 +8,15 @@ using primeira.Editor;
 namespace primeira.Editor
 {
     [DataContract()]
-    public class FileBrowserDocument : DocumentBase
-    {
-        private static DocumentDefinition _definition =
-            new DocumentDefinition()
-            {
-                Name = "File Browser Configuration",
+    [DocumentDefinition(Name = "File Browser Configuration",
                 DefaultFileName = "default",
                 Description = "File & Tab Operations",
                 DefaultFileExtension = ".filebrowser",
-                Id = new Guid("513ff96c-0d23-44f4-82ab-0dea5a62dcd3"),
-                Icon = Image.FromFile(@"D:\Desenv\Ockham\branches\1\primeira.Editor.FileBrowserEditor\Resources\folder_noborder.gif"),
                 DefaultEditor = typeof(FileBrowserEditor),
-                Options = (DocumentDefinitionOptions.DontShowLabel | DocumentDefinitionOptions.TimerSaver | DocumentDefinitionOptions.NeverClose | DocumentDefinitionOptions.OpenFromTypeByDefaultName)
-            };
-
-        public static DocumentDefinition DocumentDefinition
-        {
-            get { return _definition; }
-        }
-
-        public override DocumentDefinition Definition
-        {
-            get { return _definition; }
-        }
-
-        #region Data
-
+                TabTitle="File Tab",
+                Options = (DocumentDefinitionOptions.DontShowLabelAndFixWidth | DocumentDefinitionOptions.TimerSaver | DocumentDefinitionOptions.NeverClose | DocumentDefinitionOptions.OpenFromTypeDefaultName))]
+    public class FileBrowserDocument : DocumentBase
+    {
         private List<string> _recent = new List<string>();
 
         public void AddRecent(string filename)
@@ -58,13 +40,5 @@ namespace primeira.Editor
             }
 
         }
-
-        #endregion
-
-        public static DocumentBase ToObject(string filename)
-        {
-            return DocumentBase.ToObject(filename, typeof(FileBrowserDocument));
-        }
-
     }
 }

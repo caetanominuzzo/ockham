@@ -7,13 +7,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "primeira.Editor.FileBrowser
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "primeira.Editor.TabControlEditor", "primeira.Editor.TabControlEditor\primeira.Editor.TabControlEditor.csproj", "{CF52C6E4-2866-47CD-8F50-2584DFBD8938}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "primeira.Editor.MetaEditor", "primeira.Editor.MetaEditor\primeira.Editor.MetaEditor.csproj", "{BBE46FF0-457D-489D-82ED-2AF19FE8693B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "primeira.Editor.ShortcutConfigEditor", "primeira.Editor.ShortcutConfigEditor\primeira.Editor.ShortcutConfigEditor.csproj", "{F6081561-B784-42B7-ACCC-04156E85FEE5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "primeira.Editor", "primeira.Editor\primeira.Editor.csproj", "{60E195BA-125C-4DC4-A7B9-26C033CD1DCC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "primeira.Editor.Application", "primeira.Editor.Application\primeira.Editor.Application.csproj", "{A9C4D2E8-A829-480D-99E5-A67E254BA687}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "primeira.Editor.MetaEditor", "primeira.Editor.MetaEditor\primeira.Editor.MetaEditor.csproj", "{BBE46FF0-457D-489D-82ED-2AF19FE8693B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rd Party", "3rd Party", "{9681272B-BAB0-4B80-8C43-CC0C6B64EF32}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UndoRedoFramework", "3rd Party\UndoRedoFramework\UndoRedoFramework.csproj", "{641578C7-4522-4158-867A-30AECBB3EE73}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,10 +37,6 @@ Global
 		{CF52C6E4-2866-47CD-8F50-2584DFBD8938}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF52C6E4-2866-47CD-8F50-2584DFBD8938}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF52C6E4-2866-47CD-8F50-2584DFBD8938}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BBE46FF0-457D-489D-82ED-2AF19FE8693B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BBE46FF0-457D-489D-82ED-2AF19FE8693B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BBE46FF0-457D-489D-82ED-2AF19FE8693B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BBE46FF0-457D-489D-82ED-2AF19FE8693B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F6081561-B784-42B7-ACCC-04156E85FEE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F6081561-B784-42B7-ACCC-04156E85FEE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6081561-B784-42B7-ACCC-04156E85FEE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -49,8 +49,19 @@ Global
 		{A9C4D2E8-A829-480D-99E5-A67E254BA687}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9C4D2E8-A829-480D-99E5-A67E254BA687}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9C4D2E8-A829-480D-99E5-A67E254BA687}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBE46FF0-457D-489D-82ED-2AF19FE8693B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBE46FF0-457D-489D-82ED-2AF19FE8693B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBE46FF0-457D-489D-82ED-2AF19FE8693B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBE46FF0-457D-489D-82ED-2AF19FE8693B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{641578C7-4522-4158-867A-30AECBB3EE73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{641578C7-4522-4158-867A-30AECBB3EE73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{641578C7-4522-4158-867A-30AECBB3EE73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{641578C7-4522-4158-867A-30AECBB3EE73}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{641578C7-4522-4158-867A-30AECBB3EE73} = {9681272B-BAB0-4B80-8C43-CC0C6B64EF32}
 	EndGlobalSection
 EndGlobal

@@ -9,10 +9,8 @@ using System.Threading;
 namespace primeira.Editor
 {
     [DataContract()]
-    public abstract class DocumentBase : IExtensibleDataObject 
+    public abstract class DocumentBase 
     {
-        public abstract DocumentDefinition Definition { get; }
-
         public void ToXml(string filename)
         {
             Stream sm = File.Create(filename);
@@ -35,6 +33,7 @@ namespace primeira.Editor
         {
             try
             {
+
                 Stream sm = File.OpenRead(filename);
 
                 Type[] knownTypes = DocumentManager.GetKnownDocumentTypes();
@@ -48,6 +47,9 @@ namespace primeira.Editor
                     10000000, false, true, null);
 
                 DocumentBase res = (DocumentBase)ser.ReadObject(sm);
+
+                UndoRedoFramework.UndoRedoManager.FlushHistory();
+
                 sm.Close();
 
                 return res;
@@ -59,16 +61,5 @@ namespace primeira.Editor
             
             return null;
         }
-
-        #region IExtensibleDataObject Members
-
-        private ExtensionDataObject _extensionData;
-        public virtual ExtensionDataObject ExtensionData
-        {
-            get { return _extensionData; }
-            set { _extensionData = value; }
-        }
-
-        #endregion
     }
 }

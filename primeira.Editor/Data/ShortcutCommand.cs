@@ -5,12 +5,12 @@ using System.Reflection;
 
 namespace primeira.Editor
 {
-    internal class ShortcutCommand
+    public class ShortcutCommand
     {
-        internal string Name;
-        internal string Description;
+        public string Name;
+        public string Description;
         internal MethodInfo Method;
         internal object Target;
-        internal string Escope;
+        public string Escope;
     }
 }

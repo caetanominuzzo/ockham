@@ -8,7 +8,7 @@
     <ProjectGuid>{209D2421-5C0D-45B5-8C5D-41F414FCA6A7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>primeira.Editor.FileBrowserEditor</RootNamespace>
+    <RootNamespace>primeira.Editor</RootNamespace>
     <AssemblyName>primeira.Editor.FileBrowserEditor</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\primeira.Editor.Application\bin\Debug\Addons\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -87,13 +87,17 @@
       <Project>{F5E3F2D5-0629-4BEF-BC64-718E8483655E}</Project>
       <Name>primeira.Editor.Components</Name>
     </ProjectReference>
+    <ProjectReference Include="..\primeira.Editor.TabControlEditor\primeira.Editor.TabControlEditor.csproj">
+      <Project>{CF52C6E4-2866-47CD-8F50-2584DFBD8938}</Project>
+      <Name>primeira.Editor.TabControlEditor</Name>
+    </ProjectReference>
     <ProjectReference Include="..\primeira.Editor\primeira.Editor.csproj">
       <Project>{60E195BA-125C-4DC4-A7B9-26C033CD1DCC}</Project>
       <Name>primeira.Editor</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\folder_noborder.gif" />
+    <EmbeddedResource Include="Resources\File.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -17,7 +17,7 @@ namespace primeira.Editor
 
         void SetText(string tooltip);
 
-        void SetWidth(int width);
+        void SetBounds(Rectangle bounds);
 
         
     }

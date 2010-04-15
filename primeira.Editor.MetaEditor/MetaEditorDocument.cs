@@ -4,40 +4,48 @@ using System.Linq;
 using System.Text;
 using System.Runtime.Serialization;
 using System.Drawing;
+using UndoRedoFramework;
 using primeira.Editor;
+
 
 namespace primeira.Editor
 {
     [DataContract()]
-    public class MetaEditorDocument : DocumentBase
-    {
-        private static DocumentDefinition _definition =
-            new DocumentDefinition()
-            {
-                Name = "Meta Editor",
+    [DocumentDefinition(Name = "Meta Editor",
                 DefaultFileName = "Editor {0}",
                 Description = "An editor for editors.",
                 DefaultFileExtension = ".metaeditor",
-                Id = new Guid("513ff96c-0d23-44f4-82ab-0dea5a62dcd3"),
                 DefaultEditor = typeof(MetaEditor),
-                Options = DocumentDefinitionOptions.UserFile,
-                Icon = Image.FromFile(@"D:\Desenv\Ockham\branches\1\primeira.Editor.TabControlEditor\file1.gif")
-            };
-
-        public static DocumentDefinition DocumentDefinition
-        {
-            get { return _definition; }
-        }
-
-        public override DocumentDefinition Definition
-        {
-            get { return _definition; }
-        }
-
-        #region Data
+                Options = DocumentDefinitionOptions.UserFile)]
+    public class MetaEditorDocument : DocumentBase
+    {
+        UndoRedo<string> _editorName = new UndoRedo<string>(string.Empty);
+        UndoRedo<string> _defaultFileName = new UndoRedo<string>();
+        UndoRedo<string> _editorDescription = new UndoRedo<string>();
+        UndoRedo<string> _defaultFileExtension = new UndoRedo<string>();
 
         [DataMember()]
-        public string EditorName { get; set; }
+        public string EditorName
+        {
+            get { return _editorName.Value; }
+            set
+            {
+                using (UndoRedoManager.Start("Edit Editor Name"))
+                {
+                    if (_editorName == null)
+                        _editorName = new UndoRedo<string>(string.Empty);
+
+                    _editorName.Value = value;
+
+                    UndoRedoManager.Commit();
+
+                    
+                }
+            }
+        }
+
+        //[DataMember()]
+        //public string EditorName { get; set; }
 
         [DataMember()]
         public string DefaultFileName { get; set; }
@@ -48,18 +56,6 @@ namespace primeira.Editor
         [DataMember()]
         public string DefaultFileExtension { get; set; }
 
-        [DataMember()]
-        public Guid EditorGuid { get; set; }
-
-        [DataMember()]
-        public string Icon { get; set; }
-
-        #endregion
-
-        public static DocumentBase ToObject(string filename)
-        {
-            return DocumentBase.ToObject(filename, typeof(MetaEditorDocument));
-        }
     }
 }
 

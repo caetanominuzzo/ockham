@@ -26,7 +26,7 @@ namespace primeira.Editor
                 return "recently saved";
         }
 
-        public static string GetNewFile(DocumentDefinition fileVersion, string basedir)
+        public static string GetNewFile(DocumentDefinitionAttribute fileVersion, string basedir)
         {
             string result = string.Empty;
 
@@ -41,8 +41,6 @@ namespace primeira.Editor
             }
             return result;
         }
-
-        
 
         #region Recent file
 

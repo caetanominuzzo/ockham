@@ -56,12 +56,6 @@
     <Compile Include="EditorBaseButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="MessageControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="MessageControl.Designer.cs">
-      <DependentUpon>MessageControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="NonModalMessage.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -71,17 +65,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="TabButton.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TabButton.resx">
-      <DependentUpon>TabButton.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
