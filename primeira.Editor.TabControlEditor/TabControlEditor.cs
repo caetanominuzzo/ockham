@@ -14,7 +14,7 @@ using primeira.Editor.Components;
 namespace primeira.Editor
 {
     [EditorDefinition(DocumentType = typeof(TabControlDocument))]
-    [PluginDefinition(PluginDefinitions.SystemPlugin)]
+    [AddonDefinition(AddonDefinitions.SystemAddon)]
     public partial class TabControlEditor : EditorBase, IMessageControl, IShorcutEscopeProvider
     {
 
@@ -55,8 +55,8 @@ namespace primeira.Editor
             TabControlManager.GetInstance().RefreshTabButtonSize();
         }
 
-        [PluginInitialize()]
-        public static void PluginInitialize()
+        [AddonInitialize()]
+        public static void AddonInitialize()
         {
             Control parent = Application.OpenForms[0];
 

@@ -9,7 +9,7 @@ using primeira.Editor.Components;
 namespace primeira.Editor
 {
     [EditorDefinition(DocumentType = typeof(FileBrowserDocument))]
-    [PluginDefinition(PluginDefinitions.WaitEditorContainer | PluginDefinitions.SystemDelayedInitializationPlugin)]
+    [AddonDefinition(AddonDefinitions.WaitEditorContainer | AddonDefinitions.SystemDelayedInitializationAddon)]
     public partial class FileBrowserEditor :  EditorBase, IRecentFileControl
     {
         #region Fields
@@ -129,7 +129,7 @@ namespace primeira.Editor
 
         #endregion
 
-        [PluginInitialize()]
+        [AddonInitialize()]
         public static void RegisterEditor()
         {
             EditorManager.RegisterEditor(typeof(FileBrowserEditor));

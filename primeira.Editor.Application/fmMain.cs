@@ -25,9 +25,9 @@ namespace primeira.Editor
             //try to set windows 7 style
             DwmHelper.SeventishIt(this);
 
-            PluginManager.Discovery();
+            AddonManager.Discovery();
 
-            //TODO:Remove Shortcut manager dependecy. (Maybe using InitializePlugin attribute.)
+            //TODO:Remove Shortcut manager dependecy. (Maybe using InitializeAddon attribute.)
             ShortcutManager.LoadFromForm(this);
         }
 
