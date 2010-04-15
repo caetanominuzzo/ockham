@@ -15,7 +15,7 @@ using System.CodeDom.Compiler;
 namespace primeira.Editor
 {
     [EditorDefinition(DocumentType=typeof(MetaEditorDocument))]
-    [PluginDefinition(PluginDefinitions.WaitEditorContainer | PluginDefinitions.UserPlugin)]
+    [AddonDefinition(AddonDefinitions.WaitEditorContainer | AddonDefinitions.UserAddon)]
     public partial class MetaEditor : EditorBase, IShorcutEscopeProvider
     {
         public MetaEditor(string filename, DocumentBase data)
@@ -62,8 +62,8 @@ namespace primeira.Editor
 
         }
 
-        [PluginInitialize()]
-        public static void PluginInitialize()
+        [AddonInitialize()]
+        public static void AddonInitialize()
         {
             EditorManager.RegisterEditor(typeof(MetaEditor));
         }

@@ -13,7 +13,7 @@ using primeira.Editor;
 namespace primeira.Editor.Components
 {
 
-    public class EditorBase : UserControl, IEditor, IPlugin
+    public class EditorBase : UserControl, IEditor, IAddon
     {
         #region Fields
 
