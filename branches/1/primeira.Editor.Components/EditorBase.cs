@@ -12,8 +12,8 @@ using primeira.Editor;
 
 namespace primeira.Editor.Components
 {
-
-    public class EditorBase : UserControl, IEditor, IAddon
+    [AddonDefinition(AddonDefinitions.None)]
+    public class EditorBase : UserControl, IEditor
     {
         #region Fields
 
@@ -55,7 +55,7 @@ namespace primeira.Editor.Components
         {
             get
             {
-                DocumentDefinitionAttribute dd = DocumentManager.GetDocumentDefinitionByClrType(this.Document.GetType());
+                DocumentDefinitionAttribute dd = DocumentManager.GetDocumentDefinition(this.Document.GetType());
                 return dd.DefaultFileName + dd.DefaultFileExtension;
             }
         }
@@ -66,17 +66,6 @@ namespace primeira.Editor.Components
 
         public EditorBase()
         {
-        }
-      
-        public EditorBase(string filename, DocumentBase data, Type documentType)
-        {
-            if (data == null)
-                this.Document = (DocumentBase)documentType.GetConstructor(System.Type.EmptyTypes).Invoke(System.Type.EmptyTypes);
-            else
-                this.Document = data;
-
-            this.Filename = filename;
-
             this.Dock = DockStyle.Fill;
 
             this.BorderStyle = BorderStyle.None;
@@ -88,24 +77,27 @@ namespace primeira.Editor.Components
             this.BackColor = Color.White;
 
             this.OnChanged += new ChangedDelegate(EditorBase_OnChanged);
+        }
 
+        public EditorBase(string filename, DocumentBase data, Type documentType) : this()
+        {
+            if (data == null)
+                this.Document = DocumentManager.GetInstance(documentType);
+            else
+                this.Document = data;
+
+            this.Filename = filename;
+            
             this.DocumentType = documentType;
 
-            InitializeComponent();
-
-        }
-        
-        private void InitializeComponent()
-        {
-            if(HasOption(DocumentDefinitionOptions.TimerSaver))
+            if (HasOption(DocumentDefinitionOptions.TimerSaver))
             {
                 _saveTimer = new Timer();
                 _saveTimer.Interval = 1000;
                 _saveTimer.Tick += new EventHandler(_saveTimer_Tick);
             }
-
         }
-
+        
         #endregion
 
         #region Methods
@@ -126,7 +118,7 @@ namespace primeira.Editor.Components
 
         public bool HasOption(DocumentDefinitionOptions Option)
         {
-            return (DocumentManager.GetDocumentDefinitionByClrType(this.Document.GetType()).Options & Option) == Option;
+            return (DocumentManager.GetDocumentDefinition(this.Document.GetType()).Options & Option) > 0;
         }
 
         #endregion

@@ -101,7 +101,7 @@ namespace primeira.Editor
 
             this.TabStop = true;
 
-            DocumentDefinitionAttribute def = DocumentManager.GetDocumentDefinitionByClrType(editor.Document.GetType());
+            DocumentDefinitionAttribute def = DocumentManager.GetDocumentDefinition(editor.Document.GetType());
 
             if (def.TabTitle != null)
                 SetText(def.TabTitle);

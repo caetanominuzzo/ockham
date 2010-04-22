@@ -50,7 +50,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Business\DocumentBase.cs" />
+    <Compile Include="Business\DocumentBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Business\EditorContainerManager.cs" />
     <Compile Include="Business\AddonManager.cs" />
     <Compile Include="Business\ShortcutManager.cs" />
@@ -66,10 +68,10 @@
     <Compile Include="Data\Shortcut.cs" />
     <Compile Include="Data\ShortcutCommand.cs" />
     <Compile Include="Data\ShortcutVisibilityAttribute.cs" />
+    <Compile Include="Document\AddonDiscoveryDocument.cs" />
     <Compile Include="Interface\IEditor.cs" />
     <Compile Include="Interface\IEditorContainer.cs" />
     <Compile Include="Interface\IMessageControl.cs" />
-    <Compile Include="Interface\IPlugin.cs" />
     <Compile Include="Interface\IRecentFileControl.cs" />
     <Compile Include="Interface\IRevision.cs" />
     <Compile Include="Interface\IShorcutEscopeProvider.cs" />

@@ -70,7 +70,7 @@ namespace primeira.Editor
 
             foreach (DocumentDefinitionAttribute def in defs)
             {
-                if ((def.Options & DocumentDefinitionOptions.ShowInQuickLauchDraft) == DocumentDefinitionOptions.ShowInQuickLauchDraft)
+                if ((def.Options & DocumentDefinitionOptions.ShowInQuickLauchDraft) > 0)
                 {
                     int i = dgQuickLauch.Rows.Add(
                             new object[] { GetDraftImage(EditorManager.GetManifestResourceFileIcon(def.DefaultFileExtension)),
@@ -83,7 +83,7 @@ namespace primeira.Editor
 
             foreach (DocumentDefinitionAttribute def in defs)
             {
-                if ((def.Options & DocumentDefinitionOptions.ShowIQuickLauchnOpen) == DocumentDefinitionOptions.ShowIQuickLauchnOpen)
+                if ((def.Options & DocumentDefinitionOptions.ShowIQuickLauchnOpen) > 0)
                 {
                     int i = dgQuickLauch.Rows.Add(
                             new object[] {  EditorManager.GetManifestResourceFileIcon(def.DefaultFileExtension),
@@ -113,7 +113,7 @@ namespace primeira.Editor
             {
                 if (File.Exists(file))
                 {
-                    docDef = DocumentManager.GetDocumentDefinitionByFilename(file);
+                    docDef = DocumentManager.GetDocumentDefinition(file);
 
                     lastWrite = d.Subtract(File.GetLastWriteTime(file));
 
@@ -130,7 +130,7 @@ namespace primeira.Editor
         #endregion
 
         [AddonInitialize()]
-        public static void RegisterEditor()
+        public static void AddonInitialize()
         {
             EditorManager.RegisterEditor(typeof(FileBrowserEditor));
 
