@@ -5,6 +5,7 @@ using System.Text;
 
 namespace primeira.Editor
 {
+    [AttributeUsage(AttributeTargets.Method)]
     public class AddonInitializeAttribute : Attribute
     {
     }

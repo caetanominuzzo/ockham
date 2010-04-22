@@ -12,18 +12,18 @@ namespace primeira.Editor
 
     public static class EditorManager
     {
-        #region Register & Load
+        private static List<Type> _knownEditors;
 
-        private static List<Type> _registeredEditors;
+        #region Register & Load
 
         public static void RegisterEditor(Type type)
         {
-            if (_registeredEditors == null)
-                _registeredEditors = new List<Type>();
+            if (_knownEditors == null)
+                _knownEditors = new List<Type>();
 
-            if (!_registeredEditors.Contains(type))
+            if (!_knownEditors.Contains(type))
             {
-                _registeredEditors.Add(type);
+                _knownEditors.Add(type);
 
                 EditorDefinitionAttribute[] dd = (EditorDefinitionAttribute[])type.GetCustomAttributes(typeof(EditorDefinitionAttribute), false);
 
@@ -31,44 +31,6 @@ namespace primeira.Editor
                     DocumentManager.RegisterDocument(d.DocumentType);
             }
         }
-
-        public static IEditor CreateEditorByFilename(string filename)
-        {
-            IEditor res = null;
-            DocumentBase doc = null;
-
-            FileInfo f = new FileInfo(filename);
-
-            if (!f.Exists)
-            {
-                f.Create();
-                f.Refresh();
-            }
-
-            if (f.Length == 0)
-            {
-                DocumentDefinitionAttribute dd = DocumentManager.GetDocumentDefinitionByFilename(filename);
-
-                if (dd == null)
-                {
-                    MessageManager.Alert("There is no editor for that file type.");
-                    return null;
-                }
-
-                res = (IEditor)dd.DefaultEditor.GetConstructor(_defaultEditorCtor).Invoke(new object[2] { filename, doc });
-            }
-            else
-            {
-                doc = DocumentManager.ToObject(filename);
-
-                if (doc != null)
-                    res = (IEditor)DocumentManager.GetDocumentDefinitionByClrType(doc.GetType()).DefaultEditor.GetConstructor(_defaultEditorCtor).Invoke(new object[2] { filename, doc });
-            }
-
-            return res;
-        }
-
-        private static Type[] _defaultEditorCtor = new Type[2] { typeof(string), typeof(DocumentBase) };
 
         /// <summary>
         /// Load the specified file in the registered editor.
@@ -80,22 +42,10 @@ namespace primeira.Editor
         {
             try
             {
-                //Verify if the file is already open
-                IEditor res = EditorContainerManager.GetOpenEditorByFilename(filename);
+                Type documentType = DocumentManager.GetDocumentType(filename);
 
-                if (res != null)
-                {
-                    EditorContainerManager.AddEditor(res);
-                    return res;
-                }
+                return LoadEditor(documentType, filename);
 
-                //Load a new editor
-                res = EditorManager.CreateEditorByFilename(filename);
-
-                if (res != null)
-                    EditorContainerManager.AddEditor(res);
-
-                return res;
             }
             catch (Exception ex)
             {
@@ -113,16 +63,54 @@ namespace primeira.Editor
         /// <returns>The editor with the default file loaded.</returns>
         public static IEditor LoadEditor(Type documentType)
         {
-            DocumentDefinitionAttribute dd = DocumentManager.GetDocumentDefinitionByClrType(documentType);
+            DocumentDefinitionAttribute dd = DocumentManager.GetDocumentDefinition(documentType);
 
-            if ((dd.Options & DocumentDefinitionOptions.OpenFromTypeDefaultName) == DocumentDefinitionOptions.OpenFromTypeDefaultName)
+            if ((dd.Options & DocumentDefinitionOptions.OpenFromTypeDefaultName) > 0)
             {
-                return LoadEditor(dd.DefaultFileName + dd.DefaultFileExtension);
+                return LoadEditor(documentType, dd.DefaultFileName + dd.DefaultFileExtension);
             }
 
             return null;
         }
-    
+
+        private static IEditor CreateEditorByFilename(Type documentType, string filename)
+        {
+            IEditor res = null;
+
+            DocumentDefinitionAttribute def = DocumentManager.GetDocumentDefinition(documentType);
+
+            if (def == null)
+            {
+                throw new Exception("There is no editor for that file type.");
+            }
+
+            DocumentBase doc = DocumentManager.LoadDocument(documentType, filename);
+
+            res = (IEditor)def.DefaultEditor.GetConstructor(_defaultEditorCtor).Invoke(new object[2] { filename, doc });
+
+            return res;
+        }
+
+        private static Type[] _defaultEditorCtor = new Type[2] { typeof(string), typeof(DocumentBase) };
+        
+        private static IEditor LoadEditor(Type documentType, string filename)
+        {
+            //Verify if the file is already open
+            IEditor res = EditorContainerManager.GetOpenEditorByFilename(filename);
+
+            if (res != null)
+            {
+                EditorContainerManager.AddEditor(res);
+                return res;
+            }
+
+            res = EditorManager.CreateEditorByFilename(documentType, filename);
+
+            if (res != null)
+                EditorContainerManager.AddEditor(res);
+
+            return res;
+        }
 
         #endregion
 
@@ -152,9 +140,9 @@ namespace primeira.Editor
 
         public static Type GetEditorTypeByFileExtension(string extension)
         {
-            var x = (from c in _registeredEditors
+            var x = (from c in _knownEditors
                      where ((EditorDefinitionAttribute[])c.GetCustomAttributes(typeof(EditorDefinitionAttribute), false)).Count<EditorDefinitionAttribute>(z =>
-                         DocumentManager.GetDocumentDefinitionByClrType(z.DocumentType).DefaultFileExtension == extension) > 0
+                         DocumentManager.GetDocumentDefinition(z.DocumentType).DefaultFileExtension == extension) > 0
                      select c).First();
 
             
