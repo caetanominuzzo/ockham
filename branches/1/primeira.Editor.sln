@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rd Party", "3rd Party", "{9681272B-BAB0-4B80-8C43-CC0C6B64EF32}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "primeira.Editor.Components", "primeira.Editor.Components\primeira.Editor.Components.csproj", "{F5E3F2D5-0629-4BEF-BC64-718E8483655E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "primeira.Editor.FileBrowserEditor", "primeira.Editor.FileBrowserEditor\primeira.Editor.FileBrowserEditor.csproj", "{209D2421-5C0D-45B5-8C5D-41F414FCA6A7}"
@@ -14,8 +16,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "primeira.Editor.Application", "primeira.Editor.Application\primeira.Editor.Application.csproj", "{A9C4D2E8-A829-480D-99E5-A67E254BA687}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "primeira.Editor.MetaEditor", "primeira.Editor.MetaEditor\primeira.Editor.MetaEditor.csproj", "{BBE46FF0-457D-489D-82ED-2AF19FE8693B}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rd Party", "3rd Party", "{9681272B-BAB0-4B80-8C43-CC0C6B64EF32}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UndoRedoFramework", "3rd Party\UndoRedoFramework\UndoRedoFramework.csproj", "{641578C7-4522-4158-867A-30AECBB3EE73}"
 EndProject
