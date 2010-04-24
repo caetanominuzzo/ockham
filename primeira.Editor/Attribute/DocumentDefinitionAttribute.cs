@@ -37,6 +37,8 @@ namespace primeira.Editor
         ShowIQuickLauchnOpen = 32,
         //Used for open default.tabcontrol and default.filebrowser
         OpenFromTypeDefaultName = 128,
+        //The document must implement is own ToObject & ToXml methods
+        CustomSerialization = 256,
         //Default option for users editors
         UserFile = TimerSaver | ShowInRecents | ShowInQuickLauchDraft | ShowIQuickLauchnOpen,
     }

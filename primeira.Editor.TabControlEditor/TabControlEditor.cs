@@ -188,7 +188,7 @@ namespace primeira.Editor
         }
 
         #region IMessageControl Members
-        
+
         public void Send(MessageSeverity severity, string message)
         {
             switch (severity)
@@ -198,9 +198,13 @@ namespace primeira.Editor
                     NonModalMessage.GetInstance(message, pnDocArea);
                     break;
                 case MessageSeverity.Error:
+
+                    ((ApplicationLogDocument)DocumentManager.GetInstance(typeof(ApplicationLogDocument))).AddLog(message);
+
                     MessageBox.Show(message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 case MessageSeverity.Fatal:
+                    ((ApplicationLogDocument)DocumentManager.GetInstance(typeof(ApplicationLogDocument))).AddLog(message);
                     MessageBox.Show(message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Stop);
                     Application.Exit();
                     break;

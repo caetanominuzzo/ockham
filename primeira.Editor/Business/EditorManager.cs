@@ -88,9 +88,11 @@ namespace primeira.Editor
             {
                 res = (IEditor)def.DefaultEditor.GetConstructor(_defaultEditorCtor).Invoke(new object[1] { fileName });
             }
-            catch(TargetInvocationException)
+            catch(TargetInvocationException ex)
             {
-                MessageManager.Send("Can't create editor for ", fileName);
+                MessageManager.Send(
+                    MessageSeverity.Error,
+                    "Can't create editor for ", fileName, ".\n", ex.Message);
             }
 
             return res;

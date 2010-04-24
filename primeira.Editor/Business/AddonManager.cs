@@ -49,13 +49,10 @@ namespace primeira.Editor
                         InitializationError(addons);
                 }
             }
-            catch (FileNotFoundException ex)
+            catch (IOException ex)
             {
+                MessageManager.Send(MessageSeverity.Error, "There is an error reading an addon. Please see application log. \n", ex.ToString());
             }
-            catch (DirectoryNotFoundException ex)
-            {
-            }
-            catch (Secu
         }
 
         private static void GetAllAvaiableAddonTypes(ref List<Type> addons, string addonDir)
