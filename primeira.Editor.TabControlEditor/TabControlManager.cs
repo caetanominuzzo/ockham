@@ -78,7 +78,8 @@ namespace primeira.Editor
             {
                 iiFixedSizeWidth = iiFixedSizeCount * (FIXED_SIZE_TABBUTTON_WIDTH + iiLeftMargin);
 
-                if ((DocumentManager.GetDocumentDefinition(editor.FileName).Options & DocumentDefinitionOptions.DontShowLabelAndFixWidth) > 0)
+                //if the document is open it must have a doc definition, so no exception handling here.
+                if (DocumentManager.GetDocumentDefinition(editor.FileName).Options.HasFlag(DocumentDefinitionOptions.DontShowLabelAndFixWidth)
                 {
                     _tabcontrol.TabButton(editor).SetBounds(new Rectangle(iiAbsoluteLeftMargin + iiFixedSizeWidth + iiLeftMargin, 3, FIXED_SIZE_TABBUTTON_WIDTH, 25));
 
