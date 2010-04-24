@@ -195,18 +195,18 @@ namespace primeira.Editor
             {
                 case MessageSeverity.Information: 
                 case MessageSeverity.Alert:
-                    NonModalMessage.GetInstance(message, pnDocArea);
+                        NonModalMessage.GetInstance(message, pnDocArea);
                     break;
+
                 case MessageSeverity.Error:
-
-                    ((ApplicationLogDocument)DocumentManager.GetInstance(typeof(ApplicationLogDocument))).AddLog(message);
-
-                    MessageBox.Show(message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        LogFileManager.Log(message);
+                        MessageBox.Show(message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
+
                 case MessageSeverity.Fatal:
-                    ((ApplicationLogDocument)DocumentManager.GetInstance(typeof(ApplicationLogDocument))).AddLog(message);
-                    MessageBox.Show(message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                    Application.Exit();
+                        LogFileManager.Log(message);
+                        MessageBox.Show(message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                        Application.Exit();
                     break;
             }
         }

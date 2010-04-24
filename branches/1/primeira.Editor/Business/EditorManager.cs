@@ -48,15 +48,23 @@ namespace primeira.Editor
                 return res;
             }
 
-            //Open a new
-            res = EditorManager.CreateEditor(fileName);
+            try
+            {
+                //Open a new
+                res = EditorManager.CreateEditor(fileName);
+            }
+            catch (TargetInvocationException ex)
+            {
+                LogFileManager.Log(
+                    "Can't create editor for ", fileName, ".\n", ex.InnerException.ToString());
+            }
 
             if (res != null)
             {
                 EditorContainerManager.AddEditor(res);
                 return res;
             }
-            
+
             return null;
         }
 
@@ -84,22 +92,13 @@ namespace primeira.Editor
 
             DocumentDefinitionAttribute def = DocumentManager.GetDocumentDefinition(fileName);
 
-            try
-            {
-                res = (IEditor)def.DefaultEditor.GetConstructor(_defaultEditorCtor).Invoke(new object[1] { fileName });
-            }
-            catch(TargetInvocationException ex)
-            {
-                MessageManager.Send(
-                    MessageSeverity.Error,
-                    "Can't create editor for ", fileName, ".\n", ex.Message);
-            }
+            res = (IEditor)def.DefaultEditor.GetConstructor(_defaultEditorCtor).Invoke(new object[1] { fileName });
 
             return res;
         }
 
         private static Type[] _defaultEditorCtor = new Type[1] { typeof(string) };
-        
+
         #region Get Editor Data
 
         public static Image GetManifestResourceFileIcon(string extension)
@@ -124,7 +123,7 @@ namespace primeira.Editor
                          DocumentManager.GetDocumentDefinition(z.DocumentType).DefaultFileExtension == extension) > 0
                      select c).First();
 
-            
+
             return (Type)x;
         }
 
