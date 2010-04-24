@@ -88,12 +88,31 @@ namespace primeira.Editor
         {
             DocumentDefinitionAttribute dd = DocumentManager.GetDocumentDefinition(documentType);
 
+            if (dd == null)
+            {
+                MessageManager.Send(
+                    MessageSeverity.Error,
+                    string.Format(
+                        Message_us.DocumentMissingDocumentDefinitionAttribute,
+                        documentType.Name));
+
+                return null;
+            }
+
             if ((dd.Options & DocumentDefinitionOptions.OpenFromTypeDefaultName) > 0)
             {
                 return LoadEditor(dd.DefaultFileName + dd.DefaultFileExtension);
             }
+            else
+            {
+                MessageManager.Send(
+                    MessageSeverity.Error,
+                    string.Format(
+                        Message_us.DocumentMissingOpenFromTypeDefaultName,
+                        documentType.Name));
 
-            return null;
+                return null;
+            }
         }
 
         private static IEditor CreateEditor(string fileName)

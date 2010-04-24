@@ -109,12 +109,7 @@ namespace primeira.Editor
         /// <returns>The DocumentDefinitionAttribute of the given file extension</returns>
         private static DocumentDefinitionAttribute GetDocumentDefinitionByFileExtension(string extension)
         {
-            DocumentDefinitionAttribute tmp = (from x in _knownDocumentDefinition where x.DefaultFileExtension == extension select (DocumentDefinitionAttribute)x).FirstOrDefault();
-
-            if (tmp == null)
-                MessageManager.Send("No Editor found for ", extension, " files.");
-
-            return tmp;
+            return (from x in _knownDocumentDefinition where x.DefaultFileExtension == extension select (DocumentDefinitionAttribute)x).FirstOrDefault();
         }
 
         /// <summary>
@@ -136,7 +131,11 @@ namespace primeira.Editor
 
         #region Dialogs
 
-        public static string GetDialogFilterString()
+        /// <summary>
+        /// Renders a dialog filter string with all registered document types.
+        /// </summary>
+        /// <returns></returns>
+        public static string RenderDialogFilterString()
         {
             StringBuilder sb = new StringBuilder();
 
@@ -151,6 +150,11 @@ namespace primeira.Editor
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Gets the index of a given file type in the dialog filter string.
+        /// </summary>
+        /// <param name="FileVersion"></param>
+        /// <returns></returns>
         public static int GetDialogFilterIndex(DocumentDefinitionAttribute FileVersion)
         {
             int i = 0;
@@ -170,11 +174,6 @@ namespace primeira.Editor
         #endregion
 
         #region Serialization
-
-        public static DocumentBase ToObject(string fileName)
-        {
-            return DocumentManager.ToObject(fileName, null);
-        }
 
         public static DocumentBase ToObject(string fileName, Type type)
         {
@@ -300,7 +299,7 @@ namespace primeira.Editor
             if (NewFile)
                 s.FileName = FileManager.GetNewFile(FileVersion, BaseDir);
 
-            s.Filter = DocumentManager.GetDialogFilterString();
+            s.Filter = DocumentManager.RenderDialogFilterString();
 
             s.DefaultExt = FileVersion.DefaultFileExtension;
 
