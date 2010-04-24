@@ -70,7 +70,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Business\DocumentBase.cs">
+    <Compile Include="Data\DocumentBase.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Business\EditorContainerManager.cs" />

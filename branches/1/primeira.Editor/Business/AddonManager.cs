@@ -51,7 +51,11 @@ namespace primeira.Editor
             }
             catch (IOException ex)
             {
-                MessageManager.Send(MessageSeverity.Error, "There is an error reading an addon. Please see application log. \n", ex.ToString());
+                MessageManager.Send(MessageSeverity.Fatal, Message_us.AddonDiscoveryError,  "\n", ex.ToString());
+            }
+            catch (Exception ex)
+            {
+                MessageManager.Send(MessageSeverity.Fatal, Message_us.AddonDiscoveryError, "\n", ex.ToString());
             }
         }
 
