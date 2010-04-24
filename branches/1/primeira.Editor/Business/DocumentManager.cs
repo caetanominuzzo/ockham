@@ -242,7 +242,7 @@ namespace primeira.Editor
                 if (o is DocumentBase)
                     return (DocumentBase)o;
                 else
-                    MessageManager.Send(MessageSeverity.Error, Message_us.DocumentCustomSerializatinoFail);
+                    MessageManager.Send(MessageSeverity.Error, Message_us.DocumentCustomSerializatinoError);
 
                 return null;
             }
