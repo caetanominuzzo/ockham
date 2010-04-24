@@ -19,10 +19,10 @@ namespace primeira.Editor
     {
         private List<string> _recent = new List<string>();
 
-        public void AddRecent(string filename)
+        public void AddRecent(string fileName)
         {
-            if (!_recent.Contains(filename))
-                _recent.Add(filename);
+            if (!_recent.Contains(fileName))
+                _recent.Add(fileName);
         }
 
         [DataMember()]

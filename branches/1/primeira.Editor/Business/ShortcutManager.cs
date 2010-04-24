@@ -96,11 +96,7 @@ namespace primeira.Editor
 
         public static void RegisterCallbackForKeyUp(int key, CallbackDelegate callback)
         {
-            try
-            {
-                _keyUpCallback.Add(key, callback);
-            }
-            catch { }
+            _keyUpCallback.Add(key, callback);
         }
 
         public static bool KeyPressed(Keys key)
@@ -116,7 +112,7 @@ namespace primeira.Editor
 
             if (control is ContainerControl)
             {
-                var container = (ContainerControl)control;
+                ContainerControl container = (ContainerControl)control;
 
                 if (container == null)
                     return false;

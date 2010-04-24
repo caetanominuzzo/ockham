@@ -42,7 +42,8 @@ namespace primeira.Editor
         internal void SetTabControl(TabControlEditor tabcontrol)
         {
             if (_tabcontrol != null)
-                throw new Exception("You can't change tab control after it has been changed already.");
+                MessageManager.Send(MessageSeverity.Fatal,
+                    Message_us.TabControlAlreadySet);
 
             _tabcontrol = tabcontrol;
         }
@@ -77,7 +78,7 @@ namespace primeira.Editor
             {
                 iiFixedSizeWidth = iiFixedSizeCount * (FIXED_SIZE_TABBUTTON_WIDTH + iiLeftMargin);
 
-                if ((DocumentManager.GetDocumentDefinition(editor.Filename).Options & DocumentDefinitionOptions.DontShowLabelAndFixWidth) > 0)
+                if ((DocumentManager.GetDocumentDefinition(editor.FileName).Options & DocumentDefinitionOptions.DontShowLabelAndFixWidth) > 0)
                 {
                     _tabcontrol.TabButton(editor).SetBounds(new Rectangle(iiAbsoluteLeftMargin + iiFixedSizeWidth + iiLeftMargin, 3, FIXED_SIZE_TABBUTTON_WIDTH, 25));
 
@@ -255,11 +256,11 @@ namespace primeira.Editor
             ActiveEditor = _openEditorsTabOrder[i];
         }
 
-        public IEditor GetOpenEditorByFilename(string filename)
+        public IEditor GetOpenEditor(string fileName)
         {
             foreach (IEditor d in _openEditors)
             {
-                if (d.Filename.Equals(filename))
+                if (d.FileName.Equals(fileName))
                     return d;
             }
 
@@ -280,7 +281,7 @@ namespace primeira.Editor
                 return;
 
             //Verify if the file is already open
-            IEditor res = EditorContainerManager.GetOpenEditorByFilename(editor.Filename);
+            IEditor res = EditorContainerManager.GetOpenEditor(editor.FileName);
 
             if (res != null)
                 TabControlManager.GetInstance().ActiveEditor = editor;

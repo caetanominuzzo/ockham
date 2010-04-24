@@ -41,9 +41,9 @@
             this.Text = "Ockham - Multi Purpose Editor";
             this.Load += new System.EventHandler(this.fmMain_Load);
             this.ResumeLayout(false);
-
         }
 
         #endregion
+
     }
 }

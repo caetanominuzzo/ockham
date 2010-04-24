@@ -5,10 +5,11 @@ using System.Text;
 
 namespace primeira.Editor
 {
-    public interface IRecentFileControl
+    public enum MessageSeverity
     {
-        void AddRecent(string fileName);
-
-        string[] GetRecent();
+        Information,
+        Alert,
+        Error,
+        Fatal
     }
 }

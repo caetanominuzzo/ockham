@@ -11,7 +11,7 @@ namespace primeira.Editor
     {
         DocumentBase Document { get; }
 
-        string Filename { get; }
+        string FileName { get; }
 
         bool Selected { get; set;  }
 

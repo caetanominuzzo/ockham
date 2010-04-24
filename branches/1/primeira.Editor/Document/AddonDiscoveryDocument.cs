@@ -14,7 +14,7 @@ namespace primeira.Editor
                 Options=DocumentDefinitionOptions.OpenFromTypeDefaultName)]
     internal class AddonDiscoveryDocument : DocumentBase
     {
-        public string Filename
+        public string FileName
         {
             get { return "discovery.cache"; }
         }
@@ -42,6 +42,11 @@ namespace primeira.Editor
             AssemblyTypeDocument ass = new AssemblyTypeDocument(addonType.Assembly.CodeBase, addonType.Name);
 
             _loadOrder.Add(ass);
+        }
+
+        public void Clear()
+        {
+            _loadOrder.Clear();
         }
 
         [DataMember()]
