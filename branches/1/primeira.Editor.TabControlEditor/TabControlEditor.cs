@@ -14,7 +14,7 @@ using primeira.Editor.Components;
 namespace primeira.Editor
 {
     [EditorDefinition(DocumentType = typeof(TabControlDocument))]
-    [AddonDefinition(AddonDefinitions.SystemAddon)]
+    [AddonDefinition(AddonOptions.SystemAddon)]
     public partial class TabControlEditor : EditorBase, IMessageControl, IShorcutEscopeProvider
     {
 
@@ -31,8 +31,8 @@ namespace primeira.Editor
 
         #endregion
 
-        public TabControlEditor(string filename, DocumentBase data)
-            : base(filename, data, typeof(TabControlDocument))
+        public TabControlEditor(string fileName)
+            : base(fileName)
         {
             InitializeComponent();
 
@@ -89,9 +89,9 @@ namespace primeira.Editor
             ToolStripItem t = this.menTabs.Items.Add(tabbutton.TabTitle, DocumentManager.GetDocumentDefinition(editor.Document.GetType()).Icon, toolStripMenuItem_Click);
 
             //To be removed by RemoveByKey
-            t.Name = editor.Filename;
+            t.Name = editor.FileName;
 
-            t.Tag = editor.Filename;
+            t.Tag = editor.FileName;
 
             editor.OnSelected += new SelectedDelegate(editor_OnSelected);
 
@@ -124,7 +124,7 @@ namespace primeira.Editor
             TabButton(editor).Visible = false;
             c.Visible = false;
 
-            DocumentManager.ToXml(editor.Document, editor.Filename);
+            DocumentManager.ToXml(editor.Document, editor.FileName);
 
             pnTabArea.Controls.Remove(c);
 
@@ -189,9 +189,22 @@ namespace primeira.Editor
 
         #region IMessageControl Members
         
-        public void ShowNonModalMessage(string message)
+        public void Send(MessageSeverity severity, string message)
         {
-            NonModalMessage.GetInstance(message, pnDocArea);
+            switch (severity)
+            {
+                case MessageSeverity.Information: 
+                case MessageSeverity.Alert:
+                    NonModalMessage.GetInstance(message, pnDocArea);
+                    break;
+                case MessageSeverity.Error:
+                    MessageBox.Show(message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+                case MessageSeverity.Fatal:
+                    MessageBox.Show(message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    Application.Exit();
+                    break;
+            }
         }
 
         #endregion

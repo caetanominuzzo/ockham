@@ -9,20 +9,25 @@ namespace primeira.Editor
     {
         private static IMessageControl _messageControl;
 
-        private delegate void OnAlertDelegate(string message);
+        private delegate void OnMessageDelegate(MessageSeverity severity, string message);
 
-        private static event OnAlertDelegate OnAlert;
+        private static event OnMessageDelegate OnMessage;
 
-        public static void Alert(params string[] message)
+        public static void Send(params string[] message)
         {
-            if (OnAlert != null)
-                OnAlert(string.Join(string.Empty, message));
+            Send(MessageSeverity.Information, message);
+        }
+
+        public static void Send(MessageSeverity severity, params string[] message)
+        {
+            if (OnMessage != null)
+                OnMessage(severity, string.Join(string.Empty, message));
         }
 
         public static void SetMessageControl(IMessageControl messageControl)
         {
             _messageControl = messageControl;
-            OnAlert += new OnAlertDelegate(messageControl.ShowNonModalMessage);
+            OnMessage += new OnMessageDelegate(messageControl.Send);
         }
 
         public static bool IsInitialized()

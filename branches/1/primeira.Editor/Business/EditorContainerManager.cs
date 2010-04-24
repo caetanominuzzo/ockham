@@ -14,15 +14,15 @@ namespace primeira.Editor
             if(editor.HasOption(DocumentDefinitionOptions.ShowInRecents))
             {
                 if (FileManager.Recent != null)
-                    FileManager.Recent.AddRecent(editor.Filename);
+                    FileManager.Recent.AddRecent(editor.FileName);
             }
 
             _editorContainer.LoadEditor(editor);
         }
 
-        public static IEditor GetOpenEditorByFilename(string filename)
+        public static IEditor GetOpenEditor(string fileName)
         {
-            return _editorContainer == null ? null : _editorContainer.GetOpenEditorByFilename(filename);
+            return _editorContainer == null ? null : _editorContainer.GetOpenEditor(fileName);
         }
 
         public static void CloseEditor(IEditor editor)

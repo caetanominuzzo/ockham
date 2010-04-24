@@ -7,6 +7,6 @@ namespace primeira.Editor
 {
     public interface IMessageControl
     {
-        void ShowNonModalMessage(string message);
+        void Send(MessageSeverity severity, string message);
     }
 }

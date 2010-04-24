@@ -40,7 +40,7 @@ namespace primeira.Editor.Components
             set { m_image = value; }
         }
 
-        private static Color _parentFormBackColor = Color.Cyan;
+        private static Color? _parentFormBackColor = null;
 
         private Form getParentForm(Control c)
         {
@@ -53,7 +53,7 @@ namespace primeira.Editor.Components
 
         private Color getParentFormBackColor(Control c)
         {
-            if (_parentFormBackColor == Color.Cyan)
+            if (!_parentFormBackColor.HasValue)
             {
                 Control tmp = getParentForm(c);
                 if (tmp == null)
@@ -66,21 +66,21 @@ namespace primeira.Editor.Components
                     _parentFormBackColor = Color.Transparent;
             }
 
-            return _parentFormBackColor;
+            return _parentFormBackColor.Value;
         }
 
         protected override void OnPaint(PaintEventArgs pevent)
         {
 
             Rectangle r = new Rectangle(0, 0, this.Width, this.Height);
-
+            
             pevent.Graphics.Clear(getParentFormBackColor(this));
 
             if (m_image != null)
             {
                 Size = m_image.Size;
 
-//                pevent.Graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+                //pevent.Graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
 
                 pevent.Graphics.DrawImage((Bitmap)m_image, r, 0, m_image.Height / 2 - this.Height / 2, this.Width, this.Height, GraphicsUnit.Pixel);//, GraphicsUnit.Pixel, attr);
             }
