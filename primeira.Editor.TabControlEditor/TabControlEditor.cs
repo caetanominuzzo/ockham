@@ -199,12 +199,10 @@ namespace primeira.Editor
                     break;
 
                 case MessageSeverity.Error:
-                        LogFileManager.Log(message);
                         MessageBox.Show(message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
 
                 case MessageSeverity.Fatal:
-                        LogFileManager.Log(message);
                         MessageBox.Show(message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Stop);
                         Application.Exit();
                     break;
