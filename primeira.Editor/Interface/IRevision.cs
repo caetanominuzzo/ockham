@@ -7,7 +7,7 @@ namespace primeira.Editor
 {
     public interface IRevision
     {
-        void ToXml(string filename);
+        void ToXml(string fileName);
 
         string ParentRevision { get; set;  }
 

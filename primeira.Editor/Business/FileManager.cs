@@ -30,7 +30,7 @@ namespace primeira.Editor
         {
             string result = string.Empty;
 
-            for (int i = 1; i < 100; i++)
+            for (int i = 1; i < 1000; i++)
             {
                 string name = string.Format(fileVersion.DefaultFileName, i);
 

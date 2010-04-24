@@ -9,7 +9,7 @@ using primeira.Editor.Components;
 namespace primeira.Editor
 {
     [EditorDefinition(DocumentType = typeof(FileBrowserDocument))]
-    [AddonDefinition(AddonDefinitions.WaitEditorContainer | AddonDefinitions.SystemDelayedInitializationAddon)]
+    [AddonDefinition(AddonOptions.WaitEditorContainer | AddonOptions.SystemDelayedInitializationAddon)]
     public partial class FileBrowserEditor :  EditorBase, IRecentFileControl
     {
         #region Fields
@@ -20,8 +20,8 @@ namespace primeira.Editor
 
         #region Ctor
 
-        public FileBrowserEditor(string filename, DocumentBase data)
-            : base(filename, data, typeof(FileBrowserDocument))
+        public FileBrowserEditor(string fileName)
+            : base(fileName)
         {
             InitializeComponent();
 
@@ -188,9 +188,9 @@ namespace primeira.Editor
 
         #region Methods
 
-        public void AddRecent(string filename)
+        public void AddRecent(string fileName)
         {
-            ((FileBrowserDocument)Document).AddRecent(filename);
+            ((FileBrowserDocument)Document).AddRecent(fileName);
 
             Changed();
         }

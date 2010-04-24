@@ -5,10 +5,8 @@ using System.Text;
 
 namespace primeira.Editor
 {
-    public interface IRecentFileControl
+    [AttributeUsage(AttributeTargets.Method)]
+    public sealed class AddonInitializeAttribute : Attribute
     {
-        void AddRecent(string fileName);
-
-        string[] GetRecent();
     }
 }

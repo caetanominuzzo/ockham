@@ -15,11 +15,11 @@ using System.CodeDom.Compiler;
 namespace primeira.Editor
 {
     [EditorDefinition(DocumentType=typeof(MetaEditorDocument))]
-    [AddonDefinition(AddonDefinitions.WaitEditorContainer | AddonDefinitions.UserAddon)]
+    [AddonDefinition(AddonOptions.WaitEditorContainer | AddonOptions.UserAddon)]
     public partial class MetaEditor : EditorBase, IShorcutEscopeProvider
     {
-        public MetaEditor(string filename, DocumentBase data)
-            : base(filename, data, typeof(MetaEditorDocument))
+        public MetaEditor(string fileName)
+            : base(fileName)
         {
             InitializeComponent();
 
@@ -35,13 +35,14 @@ namespace primeira.Editor
 
         void UndoRedoManager_CommandDone(object sender, UndoRedoFramework.CommandDoneEventArgs e)
         {
-            txtName.DataBindings[0].ReadValue();
+            if(txtName.DataBindings.Count > 0)
+                txtName.DataBindings[0].ReadValue();
         }
 
         [ShortcutVisibility("Nome1", "", BasicEscopes.Global, Keys.Z, KeyModifiers.Control)]
         public void Undo()
         {
-            ((MetaEditorDocument)EditorContainerManager.GetOpenEditorByFilename("C:\\Users\\caetano\\Documents\\Editor 11.metaeditor").Document).EditorName = "asd";
+            ((MetaEditorDocument)EditorContainerManager.GetOpenEditor("C:\\Users\\caetano\\Documents\\Editor 11.metaeditor").Document).EditorName = "asd";
             
 
           //  ((MetaEditor)EditorContainerManager.GetOpenEditorByFilename("C:\\Users\\caetano\\Documents\\Editor 11.metaeditor")).Refresh();

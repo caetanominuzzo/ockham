@@ -106,7 +106,7 @@ namespace primeira.Editor
             if (def.TabTitle != null)
                 SetText(def.TabTitle);
             else
-                SetText(editor.Filename);
+                SetText(editor.FileName);
 
             this.Click += new EventHandler(TabButton_Click);
 
@@ -153,11 +153,11 @@ namespace primeira.Editor
 
         private ToolTip _toolTip;
 
-        public void SetText(string filename)
+        public void SetText(string fileName)
         {
-            _toolTip.SetToolTip(this, filename);
+            _toolTip.SetToolTip(this, fileName);
 
-            this._tabTitle = filename;
+            this._tabTitle = fileName;
         }
 
         //To avoid creating graphics dynamically. Used in MeasureFromIDC below.

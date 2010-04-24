@@ -23,14 +23,14 @@ namespace primeira.Editor
         //[DataMember()]
         //public string[] OpenEditors
         //{
-        //    get { return (from x in TabManager.GetInstance().GetOpenEditorsByOptions(DocumentDefinitionOptions.NeverClose) select x.Filename).ToArray(); }
+        //    get { return (from x in TabManager.GetInstance().GetOpenEditorsByOptions(DocumentDefinitionOptions.NeverClose) select x.FileName).ToArray(); }
         //    set { _openEditors = value; }
         //}
 
         //[DataMember()]
         //public string SelectedTab
         //{
-        //    get { return TabManager.GetInstance().ActiveEditor.Filename; }
+        //    get { return TabManager.GetInstance().ActiveEditor.FileName; }
         //    set { _selectedTab = value; }
         //}
 

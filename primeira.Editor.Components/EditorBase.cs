@@ -12,7 +12,6 @@ using primeira.Editor;
 
 namespace primeira.Editor.Components
 {
-    [AddonDefinition(AddonDefinitions.None)]
     public class EditorBase : UserControl, IEditor
     {
         #region Fields
@@ -25,7 +24,7 @@ namespace primeira.Editor.Components
 
         #region Properties
 
-        public string Filename { get; set; }
+        public string FileName { get; set; }
 
         public DocumentBase Document { get; private set; }
 
@@ -79,16 +78,13 @@ namespace primeira.Editor.Components
             this.OnChanged += new ChangedDelegate(EditorBase_OnChanged);
         }
 
-        public EditorBase(string filename, DocumentBase data, Type documentType) : this()
+        public EditorBase(string fileName) : this()
         {
-            if (data == null)
-                this.Document = DocumentManager.GetInstance(documentType);
-            else
-                this.Document = data;
+            this.DocumentType = DocumentManager.GetDocumentType(fileName);
 
-            this.Filename = filename;
-            
-            this.DocumentType = documentType;
+            this.Document = DocumentManager.LoadDocument(this.DocumentType, fileName);
+
+            this.FileName = fileName;
 
             if (HasOption(DocumentDefinitionOptions.TimerSaver))
             {
@@ -113,7 +109,7 @@ namespace primeira.Editor.Components
             if (_saveTimer != null)
                 _saveTimer.Dispose();
 
-            DocumentManager.ToXml(this.Document, this.Filename);
+            DocumentManager.ToXml(this.Document, this.FileName);
         }
 
         public bool HasOption(DocumentDefinitionOptions Option)
@@ -131,7 +127,7 @@ namespace primeira.Editor.Components
             if (_saveTimer != null)
                 _saveTimer.Stop();
 
-            DocumentManager.ToXml(this.Document, this.Filename);
+            DocumentManager.ToXml(this.Document, this.FileName);
         }
 
         private void EditorBase_OnChanged()
@@ -149,9 +145,7 @@ namespace primeira.Editor.Components
         #region Events
 
         public event SelectedDelegate OnSelected;
-
-
-
+        
         public delegate void ChangedDelegate();
         public event ChangedDelegate OnChanged;
 

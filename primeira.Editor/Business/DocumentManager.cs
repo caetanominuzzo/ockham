@@ -14,7 +14,7 @@ namespace primeira.Editor
         #region Fields
 
         private static List<Type> _knownDocumentType = new List<Type>();
-        
+
         private static List<DocumentDefinitionAttribute> _knownDocumentDefinition = new List<DocumentDefinitionAttribute>();
 
         private static string _baseDir = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -22,15 +22,15 @@ namespace primeira.Editor
         #endregion
 
         #region DocumentDefinitionAttribute & DocumentType
-        
+
         public static Type[] GetDocumentTypes()
         {
             return _knownDocumentType.ToArray();
         }
 
-        public static Type GetDocumentType(string filename)
+        public static Type GetDocumentType(string fileName)
         {
-            return GetDocumentTypeByFileExtension(Path.GetExtension(filename));
+            return GetDocumentTypeByFileExtension(Path.GetExtension(fileName));
         }
 
         public static Type GetDocumentTypeByFileExtension(string extension)
@@ -42,49 +42,45 @@ namespace primeira.Editor
             if (documentType != null)
                 return documentType;
 
-            throw new Exception(string.Format("No Editor found for *{0} files.", extension));
+            MessageManager.Send(
+                string.Concat("No Editor found for ", extension, " files."));
+
+            return null;
         }
 
         public static DocumentDefinitionAttribute[] GetDocumentDefinition()
         {
             return _knownDocumentDefinition.ToArray();
         }
-        
-        public static DocumentDefinitionAttribute GetDocumentDefinition(Type documentType)
+
+        public static DocumentDefinitionAttribute GetDocumentDefinition(MemberInfo documentType)
         {
             object[] attribs = documentType.GetCustomAttributes(typeof(DocumentDefinitionAttribute), false);
 
-            if (attribs.Length == 0)
-            {
-                MessageManager.Alert("Missing DocumentDefinitionAttribute Definition property in ", documentType.Name, " Class.");
-                return null;
-            }
+            if (attribs.Length != 0)
+                return (DocumentDefinitionAttribute)attribs[0];
 
-            return (DocumentDefinitionAttribute)attribs[0];
+            MessageManager.Send(
+                string.Concat("Missing DocumentDefinitionAttribute Definition property in ", documentType.Name, " Class."));
+
+            return null;
         }
 
-        public static DocumentDefinitionAttribute GetDocumentDefinition(string filename)
+        public static DocumentDefinitionAttribute GetDocumentDefinition(string fileName)
         {
-            string ext = Path.GetExtension(filename);
+            string ext = Path.GetExtension(fileName);
 
             return GetDocumentDefinitionByFileExtension(ext);
         }
 
         private static DocumentDefinitionAttribute GetDocumentDefinitionByFileExtension(string extension)
         {
-            try
-            {
-                DocumentDefinitionAttribute tmp = (from x in _knownDocumentDefinition where x.DefaultFileExtension == extension select (DocumentDefinitionAttribute)x).FirstOrDefault();
-                
-                if(tmp != null)
-                    return tmp;
-                throw new Exception();
-            }
-            catch(Exception)
-            {
-                MessageManager.Alert("No Editor found for *", extension, " files.");
-                return null;
-            }
+            DocumentDefinitionAttribute tmp = (from x in _knownDocumentDefinition where x.DefaultFileExtension == extension select (DocumentDefinitionAttribute)x).FirstOrDefault();
+
+            if (tmp == null)
+                MessageManager.Send("No Editor found for ", extension, " files.");
+
+            return tmp;
         }
 
         /// <summary>
@@ -141,16 +137,16 @@ namespace primeira.Editor
 
         #region Serialization
 
-        public static DocumentBase ToObject(string filename)
+        public static DocumentBase ToObject(string fileName)
         {
-            return DocumentManager.ToObject(filename, null);
+            return DocumentManager.ToObject(fileName, null);
         }
 
-        public static DocumentBase ToObject(string filename, Type type)
+        public static DocumentBase ToObject(string fileName, Type type)
         {
             try
             {
-                Stream sm = File.OpenRead(filename);
+                Stream sm = File.OpenRead(fileName);
 
                 Type[] knownTypes = DocumentManager.GetDocumentTypes();
 
@@ -170,9 +166,9 @@ namespace primeira.Editor
 
                 return res;
             }
-            catch (Exception ex)
+            catch
             {
-                MessageManager.Alert("There is an error while deserializing file ", filename, ".\n", ex.Message);
+                MessageManager.Send("There is an error while deserializing file ", fileName, ".");
             }
 
             return null;
@@ -184,17 +180,17 @@ namespace primeira.Editor
 
             if ((def.Options & DocumentDefinitionOptions.OpenFromTypeDefaultName) > 0)
             {
-                string filename = def.DefaultFileName + def.DefaultFileExtension;
+                string fileName = def.DefaultFileName + def.DefaultFileExtension;
 
-                DocumentManager.ToXml(document, filename);
+                DocumentManager.ToXml(document, fileName);
             }
             else
                 throw new InvalidOperationException("This document don't uses a default name, you must especify one.");
         }
 
-        public static void ToXml(DocumentBase document, string filename)
+        public static void ToXml(DocumentBase document, string fileName)
         {
-            Stream sm = File.Create(filename);
+            Stream sm = File.Create(fileName);
 
             Type[] knownTypes = DocumentManager.GetDocumentTypes();
 
@@ -230,18 +226,25 @@ namespace primeira.Editor
             return doc;
         }
 
-        public static DocumentBase LoadDocument(Type documentType, string filename)
+        public static DocumentBase LoadDocument(Type documentType, string fileName)
         {
-            FileInfo f = new FileInfo(filename);
+            DocumentDefinitionAttribute def = DocumentManager.GetDocumentDefinition(documentType);
+
+            if (def == null)
+            {
+                throw new Exception("This document is not supported.");
+            }
+
+            FileInfo f = new FileInfo(fileName);
 
             if (!f.Exists || f.Length == 0)
             {
                 return (DocumentBase)documentType.GetConstructor(System.Type.EmptyTypes).Invoke(System.Type.EmptyTypes);
             }
 
-            return DocumentManager.ToObject(filename, documentType);
+            return DocumentManager.ToObject(fileName, documentType);
         }
-        
+
         public static void OpenOrCreateDocument(bool NewFile, DocumentDefinitionAttribute FileVersion)
         {
             OpenFileDialog s = new OpenFileDialog();
