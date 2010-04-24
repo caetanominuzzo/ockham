@@ -60,7 +60,7 @@ namespace primeira.Editor
             if (attribs.Length != 0)
                 return (DocumentDefinitionAttribute)attribs[0];
 
-            MessageManager.Send(
+            MessageManager.Send(MessageSeverity.Fatal,
                 string.Concat("Missing DocumentDefinitionAttribute Definition property in ", documentType.Name, " Class."));
 
             return null;
@@ -230,9 +230,21 @@ namespace primeira.Editor
         {
             DocumentDefinitionAttribute def = DocumentManager.GetDocumentDefinition(documentType);
 
-            if (def == null)
+            if (def.Options.HasFlag(DocumentDefinitionOptions.CustomSerialization))
             {
-                throw new Exception("This document is not supported.");
+                MethodInfo m = documentType.GetMethod("ToObject", new Type[] { typeof(string) });
+
+                if (m == null)
+                    MessageManager.Send(MessageSeverity.Fatal, Message_us.DocumentCustomSerializationMustHaveToObjectMethod);
+
+                Object o = m.Invoke(null, new object[] { fileName });
+
+                if (o is DocumentBase)
+                    return (DocumentBase)o;
+                else
+                    MessageManager.Send(MessageSeverity.Error, Message_us.DocumentCustomSerializatinoFail);
+
+                return null;
             }
 
             FileInfo f = new FileInfo(fileName);
@@ -241,8 +253,8 @@ namespace primeira.Editor
             {
                 return (DocumentBase)documentType.GetConstructor(System.Type.EmptyTypes).Invoke(System.Type.EmptyTypes);
             }
-
-            return DocumentManager.ToObject(fileName, documentType);
+            else
+                return DocumentManager.ToObject(fileName, documentType);
         }
 
         public static void OpenOrCreateDocument(bool NewFile, DocumentDefinitionAttribute FileVersion)

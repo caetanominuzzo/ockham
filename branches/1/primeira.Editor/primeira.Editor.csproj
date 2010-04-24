@@ -89,6 +89,7 @@
     <Compile Include="Data\ShortcutCommand.cs" />
     <Compile Include="Attribute\ShortcutVisibilityAttribute.cs" />
     <Compile Include="Document\AddonDiscoveryDocument.cs" />
+    <Compile Include="Document\ApplicationLogDocument.cs" />
     <Compile Include="Interface\IEditor.cs" />
     <Compile Include="Interface\IEditorContainer.cs" />
     <Compile Include="Interface\IMessageControl.cs" />
