@@ -23,16 +23,30 @@ namespace primeira.Editor
 
         #region DocumentDefinitionAttribute & DocumentType
 
+        /// <summary>
+        /// Gets a list of all registered document types.
+        /// </summary>
+        /// <returns>Registered document types.</returns>
         public static Type[] GetDocumentTypes()
         {
             return _knownDocumentType.ToArray();
         }
 
+        /// <summary>
+        /// Gets the System.Type of the document of a given file.
+        /// </summary>
+        /// <param name="fileName">Path to a file</param>
+        /// <returns>The System.Type of the document of a given file</returns>
         public static Type GetDocumentType(string fileName)
         {
             return GetDocumentTypeByFileExtension(Path.GetExtension(fileName));
         }
 
+        /// <summary>
+        /// Gets the System.Type of the document of a given file extension.
+        /// </summary>
+        /// <param name="extension">File extesion</param>
+        /// <returns>The System.Type of the document of a given file</returns>
         public static Type GetDocumentTypeByFileExtension(string extension)
         {
             DocumentDefinitionAttribute tmp = GetDocumentDefinitionByFileExtension(extension);
@@ -48,11 +62,20 @@ namespace primeira.Editor
             return null;
         }
 
+        /// <summary>
+        /// Gets a list of DocumentDefinitionAttribute for all registered document types.
+        /// </summary>
+        /// <returns>Registered DocumentDefinitionAttribute.</returns>
         public static DocumentDefinitionAttribute[] GetDocumentDefinition()
         {
             return _knownDocumentDefinition.ToArray();
         }
 
+        /// <summary>
+        /// Gets the DocumentDefinitionAttribute of a given document System.Type.
+        /// </summary>
+        /// <param name="documentType">The type of a document</param>
+        /// <returns>The DocumentDefinitionAttribute of the given System.Type</returns>
         public static DocumentDefinitionAttribute GetDocumentDefinition(MemberInfo documentType)
         {
             object[] attribs = documentType.GetCustomAttributes(typeof(DocumentDefinitionAttribute), false);
@@ -61,11 +84,17 @@ namespace primeira.Editor
                 return (DocumentDefinitionAttribute)attribs[0];
 
             MessageManager.Send(MessageSeverity.Fatal,
-                string.Concat("Missing DocumentDefinitionAttribute Definition property in ", documentType.Name, " Class."));
+                string.Format(Message_us.DocumentMissingDocumentDefinitionAttribute,
+                documentType.Name));
 
             return null;
         }
 
+        /// <summary>
+        /// Gets the DocumentDefinitionAttribute of a given file.
+        /// </summary>
+        /// <param name="documentType">Path to a file</param>
+        /// <returns>The DocumentDefinitionAttribute of the given file</returns>
         public static DocumentDefinitionAttribute GetDocumentDefinition(string fileName)
         {
             string ext = Path.GetExtension(fileName);
@@ -73,6 +102,11 @@ namespace primeira.Editor
             return GetDocumentDefinitionByFileExtension(ext);
         }
 
+        /// <summary>
+        /// Gets the DocumentDefinitionAttribute of a given file extesion.
+        /// </summary>
+        /// <param name="documentType">A file extension</param>
+        /// <returns>The DocumentDefinitionAttribute of the given file extension</returns>
         private static DocumentDefinitionAttribute GetDocumentDefinitionByFileExtension(string extension)
         {
             DocumentDefinitionAttribute tmp = (from x in _knownDocumentDefinition where x.DefaultFileExtension == extension select (DocumentDefinitionAttribute)x).FirstOrDefault();

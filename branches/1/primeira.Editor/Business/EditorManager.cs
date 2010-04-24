@@ -38,8 +38,6 @@ namespace primeira.Editor
         /// <returns>The editor with file loaded.</returns>
         public static IEditor LoadEditor(string fileName)
         {
-            Type documentType = DocumentManager.GetDocumentType(fileName);
-
             //Verify if the file is already open
             IEditor res = EditorContainerManager.GetOpenEditor(fileName);
             if (res != null)
@@ -56,7 +54,11 @@ namespace primeira.Editor
             catch (TargetInvocationException ex)
             {
                 LogFileManager.Log(
-                    "Can't create editor for ", fileName, ".\n", ex.InnerException.ToString());
+                    string.Format(
+                        Message_us.EditorCreationError,
+                        fileName),
+                        "\n",
+                        ex.InnerException.ToString());
             }
 
             if (res != null)
@@ -64,8 +66,16 @@ namespace primeira.Editor
                 EditorContainerManager.AddEditor(res);
                 return res;
             }
+            else
+            {
+                MessageManager.Send(
+                    MessageSeverity.Alert,
+                    string.Format(
+                        Message_us.EditorCreationError,
+                        fileName));
 
-            return null;
+                return null;
+            }
         }
 
         /// <summary>
