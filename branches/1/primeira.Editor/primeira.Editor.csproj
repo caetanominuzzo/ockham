@@ -84,6 +84,7 @@
     <Compile Include="Attribute\EditorDefinitionAttribute.cs" />
     <Compile Include="Attribute\AddonDefinitionAttribute.cs" />
     <Compile Include="Attribute\AddonInitializeAttribute.cs" />
+    <Compile Include="Data\Message-en.cs" />
     <Compile Include="Data\MessageSeverity.cs" />
     <Compile Include="Data\Shortcut.cs" />
     <Compile Include="Data\ShortcutCommand.cs" />
