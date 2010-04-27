@@ -11,7 +11,7 @@ namespace primeira.Editor
 
         public Keys DefaultKey{ get; set; }
 
-        public KeyModifiers DefaultKeyModifiers{ get; set; }
+        public Keys DefaultKeys{ get; set; }
 
         public string Name{ get; set; }
 
@@ -38,10 +38,10 @@ namespace primeira.Editor
             
         }
 
-        public ShortcutVisibilityAttribute(string name, string description, string escope, Keys defaultKey, KeyModifiers defaultKeyModifiers)
+        public ShortcutVisibilityAttribute(string name, string description, string escope, Keys defaultKey, Keys defaultKeys)
             : this(name, description, escope, defaultKey)
         {
-            DefaultKeyModifiers = defaultKeyModifiers;
+            DefaultKeys = defaultKeys;
         }
     }
 }
