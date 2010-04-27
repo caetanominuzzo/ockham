@@ -12,6 +12,9 @@ namespace primeira.Editor
 
         private static string ADDON_DIR = "Addons";
 
+        /// <summary>
+        /// Discovers and initializes addons.
+        /// </summary>
         public static void Discovery()
         {
             try
@@ -29,7 +32,7 @@ namespace primeira.Editor
 
                 AddonDiscoveryDocument cache = AddonDiscoveryDocument.GetInstance();
 
-                string addonCacheFile = cache.FileName;
+                string addonCacheFile = AddonDiscoveryDocument.FileName;
 
                 DateTime dtAddonsDir = Directory.GetLastWriteTime(addonDir);
 
@@ -51,11 +54,15 @@ namespace primeira.Editor
             }
             catch (IOException ex)
             {
-                MessageManager.Send(MessageSeverity.Fatal, Message_us.AddonDiscoveryError,  "\n", ex.ToString());
+                MessageManager.Send(MessageSeverity.Error, Message_en.AddonDiscoveryError);
+
+                LogFileManager.Log(Message_en.AddonDiscoveryError, "\n", ex.ToString());
             }
             catch (Exception ex)
             {
-                MessageManager.Send(MessageSeverity.Fatal, Message_us.AddonDiscoveryError, "\n", ex.ToString());
+                MessageManager.Send(MessageSeverity.Error, Message_en.AddonDiscoveryError);
+
+                LogFileManager.Log(Message_en.AddonDiscoveryError, "\n", ex.ToString());
             }
         }
 
@@ -67,7 +74,7 @@ namespace primeira.Editor
 
             foreach (string dll in dlls)
             {
-                ass = Assembly.LoadFile(dll);
+                ass = Assembly.LoadFrom(dll);
 
                 Type[] types = ass.GetTypes();
 

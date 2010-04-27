@@ -38,7 +38,7 @@ namespace primeira.Editor
                 
                 _printLabel = MeasureFromIDC();
 
-                _hideLabel = _editor.HasOption(DocumentDefinitionOptions.DontShowLabelAndFixWidth);
+                _hideLabel = _editor.HasOption(DocumentDefinitionOptions.DoNotShowLabelAndFixWidth);
 
                 _hideLabel = _hideLabel || this.Width == 50 || _printLabel == string.Empty;
 

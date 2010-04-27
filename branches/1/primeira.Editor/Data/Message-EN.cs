@@ -14,5 +14,6 @@ namespace primeira.Editor
         public static string DocumentMissingOpenFromTypeDefaultName             = "To load a document by the document type it must have the OpenFromTypeDefaultName option.";
         public static string AddonDiscoveryError                                = "There is an error discovering addons.";
         public static string EditorCreationError                                = "There is an error loading editor for file '{0}'.";
+        public static string DocumentCreationError                              = "There is an error loading document '{0}'.";
     }
 }

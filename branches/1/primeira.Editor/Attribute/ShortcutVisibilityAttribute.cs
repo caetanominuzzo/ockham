@@ -25,8 +25,7 @@ namespace primeira.Editor
                 Escope = BasicEscopes.Global;
 
             if (Event == 0)
-                Event = KeyEvent.HotKey;
-
+                Event = KeyEvent.KeyUp;
         }
 
         public ShortcutVisibilityAttribute(string name, string description, string escope, Keys defaultKey)

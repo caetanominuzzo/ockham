@@ -15,8 +15,8 @@ namespace primeira.Editor
     [EditorDefinition(DocumentType=typeof(ShortcutConfigDocument))]
     public partial class ShortcutConfigEditor : EditorBase
     {
-        public ShortcutConfigEditor(string filename, DocumentBase data)
-            : base(filename, data, typeof(ShortcutConfigDocument))
+        public ShortcutConfigEditor(string fileName)
+            : base(fileName)
         {
             InitializeComponent();
         }
@@ -25,7 +25,7 @@ namespace primeira.Editor
         public static void RegisterEditor()
         {
             EditorManager.RegisterEditor(typeof(ShortcutConfigEditor));
-            ShortcutManager.ParentEscopeProvider = Application.OpenForms[0];
+            
             ShortcutManager.SetShortcutConfigDocumentType(typeof(ShortcutConfigDocument));
         }
 

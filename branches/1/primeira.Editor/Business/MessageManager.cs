@@ -20,9 +20,6 @@ namespace primeira.Editor
 
         public static void Send(MessageSeverity severity, params string[] message)
         {
-            if(severity == MessageSeverity.Error || severity == MessageSeverity.Fatal)
-                LogFileManager.Log(message);
-
             if (OnMessage != null)
                 OnMessage(severity, string.Join(string.Empty, message));
         }
@@ -30,6 +27,7 @@ namespace primeira.Editor
         public static void SetMessageControl(IMessageControl messageControl)
         {
             _messageControl = messageControl;
+            OnMessage = null;
             OnMessage += new OnMessageDelegate(messageControl.Send);
         }
 
