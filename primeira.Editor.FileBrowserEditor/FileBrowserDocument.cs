@@ -14,7 +14,7 @@ namespace primeira.Editor
                 DefaultFileExtension = ".filebrowser",
                 DefaultEditor = typeof(FileBrowserEditor),
                 TabTitle="File Tab",
-                Options = (DocumentDefinitionOptions.DontShowLabelAndFixWidth | DocumentDefinitionOptions.TimerSaver | DocumentDefinitionOptions.NeverClose | DocumentDefinitionOptions.OpenFromTypeDefaultName))]
+                Options = (DocumentDefinitionOptions.DoNotShowLabelAndFixWidth | DocumentDefinitionOptions.TimerSaver | DocumentDefinitionOptions.NeverClose | DocumentDefinitionOptions.OpenFromTypeDefaultName))]
     public class FileBrowserDocument : DocumentBase
     {
         private List<string> _recent = new List<string>();

@@ -135,6 +135,8 @@ namespace primeira.Editor
             EditorManager.RegisterEditor(typeof(FileBrowserEditor));
 
             EditorManager.LoadEditor(typeof(FileBrowserDocument));
+
+            
         }   
 
         #region Event Handlers
@@ -179,8 +181,38 @@ namespace primeira.Editor
                 }
                 else
                 {
-                    DocumentManager.OpenOrCreateDocument(true, (DocumentDefinitionAttribute)dgQuickLauch.Rows[e.RowIndex].Cells[5].Value);
+                    OpenOrCreateDocument(true, (DocumentDefinitionAttribute)dgQuickLauch.Rows[e.RowIndex].Cells[5].Value);
                 }
+            }
+        }
+
+        private void OpenOrCreateDocument(bool NewFile, DocumentDefinitionAttribute FileVersion)
+        {
+            OpenFileDialog s = new OpenFileDialog();
+
+            s.CheckFileExists = false;
+
+            if (NewFile)
+                s.FileName = FileManager.GetNewFile(FileVersion, DocumentManager.BaseDir);
+
+            s.Filter = DocumentManager.RenderDialogFilterString();
+
+            s.DefaultExt = FileVersion.DefaultFileExtension;
+
+            s.FilterIndex = DocumentManager.GetDialogFilterIndex(FileVersion);
+
+            s.InitialDirectory = DocumentManager.BaseDir;
+
+            if (s.ShowDialog() == DialogResult.OK)
+            {
+                DocumentManager.BaseDir = s.InitialDirectory;
+
+                string ss = Path.Combine(DocumentManager.BaseDir, s.FileName);
+
+                if (!File.Exists(ss))
+                    File.Create(ss).Close();
+
+                EditorManager.LoadEditor(ss);
             }
         }
 

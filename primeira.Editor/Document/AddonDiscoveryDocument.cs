@@ -14,7 +14,7 @@ namespace primeira.Editor
                 Options=DocumentDefinitionOptions.OpenFromTypeDefaultName)]
     internal class AddonDiscoveryDocument : DocumentBase
     {
-        public string FileName
+        public static string FileName
         {
             get { return "discovery.cache"; }
         }
@@ -66,7 +66,13 @@ namespace primeira.Editor
 
         public static AddonDiscoveryDocument GetInstance()
         {
-            return (AddonDiscoveryDocument)DocumentManager.GetInstance(typeof(AddonDiscoveryDocument));
+            AddonDiscoveryDocument doc = (AddonDiscoveryDocument)DocumentManager.LoadDocument(typeof(AddonDiscoveryDocument));
+
+            if (doc == null)
+                MessageManager.Send(MessageSeverity.Alert,
+                    string.Format(Message_en.DocumentCreationError, FileName));
+
+            return doc;
         }
 
         public void ToXml()

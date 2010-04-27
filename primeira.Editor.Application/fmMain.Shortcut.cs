@@ -8,10 +8,10 @@ namespace primeira.Editor
 {
     partial class fmMain
     {
-        [ShortcutVisibility("Nome", "", BasicEscopes.Global, Keys.A, KeyModifiers.Alt)]
+        [ShortcutVisibility("Nome", "", BasicEscopes.Global, Keys.A, KeyModifiers.Control, Event=KeyEvent.KeyUp)]
         public static void show()
         {
-            ShortcutManager.ShowConfig();
+    //        ShortcutManager.ShowConfig();
         }
 
 

@@ -71,8 +71,6 @@ namespace primeira.Editor.Components
 
             this.AutoScroll = true;
 
-            this.Font = new Font("SegoeUI", 9);
-
             this.BackColor = Color.White;
 
             this.OnChanged += new ChangedDelegate(EditorBase_OnChanged);
