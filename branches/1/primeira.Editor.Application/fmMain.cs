@@ -13,7 +13,7 @@ using primeira.Editor;
 
 namespace primeira.Editor
 {
-    public partial class fmMain : Form, IShorcutEscopeProvider
+    public partial class fmMain : Form, IShorcutEscopeProvider, IMessageControl
     {
         public fmMain()
         {
@@ -25,13 +25,12 @@ namespace primeira.Editor
             //try to set windows 7 style
             DwmHelper.SeventishIt(this);
 
+            MessageManager.SetMessageControl(this);
+
             AddonManager.Discovery();
 
             if (Controls.Count == 0)
                 showNonAddonsLabel();
-
-            //TODO:Remove Shortcut manager dependecy. (Maybe using InitializeAddon attribute.)
-            ShortcutManager.LoadFromForm(this);
         }
 
         private System.Windows.Forms.Label lblNoAddons;
@@ -65,5 +64,33 @@ namespace primeira.Editor
         }
 
         #endregion
+
+        #region IMessageControl Members
+
+        public void Send(MessageSeverity severity, string message)
+        {
+            switch (severity)
+            {
+                case MessageSeverity.Information:
+                    MessageBox.Show(message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    break;
+                case MessageSeverity.Alert:
+                    MessageBox.Show(message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    break;
+
+                case MessageSeverity.Error:
+                    MessageBox.Show(message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+
+                case MessageSeverity.Fatal:
+                    MessageBox.Show(message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    Application.Exit();
+                    break;
+            }
+        }
+
+        #endregion
+
     }
 }

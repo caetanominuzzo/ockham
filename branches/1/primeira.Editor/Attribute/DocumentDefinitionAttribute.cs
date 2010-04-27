@@ -24,7 +24,7 @@ namespace primeira.Editor
     {
         None = 0,
         //Hide the Tab Title and fix the width
-        DontShowLabelAndFixWidth =1,
+        DoNotShowLabelAndFixWidth =1,
         //Enables autosave feature
         TimerSaver = 2,
         //Never close tab

@@ -14,6 +14,10 @@ namespace primeira.Editor
     {
         private static List<Type> _knownEditors;
 
+        /// <summary>
+        /// Registers a System.Type as an editor.
+        /// </summary>
+        /// <param name="type">The System.Type to register</param>
         public static void RegisterEditor(Type type)
         {
             if (_knownEditors == null)
@@ -48,14 +52,13 @@ namespace primeira.Editor
 
             try
             {
-                //Open a new
                 res = EditorManager.CreateEditor(fileName);
             }
             catch (TargetInvocationException ex)
             {
                 LogFileManager.Log(
                     string.Format(
-                        Message_us.EditorCreationError,
+                        Message_en.EditorCreationError,
                         fileName),
                         "\n",
                         ex.InnerException.ToString());
@@ -71,7 +74,7 @@ namespace primeira.Editor
                 MessageManager.Send(
                     MessageSeverity.Alert,
                     string.Format(
-                        Message_us.EditorCreationError,
+                        Message_en.EditorCreationError,
                         fileName));
 
                 return null;
@@ -91,28 +94,18 @@ namespace primeira.Editor
             if (dd == null)
             {
                 MessageManager.Send(
-                    MessageSeverity.Error,
+                    MessageSeverity.Fatal,
                     string.Format(
-                        Message_us.DocumentMissingDocumentDefinitionAttribute,
+                        Message_en.DocumentMissingDocumentDefinitionAttribute,
                         documentType.Name));
 
                 return null;
             }
 
-            if ((dd.Options & DocumentDefinitionOptions.OpenFromTypeDefaultName) > 0)
-            {
+            if (dd.Options.HasFlag(DocumentDefinitionOptions.OpenFromTypeDefaultName))
                 return LoadEditor(dd.DefaultFileName + dd.DefaultFileExtension);
-            }
             else
-            {
-                MessageManager.Send(
-                    MessageSeverity.Error,
-                    string.Format(
-                        Message_us.DocumentMissingOpenFromTypeDefaultName,
-                        documentType.Name));
-
                 return null;
-            }
         }
 
         private static IEditor CreateEditor(string fileName)
@@ -124,6 +117,7 @@ namespace primeira.Editor
             res = (IEditor)def.DefaultEditor.GetConstructor(_defaultEditorCtor).Invoke(new object[1] { fileName });
 
             return res;
+
         }
 
         private static Type[] _defaultEditorCtor = new Type[1] { typeof(string) };

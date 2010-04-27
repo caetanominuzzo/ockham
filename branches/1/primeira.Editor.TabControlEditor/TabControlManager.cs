@@ -43,7 +43,7 @@ namespace primeira.Editor
         {
             if (_tabcontrol != null)
                 MessageManager.Send(MessageSeverity.Fatal,
-                    Message_us.TabControlAlreadySet);
+                    Message_en.TabControlAlreadySet);
 
             _tabcontrol = tabcontrol;
         }
@@ -79,7 +79,7 @@ namespace primeira.Editor
                 iiFixedSizeWidth = iiFixedSizeCount * (FIXED_SIZE_TABBUTTON_WIDTH + iiLeftMargin);
 
                 //if the document is already open it must have a doc definition, so no exception handling here.
-                if (DocumentManager.GetDocumentDefinition(editor.FileName).Options.HasFlag(DocumentDefinitionOptions.DontShowLabelAndFixWidth))
+                if (DocumentManager.GetDocumentDefinition(editor.FileName).Options.HasFlag(DocumentDefinitionOptions.DoNotShowLabelAndFixWidth))
                 {
                     _tabcontrol.TabButton(editor).SetBounds(new Rectangle(iiAbsoluteLeftMargin + iiFixedSizeWidth + iiLeftMargin, 3, FIXED_SIZE_TABBUTTON_WIDTH, 25));
 
@@ -130,7 +130,7 @@ namespace primeira.Editor
                     _openEditors.Add(value);
                     _openEditorsTabOrder.Insert(0, value);
 
-                    if(value.HasOption(DocumentDefinitionOptions.DontShowLabelAndFixWidth))
+                    if(value.HasOption(DocumentDefinitionOptions.DoNotShowLabelAndFixWidth))
                         _openEditorsDisplayOrder.Insert(0, value);
                     else
                         _openEditorsDisplayOrder.Add(value);

@@ -29,7 +29,7 @@ namespace primeira.Editor
             txtExtension.DataBindings.Add("Text", this.Document, "DefaultFileExtension");
             UndoRedoFramework.UndoRedoManager.CommandDone += new EventHandler<UndoRedoFramework.CommandDoneEventArgs>(UndoRedoManager_CommandDone);
 
-            ShortcutManager.LoadFromForm(this);
+            //ShortcutManager.LoadFromForm(this);
 
         }
 

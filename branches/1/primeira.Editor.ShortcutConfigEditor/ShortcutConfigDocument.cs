@@ -13,7 +13,7 @@ namespace primeira.Editor
                 Description = "Shortcut Manager",
                 DefaultFileExtension = ".shortcut",
                 DefaultEditor = typeof(ShortcutConfigEditor),
-                Options = DocumentDefinitionOptions.DontShowLabelAndFixWidth | DocumentDefinitionOptions.OpenFromTypeDefaultName)]
+                Options = DocumentDefinitionOptions.DoNotShowLabelAndFixWidth | DocumentDefinitionOptions.OpenFromTypeDefaultName)]
     public class ShortcutConfigDocument : DocumentBase
     {
         #region Data
@@ -23,9 +23,9 @@ namespace primeira.Editor
 
         #endregion
 
-        //public static DocumentBase ToObject(string filename)
+        //public static DocumentBase ToObject(string fileName)
         //{
-        //    return DocumentBase.ToObject(filename, typeof(ShortcutConfigDocument));
+        //    return DocumentBase.ToObject(fileName, typeof(ShortcutConfigDocument));
         //}
     }
 }
