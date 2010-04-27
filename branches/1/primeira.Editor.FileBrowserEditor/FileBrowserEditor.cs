@@ -269,7 +269,7 @@ namespace primeira.Editor
         }
 
 
-        [ShortcutVisibility("File Browser", "Shows the File Browser tab", BasicEscopes.Global, Keys.T, KeyModifiers.Control)]
+        [ShortcutVisibility("File Browser", "Shows the File Browser tab", BasicEscopes.Global, Keys.T, Keys.Control)]
         public void show()
         {
             EditorManager.LoadEditor(this.DefaultFileName).Selected = true;

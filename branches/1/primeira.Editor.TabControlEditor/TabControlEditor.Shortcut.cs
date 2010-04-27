@@ -18,19 +18,19 @@ namespace primeira.Editor
             return false;
         }
 
-        [ShortcutVisibility("Close Tab", "", BasicEscopes.Global, Keys.F4, KeyModifiers.Control)]
+        [ShortcutVisibility("Close Tab", "", BasicEscopes.Global, Keys.F4, Keys.Control)]
         public void CloseActiveTab()
         {
             TabControlManager.GetInstance().CloseEditor(TabControlManager.GetInstance().ActiveEditor);
         }
 
-        [ShortcutVisibility("Select Next Tab", "", BasicEscopes.Global, Keys.Tab, KeyModifiers.Control)]
+        [ShortcutVisibility("Select Next Tab", "", BasicEscopes.Global, Keys.Tab, Keys.Control)]
         public void SelectNextTab()
         {
             TabControlManager.GetInstance().SelectNext();
         }
 
-        [ShortcutVisibility("Select Prior Tab", "", BasicEscopes.Global, Keys.Tab, KeyModifiers.Control | KeyModifiers.Shift)]
+        [ShortcutVisibility("Select Prior Tab", "", BasicEscopes.Global, Keys.Tab, Keys.Control | Keys.Shift)]
         public void SelectPriorTab()
         {
             TabControlManager.GetInstance().SelectPrior();

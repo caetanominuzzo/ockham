@@ -39,7 +39,7 @@ namespace primeira.Editor
                 txtName.DataBindings[0].ReadValue();
         }
 
-        [ShortcutVisibility("Nome1", "", BasicEscopes.Global, Keys.Z, KeyModifiers.Control)]
+        [ShortcutVisibility("Nome1", "", BasicEscopes.Global, Keys.Z, Keys.Control)]
         public void Undo()
         {
             ((MetaEditorDocument)EditorContainerManager.GetOpenEditor("C:\\Users\\caetano\\Documents\\Editor 11.metaeditor").Document).EditorName = "asd";
