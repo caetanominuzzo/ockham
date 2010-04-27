@@ -8,7 +8,7 @@ namespace primeira.Editor
     public class Shortcut
     {
         public Keys Key;
-        public KeyModifiers KeyModifier;
+        public Keys KeyModifier;
         public string Escope;
         public ShortcutCommand Command;
         internal KeyEvent Event;
@@ -18,16 +18,6 @@ namespace primeira.Editor
             return string.Format("{0}+ ({1})", this.KeyModifier, this.Key);
         }
 
-    }
-
-    [Flags()]
-    public enum KeyModifiers
-    {
-        None = 0,
-        Alt = 1,
-        Control = 2,
-        Shift = 4,
-        Windows = 8
     }
 
     public enum KeyEvent

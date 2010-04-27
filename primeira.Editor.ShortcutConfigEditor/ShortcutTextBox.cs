@@ -9,7 +9,7 @@ namespace primeira.Editor
     internal class ShortcutTextBox : TextBox
     {
         public Keys Key;
-        public KeyModifiers Modifiers;
+        public Keys Modifiers;
 
 
      
@@ -17,19 +17,19 @@ namespace primeira.Editor
         protected override void OnKeyDown(KeyEventArgs e)
         {
             Key = e.KeyCode;
-            Modifiers = KeyModifiers.None;
+            Modifiers = Keys.None;
 
             switch (e.Modifiers)
             {
-                case Keys.Control: Modifiers = Modifiers | KeyModifiers.Control;
+                case Keys.Control: Modifiers = Modifiers | Keys.Control;
                     break;
-                case Keys.Alt: Modifiers = Modifiers | KeyModifiers.Alt;
+                case Keys.Alt: Modifiers = Modifiers | Keys.Alt;
                     break;
-                case Keys.Shift: Modifiers = Modifiers | KeyModifiers.Shift;
+                case Keys.Shift: Modifiers = Modifiers | Keys.Shift;
                     break;
             }
 
-            this.Text = (Modifiers == KeyModifiers.None ? "" : Modifiers.ToString() + "+") + e.KeyCode.ToString();
+            this.Text = (Modifiers == Keys.None ? "" : Modifiers.ToString() + "+") + e.KeyCode.ToString();
             e.SuppressKeyPress = true;
         }
 
