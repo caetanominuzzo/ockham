@@ -10,33 +10,27 @@ namespace primeira.Editor
     {
         #region PreFilter
 
-        private Control _parentEscopeProvider;
-
-        private static ShortcutManager _shortcutManager = null;
+        private static ShortcutManager _preFilter;
 
         public bool PreFilterMessage(ref Message m)
         {
-            switch (m.Msg)
+            if (m.Msg == (int)KeyEvent.KeyUp ||
+                m.Msg == (int)KeyEvent.KeyDown)
             {
-                case (int)KeyEvent.KeyUp:
-                    foreach (Shortcut p in _shortcutsUp)
+                foreach (Shortcut p in _shortcuts)
+                {
+                    if (
+                        p.Command.Target != null 
+                        && (int)p.Event == m.Msg
+                        && ((int)p.Key == (int)m.WParam)
+                        && VerifyKeys(p.Modifiers)
+                        && VerifyEscope((Control)p.Command.Target, p.Escope))
                     {
-                        if (((int)p.Key == (int)m.WParam)
-                            && VerifyKeys(p.KeyModifier)
-                            && VerifyEscope(_parentEscopeProvider, p.Escope))
-                            p.Command.Method.Invoke(p.Command.Target, new object[0]);
+                        p.Command.Method.Invoke(p.Command.Target, new object[0]);
+                        break;
                     }
-                    break;
-
-                case (int)KeyEvent.KeyDown:
-                    foreach (Shortcut p in _shortcutsDown)
-                    {
-                        if ((int)p.Key == (int)m.WParam && VerifyEscope(_parentEscopeProvider, p.Escope))
-                            p.Command.Method.Invoke(p.Command.Target, new object[0]);
-                    }
-                    break;
+                }
             }
-
             return false;
         }
 
@@ -63,18 +57,16 @@ namespace primeira.Editor
             if (escope == BasicEscopes.Global)
                 return true;
 
+            if (control == null)
+                return false;
+
             if (control is ContainerControl)
             {
                 ContainerControl container = (ContainerControl)control;
 
-                if (container == null)
-                    return false;
-
                 if (control.GetType().GetInterfaces().Contains(typeof(IShorcutEscopeProvider)))
                     if (((IShorcutEscopeProvider)control).IsAtiveByEscope(escope))
                         return true;
-
-                return VerifyEscope(container.ActiveControl, escope);
             }
             return false;
         }
@@ -97,11 +89,9 @@ namespace primeira.Editor
 
         #endregion
 
-        #region static fields
+        #region fields
 
-        private static List<Shortcut> _shortcutsUp = new List<Shortcut>();
-
-        private static List<Shortcut> _shortcutsDown = new List<Shortcut>();
+        private static List<Shortcut> _shortcuts = new List<Shortcut>();
 
         private static List<ShortcutCommand> _commands = new List<ShortcutCommand>();
 
@@ -116,12 +106,25 @@ namespace primeira.Editor
 
         public static Shortcut[] Shorcuts
         {
-            get { return _shortcutsUp.ToArray(); }
+            get { return _shortcuts.ToArray(); }
         }
 
         #endregion
 
         #region Load & Assign shortcuts
+
+        private ShortcutManager()
+        { }
+
+        public static void InitializePreFilter()
+        {
+            if (_preFilter == null)
+            {
+                _preFilter = new ShortcutManager();
+
+                Application.AddMessageFilter(_preFilter);
+            }
+        }
 
         private static ShortcutCommand AddCommand(string name, string description, MethodInfo method, Object target, string escope)
         {
@@ -147,40 +150,49 @@ namespace primeira.Editor
             Shortcut s = new Shortcut();
 
             s.Key = key;
-            s.KeyModifier = Keys;
+            s.Modifiers = Keys;
             s.Escope = escope;
             s.Command = command;
             s.Event = keyEvent;
 
-            if (keyEvent == KeyEvent.KeyUp)
-                _shortcutsUp.Add(s);
-            else if (keyEvent == KeyEvent.KeyDown)
-                _shortcutsDown.Add(s);
+            _shortcuts.Add(s);
 
             return s;
         }
 
+        private static Keys _validKeyModifiers = Keys.Control | Keys.Shift | Keys.Alt;
+
         public static void LoadFromForm(Control control)
         {
-            if (_shortcutManager == null)
-            {
-                _shortcutManager = new ShortcutManager();
-                _shortcutManager._parentEscopeProvider = Application.OpenForms[0];
-                Application.AddMessageFilter(_shortcutManager);
-            }
-            
-            foreach (MethodInfo m in control.GetType().GetMethods())
+            LoadFromType(control.GetType(), control);
+        }
+
+        public static void LoadFromType(Type type)
+        {
+            LoadFromType(type, null);
+        }
+
+        private static void LoadFromType(Type type, Control control)
+        {
+            foreach (MethodInfo m in type.GetMethods())
             {
                 foreach (object o in m.GetCustomAttributes(false))
                     if (o is ShortcutVisibilityAttribute)
                     {
                         ShortcutVisibilityAttribute v = (ShortcutVisibilityAttribute)o;
 
+                        if (!_validKeyModifiers.HasFlag(v.DefaultKeys))
+                        {
+                            LogFileManager.Log(Message_en.ShortcutKeyModifierMustBeAltControlOrShift);
+
+                            throw new InvalidOperationException(Message_en.ShortcutKeyModifierMustBeAltControlOrShift);
+                        }
+
                         ShortcutCommand command = null;
 
                         foreach (ShortcutCommand cc in _commands)
                         {
-                            if (cc.Name == v.Name)
+                            if (cc.Name == v.Name && cc.Target == control)
                             {
                                 command = cc;
                                 break;
@@ -193,16 +205,15 @@ namespace primeira.Editor
                         AddShortcut(v.Escope, v.DefaultKey, v.DefaultKeys, v.Event, command);
                     }
             }
-
         }
 
         public static void Assign(string name, string escope, Keys key, Keys Keys)
         {
             Shortcut shortcut = new Shortcut();
 
-            foreach (Shortcut p in _shortcutsUp)
+            foreach (Shortcut p in _shortcuts)
             {
-                if (p.Key == key && p.KeyModifier == Keys && p.Escope == escope)
+                if (p.Key == key && p.Modifiers == Keys && p.Escope == escope)
                 {
                     Unassign(p);
                     shortcut = p;
@@ -228,8 +239,10 @@ namespace primeira.Editor
 
         public static void Unassign(Shortcut shorcut)
         {
-            _shortcutsUp.Remove(shorcut);
+            _shortcuts.Remove(shorcut);
         }
+
+        
 
         #endregion
 

@@ -15,6 +15,10 @@ namespace primeira.Editor
 {
     public partial class fmMain : Form, IShorcutEscopeProvider, IMessageControl
     {
+        private WindowPositionDocument cache;
+
+        private FormWindowState lastWindowState;
+
         public fmMain()
         {
             InitializeComponent();
@@ -29,8 +33,26 @@ namespace primeira.Editor
 
             AddonManager.Discovery();
 
+            ShortcutManager.InitializePreFilter();
+
+            ShortcutManager.LoadFromType(this.GetType());
+
+            ShortcutManager.LoadFromForm(this);
+
             if (Controls.Count == 0)
                 showNonAddonsLabel();
+
+            cache = WindowPositionDocument.GetInstance(Application.ProductName + ".Main");
+
+            this.Location = cache.Location;
+
+            this.Size = cache.Size;
+
+            this.WindowState = cache.WindowState;
+
+            lastWindowState = this.WindowState;
+            
+            this.ClientSizeChanged += new System.EventHandler(this.fmMain_SizeChanged);
         }
 
         private System.Windows.Forms.Label lblNoAddons;
@@ -92,5 +114,21 @@ namespace primeira.Editor
 
         #endregion
 
+        private void fmMain_SizeChanged(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Normal)
+            {
+                cache.Location = this.Location;
+                cache.Size = this.Size;
+            }
+
+            if (this.WindowState != lastWindowState)
+            {
+                cache.WindowState = this.WindowState;
+                lastWindowState = this.WindowState;
+            }
+
+            cache.Save(Application.ProductName + ".Main");
+        }
     }
 }

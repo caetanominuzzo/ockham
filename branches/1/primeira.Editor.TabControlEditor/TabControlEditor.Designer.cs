@@ -56,7 +56,7 @@ namespace primeira.Editor
             this.pnDocArea.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnDocArea.Location = new System.Drawing.Point(0, 33);
             this.pnDocArea.Name = "pnDocArea";
-            this.pnDocArea.Size = new System.Drawing.Size(400, 353);
+            this.pnDocArea.Size = new System.Drawing.Size(1226, 466);
             this.pnDocArea.TabIndex = 3;
             // 
             // lblNonModalMessage
@@ -66,7 +66,7 @@ namespace primeira.Editor
             this.lblNonModalMessage.BackColor = System.Drawing.SystemColors.Info;
             this.lblNonModalMessage.Location = new System.Drawing.Point(3, 3);
             this.lblNonModalMessage.Name = "lblNonModalMessage";
-            this.lblNonModalMessage.Size = new System.Drawing.Size(394, 30);
+            this.lblNonModalMessage.Size = new System.Drawing.Size(1220, 30);
             this.lblNonModalMessage.TabIndex = 0;
             this.lblNonModalMessage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -79,10 +79,10 @@ namespace primeira.Editor
             this.pnTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnTop.Location = new System.Drawing.Point(0, 0);
             this.pnTop.Name = "pnTop";
-            this.pnTop.Size = new System.Drawing.Size(400, 33);
+            this.pnTop.Size = new System.Drawing.Size(1226, 33);
             this.pnTop.TabIndex = 4;
-            this.pnTop.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnTop_MouseMove);
             this.pnTop.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.pnTop_MouseDoubleClick);
+            this.pnTop.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnTop_MouseMove);
             // 
             // pnTabArea
             // 
@@ -90,10 +90,10 @@ namespace primeira.Editor
             this.pnTabArea.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnTabArea.Location = new System.Drawing.Point(0, 0);
             this.pnTabArea.Name = "pnTabArea";
-            this.pnTabArea.Size = new System.Drawing.Size(356, 33);
+            this.pnTabArea.Size = new System.Drawing.Size(1182, 33);
             this.pnTabArea.TabIndex = 2;
-            this.pnTabArea.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnTop_MouseMove);
             this.pnTabArea.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.pnTop_MouseDoubleClick);
+            this.pnTabArea.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnTop_MouseMove);
             // 
             // pnTabOptions
             // 
@@ -101,12 +101,12 @@ namespace primeira.Editor
             this.pnTabOptions.Controls.Add(this.btnShowTabs);
             this.pnTabOptions.Controls.Add(this.btnClose);
             this.pnTabOptions.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnTabOptions.Location = new System.Drawing.Point(356, 0);
+            this.pnTabOptions.Location = new System.Drawing.Point(1182, 0);
             this.pnTabOptions.Name = "pnTabOptions";
             this.pnTabOptions.Size = new System.Drawing.Size(44, 33);
             this.pnTabOptions.TabIndex = 2;
-            this.pnTabOptions.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnTop_MouseMove);
             this.pnTabOptions.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.pnTop_MouseDoubleClick);
+            this.pnTabOptions.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnTop_MouseMove);
             // 
             // btnShowTabs
             // 
@@ -141,7 +141,7 @@ namespace primeira.Editor
             this.Controls.Add(this.pnDocArea);
             this.Controls.Add(this.pnTop);
             this.Name = "TabControlEditor";
-            this.Size = new System.Drawing.Size(400, 386);
+            this.Size = new System.Drawing.Size(1226, 499);
             this.Load += new System.EventHandler(this.TabControlEditor_Load);
             this.pnDocArea.ResumeLayout(false);
             this.pnTop.ResumeLayout(false);

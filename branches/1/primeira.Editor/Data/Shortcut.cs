@@ -8,16 +8,15 @@ namespace primeira.Editor
     public class Shortcut
     {
         public Keys Key;
-        public Keys KeyModifier;
+        public Keys Modifiers;
         public string Escope;
         public ShortcutCommand Command;
         internal KeyEvent Event;
 
         public new string ToString()
         {
-            return string.Format("{0}+ ({1})", this.KeyModifier, this.Key);
+            return string.Format("({0}+{1})", this.Modifiers, this.Key);
         }
-
     }
 
     public enum KeyEvent
@@ -29,5 +28,7 @@ namespace primeira.Editor
     public static class BasicEscopes
     {
         public const string Global = "Global";
+        public const string Active = "Active";
+        public const string Chord = "Chord";
     }
 }

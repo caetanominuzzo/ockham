@@ -27,6 +27,8 @@ namespace primeira.Editor
             {
                 _knownEditors.Add(type);
 
+                ShortcutManager.LoadFromType(type);
+
                 EditorDefinitionAttribute[] dd = (EditorDefinitionAttribute[])type.GetCustomAttributes(typeof(EditorDefinitionAttribute), false);
 
                 foreach (EditorDefinitionAttribute d in dd)
@@ -60,8 +62,10 @@ namespace primeira.Editor
                     string.Format(
                         Message_en.EditorCreationError,
                         fileName),
-                        "\n",
-                        ex.InnerException.ToString());
+                        Environment.NewLine,
+                        ex.ToString());
+
+                throw;
             }
 
             if (res != null)
@@ -93,28 +97,46 @@ namespace primeira.Editor
 
             if (dd == null)
             {
-                MessageManager.Send(
-                    MessageSeverity.Fatal,
-                    string.Format(
+                LogFileManager.Log(string.Format(
                         Message_en.DocumentMissingDocumentDefinitionAttribute,
                         documentType.Name));
 
-                return null;
+                throw new InvalidOperationException(
+                    string.Format(
+                        Message_en.DocumentMissingDocumentDefinitionAttribute,
+                        documentType.Name));
             }
 
             if (dd.Options.HasFlag(DocumentDefinitionOptions.OpenFromTypeDefaultName))
                 return LoadEditor(dd.DefaultFileName + dd.DefaultFileExtension);
             else
-                return null;
+                throw new InvalidOperationException(Message_en.DocumentMissingOpenFromTypeDefaultName);
         }
 
         private static IEditor CreateEditor(string fileName)
         {
             IEditor res = null;
 
+            Type editorType;
+
             DocumentDefinitionAttribute def = DocumentManager.GetDocumentDefinition(fileName);
 
-            res = (IEditor)def.DefaultEditor.GetConstructor(_defaultEditorCtor).Invoke(new object[1] { fileName });
+            if (def.DefaultEditor != null)
+            {
+                editorType = def.DefaultEditor;
+            }
+            else
+            {
+                Type documentType = DocumentManager.GetDocumentType(fileName);
+
+                editorType = EditorManager.GetEditorByDocumentType(documentType);
+
+                if (editorType == null)
+                    throw new InvalidOperationException(
+                        string.Format(Message_en.ThereIsNoEditorForType, fileName));
+            }
+
+            res = (IEditor)editorType.GetConstructor(_defaultEditorCtor).Invoke(new object[1] { fileName });
 
             return res;
 
@@ -148,6 +170,17 @@ namespace primeira.Editor
 
 
             return (Type)x;
+        }
+
+        public static Type GetDocumentTypeByEditorType(Type editorType)
+        {
+            return ((EditorDefinitionAttribute)editorType.GetCustomAttributes(typeof(EditorDefinitionAttribute), false)[0]).DocumentType;
+        }
+
+        public static Type GetEditorByDocumentType(Type documentType)
+        {
+            return (from x in _knownEditors where ((EditorDefinitionAttribute[])x.GetCustomAttributes(typeof(EditorDefinitionAttribute), false))[0].DocumentType.Equals(documentType)
+                        select x).First();
         }
 
         #endregion

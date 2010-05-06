@@ -69,7 +69,7 @@ namespace primeira.Editor
             AddonDiscoveryDocument doc = (AddonDiscoveryDocument)DocumentManager.LoadDocument(typeof(AddonDiscoveryDocument));
 
             if (doc == null)
-                MessageManager.Send(MessageSeverity.Alert,
+                throw new InvalidOperationException(
                     string.Format(Message_en.DocumentCreationError, FileName));
 
             return doc;
@@ -77,7 +77,7 @@ namespace primeira.Editor
 
         public void ToXml()
         {
-            DocumentManager.ToXml(this);
+            DocumentManager.SaveDocument(this);
         }
 
     }

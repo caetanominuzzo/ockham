@@ -80,11 +80,8 @@ namespace primeira.Editor
             if (attribs.Length != 0)
                 return (DocumentDefinitionAttribute)attribs[0];
 
-            MessageManager.Send(MessageSeverity.Fatal,
-                string.Format(Message_en.DocumentMissingDocumentDefinitionAttribute,
+            throw new InvalidOperationException(string.Format(Message_en.DocumentMissingDocumentDefinitionAttribute,
                 documentType.Name));
-
-            return null;
         }
 
         /// <summary>
@@ -178,34 +175,46 @@ namespace primeira.Editor
         /// <param name="fileName">A file path</param>
         /// <param name="type">The type of the document</param>
         /// <returns></returns>
-        private static DocumentBase ToObject(string fileName, Type type)
+        internal static DocumentBase ToObject(string fileName, Type type)
         {
-            Stream sm = File.OpenRead(fileName);
+            FileInfo f = new FileInfo(fileName);
 
-            Type[] knownTypes = DocumentManager.GetDocumentTypes();
+            DocumentBase doc = null;
 
-            Array.Resize(ref knownTypes, knownTypes.Length + 1);
+            if (!f.Exists || f.Length == 0)
+            {
+                doc = (DocumentBase)type.GetConstructor(System.Type.EmptyTypes).Invoke(System.Type.EmptyTypes);
+            }
+            else
+            {
 
-            knownTypes[knownTypes.Length - 1] = type;
+                Stream sm = File.OpenRead(fileName);
 
-            DataContractSerializer ser = new DataContractSerializer(typeof(DocumentBase),
-                knownTypes,
-                10000000, false, true, null);
+                Type[] knownTypes = DocumentManager.GetDocumentTypes();
 
-            DocumentBase res = (DocumentBase)ser.ReadObject(sm);
+                Array.Resize(ref knownTypes, knownTypes.Length + 1);
 
-            UndoRedoFramework.UndoRedoManager.FlushHistory();
+                knownTypes[knownTypes.Length - 1] = type;
 
-            sm.Close();
+                DataContractSerializer ser = new DataContractSerializer(typeof(DocumentBase),
+                    knownTypes,
+                    10000000, false, true, null);
 
-            return res;
+                doc = (DocumentBase)ser.ReadObject(sm);
+
+                UndoRedoFramework.UndoRedoManager.FlushHistory();
+
+                sm.Close();
+            }
+
+            return doc;
         }
 
         /// <summary>
         /// Serializes a given document in its default file name.
         /// </summary>
         /// <param name="document">The document to serialize</param>
-        public static void ToXml(DocumentBase document)
+        internal static void ToXml(DocumentBase document)
         {
             DocumentDefinitionAttribute def = DocumentManager.GetDocumentDefinition(document.GetType());
 
@@ -216,15 +225,10 @@ namespace primeira.Editor
                 DocumentManager.ToXml(document, fileName);
             }
             else
-            {
-                MessageManager.Send(
-                    MessageSeverity.Fatal,
+                throw new InvalidOperationException(
                     string.Format(
                         Message_en.DocumentMissingOpenFromTypeDefaultName,
                         document.GetType().Name));
-
-                return;
-            }
                 
         }
 
@@ -233,7 +237,7 @@ namespace primeira.Editor
         /// </summary>
         /// <param name="document">The document to serialize</param>
         /// <param name="fileName">The file to serialize</param>
-        public static void ToXml(DocumentBase document, string fileName)
+        internal static void ToXml(DocumentBase document, string fileName)
         {
             Stream sm = File.Create(fileName);
 
@@ -270,13 +274,10 @@ namespace primeira.Editor
             }
             else
             {
-                MessageManager.Send(
-                    MessageSeverity.Fatal,
+                throw new InvalidOperationException(
                     string.Format(
                         Message_en.DocumentMissingOpenFromTypeDefaultName,
                         documentType.Name));
-
-                return null;
             }
         }
 
@@ -290,45 +291,94 @@ namespace primeira.Editor
         {
             DocumentDefinitionAttribute def = DocumentManager.GetDocumentDefinition(documentType);
 
-            if (def.Options.HasFlag(DocumentDefinitionOptions.CustomSerialization))
+            if (def.Options.HasFlag(DocumentDefinitionOptions.CustomSerializationRead))
             {
                 MethodInfo m = documentType.GetMethod("ToObject", new Type[] { typeof(string) });
 
                 if (m == null)
-                    MessageManager.Send(MessageSeverity.Fatal, Message_en.DocumentCustomSerializationMustHaveToObjectMethod);
+                    throw new InvalidOperationException(
+                        Message_en.DocumentCustomSerializationReadMustHaveToObjectMethod);
 
                 try
                 {
                     return (DocumentBase)m.Invoke(null, new object[] { fileName });
                 }
-                catch
+                catch(Exception ex)
                 {
-                    MessageManager.Send(MessageSeverity.Error, Message_en.DocumentCustomSerializatinoError);
+                    LogFileManager.Log(
+                        string.Format(
+                            Message_en.DocumentCustomSerializatinoError, def.DefaultEditor.Name), Environment.NewLine, ex.ToString());
+
+                    throw new InvalidOperationException(
+                        string.Format(
+                            Message_en.DocumentCustomSerializatinoError, def.DefaultEditor.Name), ex);
                 }
-
-
-                return null;
             }
 
-            FileInfo f = new FileInfo(fileName);
+            return DocumentManager.ToObject(fileName, documentType);
+        }
 
-            DocumentBase doc = null;
+        /// <summary>
+        /// Saves a document by its default name.
+        /// </summary>
+        /// <param name="documentType">The System.Type of the document to open</param>
+        public static void SaveDocument(DocumentBase document)
+        {
+            Type documentType = document.GetType();
 
-            if (!f.Exists || f.Length == 0)
+            DocumentDefinitionAttribute def = DocumentManager.GetDocumentDefinition(documentType);
+
+            if (def.Options.HasFlag(DocumentDefinitionOptions.OpenFromTypeDefaultName))
             {
-                doc = (DocumentBase)documentType.GetConstructor(System.Type.EmptyTypes).Invoke(System.Type.EmptyTypes);
+                DocumentManager.SaveDocument(document, def.DefaultFileName + def.DefaultFileExtension);
             }
             else
-                doc = DocumentManager.ToObject(fileName, documentType);
+            {
+                throw new InvalidOperationException(
+                    string.Format(
+                        Message_en.DocumentMissingOpenFromTypeDefaultName,
+                        documentType.Name));
+            }
+        }
 
+        /// <summary>
+        /// Saves a document by its default name.
+        /// </summary>
+        /// <param name="documentType">The System.Type of the document to open</param>
+        /// <param name="fileName">The file to load</param>
+        public static void SaveDocument(DocumentBase document, string fileName)
+        {
+            Type documentType = document.GetType();
 
-            //if(doc == null)
-            //    MessageManager.Send(
-            //        MessageSeverity.Alert, 
+            DocumentDefinitionAttribute def = DocumentManager.GetDocumentDefinition(documentType);
 
-            return doc;
+            if (def.Options.HasFlag(DocumentDefinitionOptions.CustomSerializationWrite))
+            {
+                MethodInfo m = documentType.GetMethod("ToXml", new Type[] { typeof(string) });
+
+                if (m == null)
+                    throw new InvalidOperationException(
+                        Message_en.DocumentCustomSerializationWriteMustHaveToObjectMethod);
+
+                try
+                {
+                    m.Invoke(document, new object[] { fileName });
+                }
+                catch(Exception ex)
+                {
+                    LogFileManager.Log(Message_en.DocumentCustomSerializatinoError);
+
+                    throw new InvalidOperationException(
+                        Message_en.DocumentCustomSerializatinoError, ex);
+                }
+
+                return;
+            }
+
+            ToXml(document, fileName);
 
         }
+
 
         public static string BaseDir
         {
