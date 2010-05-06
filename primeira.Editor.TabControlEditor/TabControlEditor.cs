@@ -14,7 +14,7 @@ using primeira.Editor.Components;
 namespace primeira.Editor
 {
     [EditorDefinition(DocumentType = typeof(TabControlDocument))]
-    [AddonDefinition(AddonOptions.SystemAddon)]
+    [AddonDefinition(AddonOptions.SystemDelayedInitializationAddon)]
     public partial class TabControlEditor : EditorBase, IMessageControl, IShorcutEscopeProvider
     {
 
@@ -37,8 +37,6 @@ namespace primeira.Editor
             InitializeComponent();
 
             MessageManager.SetMessageControl(this);
-
-            ShortcutManager.LoadFromForm(this);
 
             ((Form)TabControlManager.GetInstance().ParentControl).ResizeEnd += new EventHandler(TabControlEditor_ResizeEnd);
             TabControlManager.GetInstance().ParentControl.SizeChanged += new EventHandler(TabControlEditor_ResizeEnd);
@@ -76,8 +74,6 @@ namespace primeira.Editor
 
         public void AddEditor(IEditor editor)
         {
-
-
             this.pnTabArea.SuspendLayout();
 
             this.pnDocArea.Controls.Add((Control)editor);
@@ -124,7 +120,7 @@ namespace primeira.Editor
             TabButton(editor).Visible = false;
             c.Visible = false;
 
-            DocumentManager.ToXml(editor.Document, editor.FileName);
+            DocumentManager.SaveDocument(editor.Document, editor.FileName);
 
             pnTabArea.Controls.Remove(c);
 

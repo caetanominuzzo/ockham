@@ -12,7 +12,7 @@ using primeira.Editor;
 
 namespace primeira.Editor.Components
 {
-    public class EditorBase : UserControl, IEditor
+    public partial class EditorBase : UserControl, IEditor, IShorcutEscopeProvider
     {
         #region Fields
 
@@ -65,6 +65,8 @@ namespace primeira.Editor.Components
 
         public EditorBase()
         {
+            InitializeComponent();
+
             this.Dock = DockStyle.Fill;
 
             this.BorderStyle = BorderStyle.None;
@@ -74,24 +76,25 @@ namespace primeira.Editor.Components
             this.BackColor = Color.White;
 
             this.OnChanged += new ChangedDelegate(EditorBase_OnChanged);
-        }
 
-        public EditorBase(string fileName) : this()
-        {
-            this.DocumentType = DocumentManager.GetDocumentType(fileName);
 
-            this.Document = DocumentManager.LoadDocument(this.DocumentType, fileName);
-
-            this.FileName = fileName;
-
-            if (HasOption(DocumentDefinitionOptions.TimerSaver))
+            try //DesignTime problem
             {
-                _saveTimer = new Timer();
-                _saveTimer.Interval = 1000;
-                _saveTimer.Tick += new EventHandler(_saveTimer_Tick);
+                this.DocumentType = EditorManager.GetDocumentTypeByEditorType(this.GetType());
+            }
+            catch {
+                
             }
         }
-        
+
+        public EditorBase(string fileName)
+            : this()
+        {
+            this.FileName = fileName;
+
+                this.Document = DocumentManager.LoadDocument(this.DocumentType, this.FileName);
+        }
+
         #endregion
 
         #region Methods
@@ -107,25 +110,45 @@ namespace primeira.Editor.Components
             if (_saveTimer != null)
                 _saveTimer.Dispose();
 
-            DocumentManager.ToXml(this.Document, this.FileName);
+            DocumentManager.SaveDocument(this.Document, this.FileName);
         }
 
         public bool HasOption(DocumentDefinitionOptions Option)
         {
-            return (DocumentManager.GetDocumentDefinition(this.Document.GetType()).Options & Option) > 0;
+            return (DocumentManager.GetDocumentDefinition(this.DocumentType).Options & Option) > 0;
         }
 
         #endregion
 
         #region Event Handlers
 
+        private void EditorBase_Load(object sender, EventArgs e)
+        {
+            try //DesignTime problem
+            {
+                if (HasOption(DocumentDefinitionOptions.TimerSaver))
+                {
+                    _saveTimer = new Timer();
+                    _saveTimer.Interval = 1000;
+                    _saveTimer.Tick += new EventHandler(_saveTimer_Tick);
+                }
+
+                this.SelectNextControl(this, true, true, true, false);
+
+
+                ShortcutManager.LoadFromForm(this);
+            }
+            catch { }
+
+
+        }
+
         private void _saveTimer_Tick(object sender, EventArgs e)
         {
-            //Since if !DocumentDefinitionOptions.Virtual there is not _timer set;
             if (_saveTimer != null)
                 _saveTimer.Stop();
 
-            DocumentManager.ToXml(this.Document, this.FileName);
+            DocumentManager.SaveDocument(this.Document, this.FileName);
         }
 
         private void EditorBase_OnChanged()
@@ -151,6 +174,18 @@ namespace primeira.Editor.Components
         {
             if (OnChanged != null)
                 OnChanged();
+        }
+
+        #endregion
+
+        #region IShorcutEscopeProvider Members
+
+        public bool IsAtiveByEscope(string escope)
+        {
+            if (escope.Equals(BasicEscopes.Active))
+                return (EditorContainerManager.IsActive(this));
+
+            else return false;
         }
 
         #endregion

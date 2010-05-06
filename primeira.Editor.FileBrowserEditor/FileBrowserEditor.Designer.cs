@@ -31,13 +31,13 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FileBrowserEditor));
             this.lblQuickLauch = new System.Windows.Forms.Label();
             this.lblRecent = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.folderBrowser1 = new primeira.Editor.FileBrowserEditorComponents.FolderBrowser();
             this.dgDirFiles = new System.Windows.Forms.DataGridView();
             this.dataGridViewImageColumn2 = new System.Windows.Forms.DataGridViewImageColumn();
             this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -60,10 +60,7 @@
             this.ColOrder = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColHardFilename = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColFileVersion = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            //this.tabButton1 = new primeira.Editor.Components.TabButton();
-            this.folderBrowser1 = new primeira.Editor.FileBrowserEditorComponents.FolderBrowser();
             this.panel4.SuspendLayout();
-            this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgDirFiles)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgQuickLauch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgRecentFiles)).BeginInit();
@@ -105,7 +102,7 @@
             this.panel4.Controls.Add(this.dgDirFiles);
             this.panel4.Location = new System.Drawing.Point(530, 50);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(10, 373);
+            this.panel4.Size = new System.Drawing.Size(875, 542);
             this.panel4.TabIndex = 13;
             this.panel4.Visible = false;
             // 
@@ -128,7 +125,7 @@
             this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(219)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
             this.panel3.Location = new System.Drawing.Point(10, 60);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(0, 1);
+            this.panel3.Size = new System.Drawing.Size(875, 1);
             this.panel3.TabIndex = 12;
             // 
             // panel2
@@ -136,12 +133,21 @@
             this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(219)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
-            //this.panel2.Controls.Add(this.tabButton1);
-            this.panel2.Location = new System.Drawing.Point(10, 273);
+            this.panel2.Location = new System.Drawing.Point(10, 442);
             this.panel2.Name = "panel2";
             this.panel2.Padding = new System.Windows.Forms.Padding(0, 0, 5, 0);
-            this.panel2.Size = new System.Drawing.Size(0, 40);
+            this.panel2.Size = new System.Drawing.Size(875, 40);
             this.panel2.TabIndex = 11;
+            // 
+            // folderBrowser1
+            // 
+            this.folderBrowser1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.folderBrowser1.Location = new System.Drawing.Point(0, 0);
+            this.folderBrowser1.Name = "folderBrowser1";
+            this.folderBrowser1.Size = new System.Drawing.Size(875, 46);
+            this.folderBrowser1.TabIndex = 7;
+            this.folderBrowser1.OnDirectoryChange += new primeira.Editor.FileBrowserEditorComponents.FolderBrowser.OnDirectoryChangeDelegate(this.folderBrowser1_OnDirectoryChange);
             // 
             // dgDirFiles
             // 
@@ -183,11 +189,12 @@
             this.dgDirFiles.RowTemplate.Height = 35;
             this.dgDirFiles.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dgDirFiles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgDirFiles.Size = new System.Drawing.Size(0, 201);
+            this.dgDirFiles.Size = new System.Drawing.Size(875, 542);
+            this.dgDirFiles.StandardTab = true;
             this.dgDirFiles.TabIndex = 9;
-            this.dgDirFiles.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellMouseLeave);
-            this.dgDirFiles.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellMouseEnter);
             this.dgDirFiles.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
+            this.dgDirFiles.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellMouseEnter);
+            this.dgDirFiles.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellMouseLeave);
             // 
             // dataGridViewImageColumn2
             // 
@@ -239,7 +246,7 @@
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(219)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
             this.panel1.Location = new System.Drawing.Point(280, 60);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1, 363);
+            this.panel1.Size = new System.Drawing.Size(1, 542);
             this.panel1.TabIndex = 8;
             // 
             // dgQuickLauch
@@ -281,11 +288,12 @@
             this.dgQuickLauch.RowTemplate.Height = 35;
             this.dgQuickLauch.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dgQuickLauch.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgQuickLauch.Size = new System.Drawing.Size(260, 380);
+            this.dgQuickLauch.Size = new System.Drawing.Size(260, 542);
+            this.dgQuickLauch.StandardTab = true;
             this.dgQuickLauch.TabIndex = 5;
-            this.dgQuickLauch.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellMouseLeave);
-            this.dgQuickLauch.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellMouseEnter);
             this.dgQuickLauch.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
+            this.dgQuickLauch.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellMouseEnter);
+            this.dgQuickLauch.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellMouseLeave);
             // 
             // dataGridViewImageColumn1
             // 
@@ -370,11 +378,12 @@
             this.dgRecentFiles.RowTemplate.Height = 35;
             this.dgRecentFiles.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dgRecentFiles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgRecentFiles.Size = new System.Drawing.Size(250, 380);
+            this.dgRecentFiles.Size = new System.Drawing.Size(928, 542);
+            this.dgRecentFiles.StandardTab = true;
             this.dgRecentFiles.TabIndex = 2;
-            this.dgRecentFiles.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellMouseLeave);
-            this.dgRecentFiles.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellMouseEnter);
             this.dgRecentFiles.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
+            this.dgRecentFiles.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellMouseEnter);
+            this.dgRecentFiles.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellMouseLeave);
             // 
             // ColIcon
             // 
@@ -419,40 +428,6 @@
             this.ColFileVersion.ReadOnly = true;
             this.ColFileVersion.Visible = false;
             // 
-            // tabButton1
-            // 
-            //this.tabButton1.AutoEllipsis = true;
-            //this.tabButton1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("tabButton1.BackgroundImage")));
-            //this.tabButton1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            //this.tabButton1.Cursor = System.Windows.Forms.Cursors.Hand;
-            //this.tabButton1.Dock = System.Windows.Forms.DockStyle.Right;
-            //this.tabButton1.FlatAppearance.BorderSize = 0;
-            //this.tabButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            //this.tabButton1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            //this.tabButton1.ForeColor = System.Drawing.Color.DarkGray;
-            //this.tabButton1.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            //this.tabButton1.Location = new System.Drawing.Point(-80, 0);
-            //this.tabButton1.MaximumSize = new System.Drawing.Size(200, 40);
-            //this.tabButton1.Name = "tabButton1";
-            //this.tabButton1.Padding = new System.Windows.Forms.Padding(10, 5, 5, 5);
-            //this.tabButton1.SelectedImage = ((System.Drawing.Image)(resources.GetObject("tabButton1.SelectedImage")));
-            //this.tabButton1.Size = new System.Drawing.Size(75, 40);
-            //this.tabButton1.TabIndex = 10;
-            //this.tabButton1.Text = "Open";
-            //this.tabButton1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            //this.tabButton1.UnselectedImage = ((System.Drawing.Image)(resources.GetObject("tabButton1.UnselectedImage")));
-            //this.tabButton1.UseVisualStyleBackColor = true;
-            // 
-            // folderBrowser1
-            // 
-            this.folderBrowser1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.folderBrowser1.Location = new System.Drawing.Point(0, 0);
-            this.folderBrowser1.Name = "folderBrowser1";
-            this.folderBrowser1.Size = new System.Drawing.Size(10, 46);
-            this.folderBrowser1.TabIndex = 7;
-            this.folderBrowser1.OnDirectoryChange += new primeira.Editor.FileBrowserEditorComponents.FolderBrowser.OnDirectoryChangeDelegate(this.folderBrowser1_OnDirectoryChange);
-            // 
             // FileBrowserEditor
             // 
             this.Controls.Add(this.lblQuickLauch);
@@ -462,11 +437,10 @@
             this.Controls.Add(this.dgQuickLauch);
             this.Controls.Add(this.dgRecentFiles);
             this.Name = "FileBrowserEditor";
-            this.Size = new System.Drawing.Size(548, 439);
+            this.Size = new System.Drawing.Size(1226, 582);
             this.Load += new System.EventHandler(this.FileBrowserEditor_Load);
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
-            this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgDirFiles)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgQuickLauch)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgRecentFiles)).EndInit();

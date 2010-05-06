@@ -17,15 +17,12 @@ namespace primeira.Editor
 
         private IEditor _editor;
 
-        private IContainer components;
-        private string _tabTitle;
         private Image[,] _imgs;
-       
 
-        public string TabTitle
-        {
-            get { return _tabTitle; }
-        }
+
+        public string TabTitle { get; private set; }
+        public string FileName { get; private set; }
+        public string FriendlyName { get; private set; }
 
         public void SetBounds(Rectangle bounds)
         {
@@ -35,10 +32,11 @@ namespace primeira.Editor
             if (bounds != this.Bounds)
             {
                 this.Bounds = bounds;
-                
-                _printLabel = MeasureFromIDC();
 
                 _hideLabel = _editor.HasOption(DocumentDefinitionOptions.DoNotShowLabelAndFixWidth);
+
+                if(!_hideLabel)
+                    _printLabel = MeasureFromIDC();
 
                 _hideLabel = _hideLabel || this.Width == 50 || _printLabel == string.Empty;
 
@@ -103,10 +101,11 @@ namespace primeira.Editor
 
             DocumentDefinitionAttribute def = DocumentManager.GetDocumentDefinition(editor.Document.GetType());
 
-            if (def.TabTitle != null)
-                SetText(def.TabTitle);
-            else
-                SetText(editor.FileName);
+            SetText(editor.FileName, def.FriendlyName);
+            //if (def.FriendlyName != null)
+            //    SetText(def.FriendlyName);
+            //else
+            //    SetText(editor.FileName);
 
             this.Click += new EventHandler(TabButton_Click);
 
@@ -155,9 +154,19 @@ namespace primeira.Editor
 
         public void SetText(string fileName)
         {
-            _toolTip.SetToolTip(this, fileName);
+            SetText(fileName, null);
+        }
 
-            this._tabTitle = fileName;
+        public void SetText(string fileName, string friendlyName)
+        {
+            if (friendlyName == null)
+                friendlyName = "%";
+
+            this.FriendlyName = friendlyName;
+
+            this.TabTitle = friendlyName.Replace("%", fileName);
+
+            _toolTip.SetToolTip(this, this.TabTitle);
         }
 
         //To avoid creating graphics dynamically. Used in MeasureFromIDC below.
@@ -177,7 +186,7 @@ namespace primeira.Editor
                 _graphics = _control.CreateGraphics();
             }
 
-            _value = _tabTitle;
+            _value = TabTitle;
 
             _size = new Size(
                         this.Width - 20,

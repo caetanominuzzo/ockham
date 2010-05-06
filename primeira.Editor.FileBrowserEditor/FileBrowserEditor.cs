@@ -9,7 +9,7 @@ using primeira.Editor.Components;
 namespace primeira.Editor
 {
     [EditorDefinition(DocumentType = typeof(FileBrowserDocument))]
-    [AddonDefinition(AddonOptions.WaitEditorContainer | AddonOptions.SystemDelayedInitializationAddon)]
+    [AddonDefinition(AddonOptions.LastInitilizedAddon)]
     public partial class FileBrowserEditor :  EditorBase, IRecentFileControl
     {
         #region Fields
@@ -20,14 +20,18 @@ namespace primeira.Editor
 
         #region Ctor
 
+        public FileBrowserEditor()
+        {
+            InitializeComponent();
+        }
+
         public FileBrowserEditor(string fileName)
             : base(fileName)
         {
+
             InitializeComponent();
 
             FileManager.SetRecentManager(this);
-
-            ShortcutManager.LoadFromForm(this);
 
             this.OnSelected += new SelectedDelegate(FileBrowser_OnSelected);
 
@@ -135,8 +139,6 @@ namespace primeira.Editor
             EditorManager.RegisterEditor(typeof(FileBrowserEditor));
 
             EditorManager.LoadEditor(typeof(FileBrowserDocument));
-
-            
         }   
 
         #region Event Handlers
@@ -266,13 +268,12 @@ namespace primeira.Editor
 
             if (dgQuickLauch.SelectedRows.Count == 1)
                 dgQuickLauch.SelectedRows[0].Selected = false;
+
         }
 
 
-        [ShortcutVisibility("File Browser", "Shows the File Browser tab", BasicEscopes.Global, Keys.T, Keys.Control)]
-        public void show()
-        {
-            EditorManager.LoadEditor(this.DefaultFileName).Selected = true;
-        }
+
+
+
     }
 }

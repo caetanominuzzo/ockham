@@ -40,5 +40,9 @@ namespace primeira.Editor
             _editorContainer = container;
         }
 
+        public static bool IsActive(IEditor editor)
+        {
+            return _editorContainer.IsActive(editor);
+        }
     }
 }

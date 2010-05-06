@@ -34,9 +34,7 @@ namespace primeira.Editor
 
                 string addonCacheFile = AddonDiscoveryDocument.FileName;
 
-                DateTime dtAddonsDir = Directory.GetLastWriteTime(addonDir);
-
-                if (dtAddonsDir <= File.GetLastWriteTime(addonCacheFile))
+                if (cache.LoadOrder.Length > 0 && Directory.GetLastWriteTime(addonDir) <= File.GetLastWriteTime(addonCacheFile))
                 {
                     InitializeAddonsFromCache(ref addons, cache);
                 }
@@ -52,37 +50,35 @@ namespace primeira.Editor
                         InitializationError(addons);
                 }
             }
-            catch (IOException ex)
-            {
-                MessageManager.Send(MessageSeverity.Error, Message_en.AddonDiscoveryError);
-
-                LogFileManager.Log(Message_en.AddonDiscoveryError, "\n", ex.ToString());
-            }
             catch (Exception ex)
             {
-                MessageManager.Send(MessageSeverity.Error, Message_en.AddonDiscoveryError);
-
-                LogFileManager.Log(Message_en.AddonDiscoveryError, "\n", ex.ToString());
+                LogFileManager.Log(Message_en.AddonDiscoveryError, Environment.NewLine, ex.ToString());
+                throw;
             }
         }
 
         private static void GetAllAvaiableAddonTypes(ref List<Type> addons, string addonDir)
         {
+            
             string[] dlls = Directory.GetFiles(addonDir, "*.dll", SearchOption.AllDirectories);
+            //string[] dlls = Directory.GetDirectories(addonDir);
 
             Assembly ass = null;
 
             foreach (string dll in dlls)
             {
+                //ass = Assembly.LoadFrom(@"D:\Desenv\Ockham\branches\1\primeira.Editor.Application\bin\Debug\Addons\TabControlEditor\primeira.Editor.TabControlEditor.dll");
                 ass = Assembly.LoadFrom(dll);
 
-                Type[] types = ass.GetTypes();
+                Type[] types = ass.GetExportedTypes();
 
                 foreach (Type type in types)
                 {
                     if (type.GetCustomAttributes(typeof(AddonDefinitionAttribute), true).Length > 0)
                         addons.Add(type);
                 }
+
+             //   break;
             }
         }
 
@@ -105,12 +101,11 @@ namespace primeira.Editor
         {
             InitializeAddonGroup(ref addons, AddonOptions.SystemAddon, cache);
 
+            InitializeAddonGroup(ref addons, AddonOptions.SystemDelayedInitializationAddon, cache);
+
             InitializeAddonGroup(ref addons, AddonOptions.UserAddon, cache);
 
-            if (EditorContainerManager.IsInitialized())
-                InitializeAddonGroup(ref addons, AddonOptions.WaitEditorContainer, cache);
-
-            InitializeAddonGroup(ref addons, AddonOptions.SystemDelayedInitializationAddon, cache);
+            InitializeAddonGroup(ref addons, AddonOptions.LastInitilizedAddon, cache);
         }
 
         private static void InitializeAddonGroup(ref List<Type> addons, AddonOptions definitionFilter, AddonDiscoveryDocument cache)
