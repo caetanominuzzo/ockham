@@ -1,6 +1,6 @@
-﻿namespace primeira.Editor
+﻿namespace primeira.Editor.Components
 {
-    partial class fmMain
+    partial class FormBase
     {
         /// <summary>
         /// Required designer variable.
@@ -30,21 +30,18 @@
         {
             this.SuspendLayout();
             // 
-            // fmMain
+            // FormBase
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.Lavender;
             this.ClientSize = new System.Drawing.Size(284, 262);
-            this.Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Name = "fmMain";
-            this.Text = "Ockham - Multi Purpose Editor";
-            this.Load += new System.EventHandler(this.fmMain_Load);
+            this.Name = "FormBase";
+            this.Text = "FormBase";
+            this.Load += new System.EventHandler(this.FormBase_Load);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
     }
 }

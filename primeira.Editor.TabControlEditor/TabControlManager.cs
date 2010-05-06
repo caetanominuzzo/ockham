@@ -27,7 +27,7 @@ namespace primeira.Editor
 
         #region Parent Control
 
-        public Control ParentControl
+        public Form MainForm
         {
             get;
             internal set;
@@ -89,7 +89,7 @@ namespace primeira.Editor
 
                 iiDinamicSizeCount = _openEditors.Count() - iiFixedSizeCount;
 
-                iiAvalaibleSize = this.ParentControl.Width - 70 - iiFixedSizeWidth;
+                iiAvalaibleSize = this.MainForm.Width - 70 - iiFixedSizeWidth;
 
                 iiDinamicSizeWidth = Math.Max(FIXED_SIZE_TABBUTTON_WIDTH, Math.Min(MAX_SIZE_TABBUTTON_WIDTH, iiAvalaibleSize / iiDinamicSizeCount));
 
@@ -293,5 +293,6 @@ namespace primeira.Editor
             else
                 _tabcontrol.AddEditor(editor);
         }
+
     }
 }

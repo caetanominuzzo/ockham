@@ -42,6 +42,11 @@ namespace primeira.Editor
             TabControlManager.GetInstance().ReleaseDelayedZOrderControl();
         }
 
+        [ShortcutVisibility("Manage Shortcuts", "", BasicEscopes.Global, Keys.S, Keys.Control | Keys.Shift | Keys.Alt, Event = KeyEvent.KeyUp)]
+        public static void show()
+        {
+            ShortcutManager.ShowConfig();
+        }
 
         #endregion
 
