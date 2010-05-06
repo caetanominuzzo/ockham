@@ -14,5 +14,7 @@ namespace primeira.Editor
         IEditor GetOpenEditor(string fileName);
 
         bool IsActive(IEditor editor);
+
+        System.Windows.Forms.Form MainForm { get; }
     }
 }

@@ -15,7 +15,12 @@ namespace primeira.Editor
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new fmMain());
+
+            AddonManager.Discovery();
+
+            ShortcutManager.InitializePreFilter();
+
+            Application.Run(EditorContainerManager.MainMForm);
         }
     }
 }
