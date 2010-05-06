@@ -73,7 +73,7 @@
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(561, 495);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(1037, 582);
             this.flowLayoutPanel1.TabIndex = 21;
             // 
             // panel1
@@ -108,8 +108,8 @@
             this.txtName.Size = new System.Drawing.Size(495, 20);
             this.txtName.TabIndex = 3;
             this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
-            this.txtName.Leave += new System.EventHandler(this.txtName_Leave);
             this.txtName.Enter += new System.EventHandler(this.txtName_Enter);
+            this.txtName.Leave += new System.EventHandler(this.txtName_Leave);
             // 
             // panel2
             // 
@@ -335,7 +335,7 @@
             this.AutoSize = true;
             this.Controls.Add(this.flowLayoutPanel1);
             this.Name = "MetaEditor";
-            this.Size = new System.Drawing.Size(561, 495);
+            this.Size = new System.Drawing.Size(1037, 582);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
             this.panel1.ResumeLayout(false);

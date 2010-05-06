@@ -37,7 +37,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\primeira.Editor.Application\bin\Debug\Addons\</OutputPath>
+    <OutputPath>..\primeira.Editor.Application\bin\Debug\Addons\TabControlEditor\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -98,10 +98,12 @@
     <ProjectReference Include="..\primeira.Editor.Components\primeira.Editor.Components.csproj">
       <Project>{F5E3F2D5-0629-4BEF-BC64-718E8483655E}</Project>
       <Name>primeira.Editor.Components</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\primeira.Editor\primeira.Editor.csproj">
       <Project>{60E195BA-125C-4DC4-A7B9-26C033CD1DCC}</Project>
       <Name>primeira.Editor</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

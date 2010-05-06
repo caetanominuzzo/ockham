@@ -15,7 +15,7 @@ using System.CodeDom.Compiler;
 namespace primeira.Editor
 {
     [EditorDefinition(DocumentType=typeof(MetaEditorDocument))]
-    [AddonDefinition(AddonOptions.WaitEditorContainer | AddonOptions.UserAddon)]
+    [AddonDefinition(AddonOptions.UserAddon)]
     public partial class MetaEditor : EditorBase, IShorcutEscopeProvider
     {
         public MetaEditor(string fileName)
@@ -42,7 +42,7 @@ namespace primeira.Editor
         [ShortcutVisibility("Nome1", "", BasicEscopes.Global, Keys.Z, Keys.Control)]
         public void Undo()
         {
-            ((MetaEditorDocument)EditorContainerManager.GetOpenEditor("C:\\Users\\caetano\\Documents\\Editor 11.metaeditor").Document).EditorName = "asd";
+            //((MetaEditorDocument)EditorContainerManager.GetOpenEditor("C:\\Users\\caetano\\Documents\\Editor 11.metaeditor").Document).EditorName = "asd";
             
 
           //  ((MetaEditor)EditorContainerManager.GetOpenEditorByFilename("C:\\Users\\caetano\\Documents\\Editor 11.metaeditor")).Refresh();

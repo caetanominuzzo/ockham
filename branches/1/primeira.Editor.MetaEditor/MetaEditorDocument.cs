@@ -12,7 +12,7 @@ namespace primeira.Editor
 {
     [DataContract()]
     [DocumentDefinition(Name = "Meta Editor",
-                DefaultFileName = "Editor {0}",
+                DefaultFileName = "Editor",
                 Description = "An editor for editors.",
                 DefaultFileExtension = ".metaeditor",
                 DefaultEditor = typeof(MetaEditor),

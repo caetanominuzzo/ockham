@@ -12,5 +12,7 @@ namespace primeira.Editor
         bool CloseEditor(IEditor editor);
 
         IEditor GetOpenEditor(string fileName);
+
+        bool IsActive(IEditor editor);
     }
 }

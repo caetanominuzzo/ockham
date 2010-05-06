@@ -13,7 +13,7 @@ namespace primeira.Editor
                 Description = "File & Tab Operations",
                 DefaultFileExtension = ".filebrowser",
                 DefaultEditor = typeof(FileBrowserEditor),
-                TabTitle="File Tab",
+                FriendlyName="File Tab",
                 Options = (DocumentDefinitionOptions.DoNotShowLabelAndFixWidth | DocumentDefinitionOptions.TimerSaver | DocumentDefinitionOptions.NeverClose | DocumentDefinitionOptions.OpenFromTypeDefaultName))]
     public class FileBrowserDocument : DocumentBase
     {

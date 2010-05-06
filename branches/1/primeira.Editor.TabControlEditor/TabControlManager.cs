@@ -42,9 +42,8 @@ namespace primeira.Editor
         internal void SetTabControl(TabControlEditor tabcontrol)
         {
             if (_tabcontrol != null)
-                MessageManager.Send(MessageSeverity.Fatal,
-                    Message_en.TabControlAlreadySet);
-
+                LogFileManager.Log(Message_en.TwoTabControlAddons);
+            
             _tabcontrol = tabcontrol;
         }
 
@@ -180,6 +179,11 @@ namespace primeira.Editor
         public bool DelayedZOrderControl
         {
             get { return _delayedZOrderControl; }
+        }
+
+        public bool IsActive(IEditor editor)
+        {
+            return _activeEditor.FileName == editor.FileName;
         }
 
         #endregion

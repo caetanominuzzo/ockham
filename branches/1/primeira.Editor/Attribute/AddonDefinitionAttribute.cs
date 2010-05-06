@@ -5,6 +5,11 @@ using System.Text;
 
 namespace primeira.Editor
 {
+    /// <summary>
+    /// Defines a class as an Addon.
+    /// 
+    /// To be correctly handled the class must have an static method with AddonInitializeAttribute.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public sealed class AddonDefinitionAttribute : Attribute
     {
@@ -16,13 +21,22 @@ namespace primeira.Editor
         }
     }
 
-    [Flags()]
+    /// <summary>
+    /// Used in AddonDefinitionAttribute ctor.
+    /// This enum defines the addons order to load. 
+    /// 
+    /// First are loaded SystemAddon,
+    ///             then SystemDelayedInitializationAddon,
+    ///             then UserAddon 
+    ///      and finally LastInitilizedAddon.
+    /// 
+    /// </summary>
     public enum AddonOptions
     {
         None = 0,
-        SystemAddon = 1,
-        UserAddon = 2,
-        WaitEditorContainer = 4,
-        SystemDelayedInitializationAddon = 8,
+        UserAddon = 1,
+        SystemAddon = 2,
+        SystemDelayedInitializationAddon = 4,
+        LastInitilizedAddon = 8,
     }
 }

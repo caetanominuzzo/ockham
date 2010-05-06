@@ -32,11 +32,12 @@ namespace primeira.Editor
 
             for (int i = 1; i < 1000; i++)
             {
-                string name = string.Format(fileVersion.DefaultFileName, i);
+                result = string.Format("{0} {1}{2}",
+                    fileVersion.DefaultFileName, 
+                    i,
+                    fileVersion.DefaultFileExtension);
 
-                result = string.Format("{0}{1}", name, fileVersion.DefaultFileExtension);
-
-                if (!File.Exists(string.Format("{0}{1}", Path.Combine(basedir, name), fileVersion.DefaultFileExtension)))
+                if (!File.Exists(Path.Combine(basedir, result)))
                     break;
             }
             return result;
