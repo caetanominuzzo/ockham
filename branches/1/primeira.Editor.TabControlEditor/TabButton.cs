@@ -26,7 +26,7 @@ namespace primeira.Editor
 
         public void SetBounds(Rectangle bounds)
         {
-            if (TabControlManager.GetInstance().ParentControl.Width - 60 < bounds.Left + bounds.Width)
+            if (TabControlManager.GetInstance().MainForm.Width - 60 < bounds.Left + bounds.Width)
                 bounds = new Rectangle(0, 0, 0, 0);
 
             if (bounds != this.Bounds)

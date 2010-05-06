@@ -44,5 +44,10 @@ namespace primeira.Editor
         {
             return _editorContainer.IsActive(editor);
         }
+
+        public static System.Windows.Forms.Form MainMForm
+        {
+            get { return _editorContainer.MainForm; }
+        }
     }
 }

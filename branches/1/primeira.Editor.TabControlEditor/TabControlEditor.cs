@@ -38,9 +38,9 @@ namespace primeira.Editor
 
             MessageManager.SetMessageControl(this);
 
-            ((Form)TabControlManager.GetInstance().ParentControl).ResizeEnd += new EventHandler(TabControlEditor_ResizeEnd);
-            TabControlManager.GetInstance().ParentControl.SizeChanged += new EventHandler(TabControlEditor_ResizeEnd);
-            ((Form)TabControlManager.GetInstance().ParentControl).FormClosing += new FormClosingEventHandler(TabControlEditor_FormClosing);
+            ((Form)TabControlManager.GetInstance().MainForm).ResizeEnd += new EventHandler(TabControlEditor_ResizeEnd);
+            TabControlManager.GetInstance().MainForm.SizeChanged += new EventHandler(TabControlEditor_ResizeEnd);
+            ((Form)TabControlManager.GetInstance().MainForm).FormClosing += new FormClosingEventHandler(TabControlEditor_FormClosing);
         }
 
         void TabControlEditor_FormClosing(object sender, FormClosingEventArgs e)
@@ -56,9 +56,12 @@ namespace primeira.Editor
         [AddonInitialize()]
         public static void AddonInitialize()
         {
-            Control parent = Application.OpenForms[0];
+            FormBase fmMain = new FormBase();
 
-            TabControlManager.GetInstance().ParentControl = parent;
+            //try to set windows 7 style
+            DwmHelper.SeventishIt(fmMain);
+
+            TabControlManager.GetInstance().MainForm = fmMain;
 
             EditorContainerManager.SetEditorContainer((IEditorContainer)TabControlManager.GetInstance());
 
@@ -68,8 +71,7 @@ namespace primeira.Editor
 
             TabControlManager.GetInstance().SetTabControl((TabControlEditor)tabEditor);
 
-            parent.Controls.Add((Control)tabEditor);
-
+            fmMain.Controls.Add((Control)tabEditor);
         }
 
         public void AddEditor(IEditor editor)
@@ -136,6 +138,12 @@ namespace primeira.Editor
 
         private void TabControlEditor_Load(object sender, EventArgs e)
         {
+            MessageManager.SetMessageControl(this);
+
+            ShortcutManager.LoadFromType(this.GetType());
+
+            ShortcutManager.LoadFromForm(this);
+
             foreach (string file in ((TabControlDocument)Document).GetOpenTabsFilename())
             {
                 EditorManager.LoadEditor(file);

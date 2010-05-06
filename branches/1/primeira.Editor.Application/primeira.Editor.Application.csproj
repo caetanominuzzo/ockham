@@ -71,21 +71,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DwmHelper.cs" />
-    <Compile Include="fmMain.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="fmMain.Designer.cs">
-      <DependentUpon>fmMain.cs</DependentUpon>
-    </Compile>
-    <Compile Include="fmMain.Shortcut.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="fmMain.resx">
-      <DependentUpon>fmMain.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
