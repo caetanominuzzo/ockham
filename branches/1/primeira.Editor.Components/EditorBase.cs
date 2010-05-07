@@ -77,14 +77,11 @@ namespace primeira.Editor.Components
 
             this.OnChanged += new ChangedDelegate(EditorBase_OnChanged);
 
-
             try //DesignTime problem
             {
                 this.DocumentType = EditorManager.GetDocumentTypeByEditorType(this.GetType());
             }
-            catch {
-                
-            }
+            catch { }
         }
 
         public EditorBase(string fileName)
@@ -139,8 +136,6 @@ namespace primeira.Editor.Components
                 ShortcutManager.LoadFromForm(this);
             }
             catch { }
-
-
         }
 
         private void _saveTimer_Tick(object sender, EventArgs e)

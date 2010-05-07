@@ -12,7 +12,7 @@ using primeira.Editor.Components;
 
 namespace primeira.Editor
 {
-    [EditorDefinition(DocumentType=typeof(ShortcutConfigDocument))]
+    [EditorDefinition(DocumentType = typeof(ShortcutConfigDocument))]
     [AddonDefinition(AddonOptions.SystemAddon)]
     public partial class ShortcutConfigEditor : EditorBase
     {
@@ -26,42 +26,39 @@ namespace primeira.Editor
         public static void RegisterEditor()
         {
             EditorManager.RegisterEditor(typeof(ShortcutConfigEditor));
-            
+
             ShortcutManager.SetShortcutConfigDocumentType(typeof(ShortcutConfigDocument));
         }
 
         private void ShortcutManagerEditor_Load(object sender, EventArgs e)
         {
-            foreach (ShortcutCommand p in ShortcutManager.Commands)
-            {
-                if (!lsCommand.Items.Contains(p.Name))
-                    lsCommand.Items.Add(p.Name);
-            }
+            Shortcut[] shortcuts = (from a in ShortcutManager.Shorcuts
+                             group a by a.Method into g
+                             orderby g.First().CommandCaption
+                             select g.First()
+                      ).ToArray();
 
-            foreach (ShortcutCommand p in ShortcutManager.Commands)
-            {
-                if (!cbEscope.Items.Contains(p.Escope))
-                    cbEscope.Items.Add(p.Escope);
-            }
+            lsCommand.DataSource = shortcuts;
+            lsCommand.DisplayMember = "CommandCaption";
+
+            string[] escopes = (from a in ShortcutManager.Shorcuts
+                             group a by a.Escope into g
+                             select g.First().Escope
+                      ).ToArray();
+
+            cbEscope.DataSource = escopes;
 
             txtCommand.Focus();
         }
 
         private void lsCommand_SelectedIndexChanged(object sender, EventArgs e)
         {
-            cbShortcut.Items.Clear();
-            
-            foreach (ShortcutCommand p in ShortcutManager.Commands)
-            {
-                if (p.Name == lsCommand.SelectedItem.ToString())
-                {
-                    foreach (Shortcut pp in ShortcutManager.Shorcuts)
-                    {
-                        if (pp.Command == p)
-                            cbShortcut.Items.Add(pp.ToString());
-                    }
-                }
-            }
+            Shortcut[] shortcuts = (from a in ShortcutManager.Shorcuts
+                                    where a.Method == ((Shortcut)lsCommand.SelectedItem).Method
+                                    select a).ToArray();
+
+            cbShortcut.DataSource = shortcuts;
+            cbShortcut.DisplayMember = "KeyCaption";
 
             lblCommand1.Text = lblCommand2.Text = lsCommand.SelectedItem.ToString();
 
@@ -72,21 +69,16 @@ namespace primeira.Editor
         private void btRemove_Click(object sender, EventArgs e)
         {
             if (cbShortcut.SelectedItem != null)
-                foreach (Shortcut p in ShortcutManager.Shorcuts)
-                {
-                    if (p.ToString() == cbShortcut.SelectedItem.ToString())
-                    {
-                        ShortcutManager.Unassign(p);
-                        break;
-                    }
-                }
+            {
+                ShortcutManager.Remove((Shortcut)cbShortcut.SelectedItem);
+            }
 
             lsCommand_SelectedIndexChanged(null, null);
         }
 
         private void btAssign_Click(object sender, EventArgs e)
         {
-            ShortcutManager.Assign(lsCommand.SelectedItem.ToString(), cbEscope.Text, txtShortcut.Key, txtShortcut.Modifiers);
+            ShortcutManager.Assign((Shortcut)lsCommand.SelectedItem, cbEscope.Text, txtShortcut.Key, txtShortcut.Modifiers);
             lsCommand_SelectedIndexChanged(null, null);
         }
 
@@ -94,16 +86,25 @@ namespace primeira.Editor
         {
             this.Close();
         }
-        
+
         private void txtShortcut_TextChanged(object sender, EventArgs e)
         {
-            foreach (Shortcut p in ShortcutManager.Shorcuts)
+            btAssign.Enabled = txtShortcut.IsValid;
+
+            if (txtShortcut.IsValid)
             {
-                if (p.Key == txtShortcut.Key && p.Modifiers == txtShortcut.Modifiers && p.Escope == cbEscope.Text)
-                {
-                    txtCurrently.Text = p.Command.Name;
-                    break;
-                }
+                Shortcut shortcut = (from a in ShortcutManager.Shorcuts
+                                     where a.Key == txtShortcut.Key && a.Modifiers == txtShortcut.Modifiers
+                                     select a).FirstOrDefault();
+
+                if (shortcut != null)
+                    txtCurrently.Text = shortcut.CommandCaption;
+                else
+                    txtCurrently.Text = Message_en.ShortcutNoConflictsDetected;
+            }
+            else
+            {
+                txtCurrently.Text = string.Empty;
             }
         }
 
@@ -112,36 +113,66 @@ namespace primeira.Editor
             this.Close();
         }
 
-        private void txtCommand_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            lsCommand.Items.Clear();
-
-            string cmd;
-
-            foreach (ShortcutCommand p in ShortcutManager.Commands)
-            {
-                cmd = string.Format("{0}\t\t{1}", p.Name, p.Description);
-
-                if (!lsCommand.Items.Contains(cmd)
-                    && cmd.ToUpper().Contains(txtCommand.Text.ToUpper()))
-                    lsCommand.Items.Add(cmd);
-            }
-
-        }
-
         private void txtCommand_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Down && lsCommand.Items.Count > 0)
+            if ((e.KeyCode == Keys.Down ||
+                (e.KeyCode == Keys.Right && txtCommand.SelectionStart == txtCommand.Text.Length))
+                && lsCommand.Items.Count > 0)
             {
                 e.Handled = true;
 
                 lsCommand.Focus();
 
                 lsCommand.SelectedIndex = 0;
-                
+
             }
         }
 
+        private void lsCommand_KeyUp(object sender, KeyEventArgs e)
+        {
+            if ((e.KeyCode == Keys.Up || e.KeyCode == Keys.Left) && lsCommand.SelectedItem != null && lsCommand.SelectedIndex == 0) 
+            {
+                e.Handled = true;
 
+                txtCommand.Focus();
+
+                txtCommand.SelectAll();
+            }
+        }
+
+        private int lastTextLength = 0;
+
+        private void txtCommand_TextChanged(object sender, EventArgs e)
+        {
+            if ((lastTextLength == 0 && txtCommand.Text.Length == 0) ||
+                (lastTextLength > 0 && txtCommand.Text.Length > 0))
+            {
+                lastTextLength = txtCommand.Text.Length;
+            }
+            else if ((lastTextLength == 0 && txtCommand.Text.Length > 0) || (lastTextLength > 0 && txtCommand.Text.Length == 0))
+            {
+                DelayedExecutionManager.AbortTask(this);
+
+                DelayedExecutionManager.AddTask(this, 500, delegate()
+                {
+                    if (this != null && !this.IsDisposed && this.IsHandleCreated)
+                        this.Invoke((MethodInvoker)delegate
+                        {
+                            if (!this.IsDisposed && this.IsHandleCreated)
+                                lblType.Visible = txtCommand.Text.Length == 0;
+                        });
+
+                });
+
+                
+            }
+           
+            lsCommand.DataSource = (from a in ShortcutManager.Shorcuts
+                                    group a by a.Method into g
+                                    orderby g.First().CommandCaption
+                                    select g.First()).ToArray();
+
+            lastTextLength = txtCommand.Text.Length;
+        }
     }
 }

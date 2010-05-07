@@ -19,6 +19,7 @@ namespace primeira.Editor
         public static string ThereIsNoEditorForType                             = "There is no registered editor for file '{0}'.";
         public static string DocumentCreationError                              = "There is an error loading document '{0}'.";
         public static string ShortcutKeyModifierMustBeAltControlOrShift         = "Shortcut key modifier must be only Alt, Control or Shift key.";
+        public static string ShortcutNoConflictsDetected                        = "No conflicts detected.";
     }
 
 }

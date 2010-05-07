@@ -19,6 +19,7 @@ namespace primeira.Editor
         }
 
         [ShortcutVisibility("Close Tab", "", BasicEscopes.Global, Keys.F4, Keys.Control)]
+        [ShortcutVisibility("Close Tab", "", BasicEscopes.Global, Keys.F5, Keys.Control)]
         public void CloseActiveTab()
         {
             TabControlManager.GetInstance().CloseEditor(TabControlManager.GetInstance().ActiveEditor);

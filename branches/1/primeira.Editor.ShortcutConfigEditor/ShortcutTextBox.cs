@@ -10,49 +10,52 @@ namespace primeira.Editor
     {
         public Keys Key;
         public Keys Modifiers;
-
+        public bool IsValid;
 
      
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
             Key = e.KeyCode;
+            Modifiers = e.Modifiers;
 
             StringBuilder sb = new StringBuilder();
 
-            if (e.Modifiers.HasFlag(Keys.Alt))
-            {
-                sb.Append("Alt");
+            sb.Append(Modifiers == Keys.None ? string.Empty : Modifiers.ToString());
 
-                if (Key.HasFlag(Keys.Menu))
-                    Key &= ~Keys.Menu;
-            }
-
-            if (e.Modifiers.HasFlag(Keys.Control))
+            if (Key != Keys.Menu &&
+                Key != Keys.ShiftKey &&
+                Key != Keys.ControlKey)
             {
                 if (sb.Length > 0)
                     sb.Append(" + ");
 
-                sb.Append("Control");
-
-                if (Key.HasFlag(Keys.ControlKey))
-                    Key &= ~Keys.ControlKey;
+                sb.Append(Key.ToString());
             }
+            else Key = Keys.None;
 
-            if (e.Modifiers.HasFlag(Keys.Shift))
-            {
-                if (sb.Length > 0)
-                    sb.Append(" + ");
+            Text =  sb.ToString();
 
-                sb.Append("Shift");
+            IsValid = (Key != Keys.None);
 
-                if (Key.HasFlag(Keys.ShiftKey))
-                    Key &= ~Keys.ShiftKey;
-            }
+            this.OnTextChanged(e);
 
-            this.Text = (e.Modifiers == Keys.None ? "" : sb.ToString() + (Key == Keys.None? "" : " + ")) + (Key == Keys.None? "" : Key.ToString());
             e.SuppressKeyPress = true;
             e.Handled = true;
+        }
+
+        protected override void OnEnter(EventArgs e)
+        {
+            base.OnEnter(e);
+
+            ShortcutManager.PausePreFilter();
+        }
+
+        protected override void OnLeave(EventArgs e)
+        {
+            base.OnLeave(e);
+
+            ShortcutManager.ResumePreFilter();
         }
 
     }
