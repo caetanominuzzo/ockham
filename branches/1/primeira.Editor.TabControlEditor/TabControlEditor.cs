@@ -140,9 +140,9 @@ namespace primeira.Editor
         {
             MessageManager.SetMessageControl(this);
 
-            ShortcutManager.LoadFromType(this.GetType());
+            //ShortcutManager.LoadFromType(this.GetType());
 
-            ShortcutManager.LoadFromForm(this);
+            //ShortcutManager.LoadFromForm(this);
 
             foreach (string file in ((TabControlDocument)Document).GetOpenTabsFilename())
             {

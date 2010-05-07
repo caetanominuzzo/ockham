@@ -5,6 +5,7 @@ using System.Windows.Forms;
 
 namespace primeira.Editor
 {
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple=true)]
     public sealed class ShortcutVisibilityAttribute : Attribute
     {
         public string Escope { get; set; }
@@ -28,19 +29,13 @@ namespace primeira.Editor
                 Event = KeyEvent.KeyUp;
         }
 
-        public ShortcutVisibilityAttribute(string name, string description, string escope, Keys defaultKey)
-            :this()
+        public ShortcutVisibilityAttribute(string name, string description, string escope, Keys defaultKey, Keys defaultKeys)
+            : this()
         {
             Name = name;
             Description = description;
             DefaultKey = defaultKey;
             Escope = escope;
-            
-        }
-
-        public ShortcutVisibilityAttribute(string name, string description, string escope, Keys defaultKey, Keys defaultKeys)
-            : this(name, description, escope, defaultKey)
-        {
             DefaultKeys = defaultKeys;
         }
     }

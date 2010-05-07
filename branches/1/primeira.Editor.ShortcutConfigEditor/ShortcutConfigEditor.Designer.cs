@@ -46,6 +46,7 @@ namespace primeira.Editor
             this.btAssign = new System.Windows.Forms.Button();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.lblType = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.txtShortcut = new primeira.Editor.ShortcutTextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -71,7 +72,7 @@ namespace primeira.Editor
             // 
             this.label13.AutoSize = true;
             this.flowLayoutPanel1.SetFlowBreak(this.label13, true);
-            this.label13.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.label13.ForeColor = System.Drawing.SystemColors.InactiveCaptionText;
             this.label13.Location = new System.Drawing.Point(38, 395);
             this.label13.Margin = new System.Windows.Forms.Padding(8);
             this.label13.Name = "label13";
@@ -136,12 +137,13 @@ namespace primeira.Editor
             // 
             this.txtCommand.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtCommand.ForeColor = System.Drawing.SystemColors.WindowText;
             this.txtCommand.Location = new System.Drawing.Point(0, 29);
             this.txtCommand.Margin = new System.Windows.Forms.Padding(8);
             this.txtCommand.Name = "txtCommand";
             this.txtCommand.Size = new System.Drawing.Size(400, 20);
             this.txtCommand.TabIndex = 0;
-            this.txtCommand.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtCommand_KeyPress);
+            this.txtCommand.TextChanged += new System.EventHandler(this.txtCommand_TextChanged);
             this.txtCommand.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtCommand_KeyUp);
             // 
             // cbEscope
@@ -203,6 +205,7 @@ namespace primeira.Editor
             this.lsCommand.Size = new System.Drawing.Size(400, 56);
             this.lsCommand.TabIndex = 1;
             this.lsCommand.SelectedIndexChanged += new System.EventHandler(this.lsCommand_SelectedIndexChanged);
+            this.lsCommand.KeyUp += new System.Windows.Forms.KeyEventHandler(this.lsCommand_KeyUp);
             // 
             // label3
             // 
@@ -268,11 +271,12 @@ namespace primeira.Editor
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(30, 15, 0, 0);
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(1037, 582);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(970, 582);
             this.flowLayoutPanel1.TabIndex = 27;
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.lblType);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.txtCommand);
             this.flowLayoutPanel1.SetFlowBreak(this.panel1, true);
@@ -281,6 +285,16 @@ namespace primeira.Editor
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(399, 50);
             this.panel1.TabIndex = 19;
+            // 
+            // lblType
+            // 
+            this.lblType.AutoSize = true;
+            this.lblType.ForeColor = System.Drawing.SystemColors.InactiveCaptionText;
+            this.lblType.Location = new System.Drawing.Point(168, 32);
+            this.lblType.Name = "lblType";
+            this.lblType.Size = new System.Drawing.Size(226, 13);
+            this.lblType.TabIndex = 1;
+            this.lblType.Text = "Type to find commands by name or description";
             // 
             // label6
             // 
@@ -335,7 +349,7 @@ namespace primeira.Editor
             this.Controls.Add(this.flowLayoutPanel1);
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "ShortcutConfigEditor";
-            this.Size = new System.Drawing.Size(1037, 582);
+            this.Size = new System.Drawing.Size(970, 582);
             this.Load += new System.EventHandler(this.ShortcutManagerEditor_Load);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
@@ -368,6 +382,7 @@ namespace primeira.Editor
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lblCommand2;
+        private System.Windows.Forms.Label lblType;
 
 
     }

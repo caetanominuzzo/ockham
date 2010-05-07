@@ -14,6 +14,7 @@ namespace primeira.Editor
         static void Main()
         {
             Application.EnableVisualStyles();
+
             Application.SetCompatibleTextRenderingDefault(false);
 
             AddonManager.Discovery();
