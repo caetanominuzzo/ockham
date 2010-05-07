@@ -12,7 +12,7 @@ namespace primeira.Editor
 
     public static class EditorManager
     {
-        private static List<Type> _knownEditors;
+        private static List<Type> _knownEditors = new List<Type>();
 
         /// <summary>
         /// Registers a System.Type as an editor.
@@ -20,9 +20,6 @@ namespace primeira.Editor
         /// <param name="type">The System.Type to register</param>
         public static void RegisterEditor(Type type)
         {
-            if (_knownEditors == null)
-                _knownEditors = new List<Type>();
-
             if (!_knownEditors.Contains(type))
             {
                 _knownEditors.Add(type);
@@ -109,8 +106,8 @@ namespace primeira.Editor
 
             if (dd.Options.HasFlag(DocumentDefinitionOptions.OpenFromTypeDefaultName))
                 return LoadEditor(dd.DefaultFileName + dd.DefaultFileExtension);
-            else
-                throw new InvalidOperationException(Message_en.DocumentMissingOpenFromTypeDefaultName);
+            
+            throw new InvalidOperationException(Message_en.DocumentMissingOpenFromTypeDefaultName);
         }
 
         private static IEditor CreateEditor(string fileName)

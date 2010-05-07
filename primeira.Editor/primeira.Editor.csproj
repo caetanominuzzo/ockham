@@ -70,6 +70,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\DelayedExecutionManager.cs" />
     <Compile Include="Data\DocumentBase.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -87,7 +88,6 @@
     <Compile Include="Data\Message-en.cs" />
     <Compile Include="Data\MessageSeverity.cs" />
     <Compile Include="Data\Shortcut.cs" />
-    <Compile Include="Data\ShortcutCommand.cs" />
     <Compile Include="Attribute\ShortcutVisibilityAttribute.cs" />
     <Compile Include="Document\AddonDiscoveryDocument.cs" />
     <Compile Include="Document\ShortcutConfigDocument.cs" />

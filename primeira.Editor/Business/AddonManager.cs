@@ -13,7 +13,9 @@ namespace primeira.Editor
         private static string ADDON_DIR = "Addons";
 
         /// <summary>
-        /// Discovers and initializes addons.
+        /// Discovers and initializes all available addons.
+        /// 
+        /// If there is a addon discovery cache file newer than the addons dir it will be loaded.
         /// </summary>
         public static void Discovery()
         {
