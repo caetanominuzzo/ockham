@@ -86,7 +86,7 @@ namespace primeira.Editor
 
             this.pnTabArea.Controls.Add(tabbutton);
 
-            ToolStripItem t = this.menTabs.Items.Add(tabbutton.TabTitle, editor.DocumentDetail.Definition.Icon, toolStripMenuItem_Click);
+            ToolStripItem t = this.menTabs.Items.Add(tabbutton.TabTitle, editor.DocumentDetail.Icon, toolStripMenuItem_Click);
 
             //To be removed by RemoveByKey
             t.Name = editor.FileName;
