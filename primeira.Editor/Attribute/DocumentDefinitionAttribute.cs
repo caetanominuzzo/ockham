@@ -12,40 +12,37 @@ namespace primeira.Editor
     public sealed class DocumentDefinitionAttribute : Attribute
     {
         /// <summary>
-        /// The name of the document. Eg.: "Text File", it will appear as "Text File Document".
+        /// Gets or sets the name of the document. Eg.: "Text File", it will appear as "Text File Document".
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// The description of the document. Eg.: "Simple plain text."
+        /// Gets or sets the description of the document. Eg.: "Simple plain text."
         /// </summary>
         public string Description { get; set; }
         /// <summary>
-        /// The default name of the document file. Eg.: "NoName". Used with DefaultFileExtension.
+        /// Gets or sets the default name of the document file. Eg.: "NoName". Used with DefaultFileExtension.
         /// </summary>
         public string DefaultFileName { get; set; }
         /// <summary>
-        /// The default extension of the document file. Eg.: ".txt". Used with DefaultFileExtension.
+        /// Gets or sets the default extension of the document file. Eg.: ".txt". Used with DefaultFileExtension.
         /// Must contain the initial dot.
         /// </summary>
         public string DefaultFileExtension { get; set; }
         /// <summary>
-        /// Defines the options of the document.
+        /// Gets or sets the options of the document.
         /// See DocumentDefinitionOptions.
         /// </summary>
         public DocumentDefinitionOptions Options { get; set; }
         /// <summary>
-        /// The icon of the document. 
-        /// </summary>
-        public string IconResourceFile { get; set; }
-        /// <summary>
-        /// Sets type of the default editor for this document.
-        /// </summary>
-        public Type DefaultEditor { get; set; }
-        /// <summary>
-        /// Defines a mask to hide the real file name. Eg.: "Revisions".
+        /// Gets or sets a mask to hide the real file name. Eg.: "Revisions".
         /// To concat the original file name use: "Revisions of %". The percent symbol will be replaced by the real file name becomimg: "Revisions of Noname 1.txt". 
         /// </summary>
         public string FriendlyName { get; set; }
+        /// <summary>
+        /// Gets or sets the name of the icon in the assembly resources.
+        /// </summary>
+        [DataMember()]
+        public string IconResourceFile { get; set; }
     }
 
 
