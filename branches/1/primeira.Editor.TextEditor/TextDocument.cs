@@ -15,7 +15,6 @@ namespace primeira.Editor
                 DefaultFileName = "Noname",
                 Description = "A plain text editor.",
                 DefaultFileExtension = ".txt",
-                DefaultEditor = typeof(TextEditor),
                 Options = DocumentDefinitionOptions.UserFile | DocumentDefinitionOptions.CustomSerialization)]
     public class TextEditorDocument : DocumentBase
     {

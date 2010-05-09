@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Drawing;
 
 namespace primeira.Editor
 {
@@ -15,21 +15,110 @@ namespace primeira.Editor
 
         private static string _baseDir = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
-        private static List<DocumentDetail> _documents = new List<DocumentDetail>();
+        private static List<DocumentDefinition> _definitions = new List<DocumentDefinition>();
 
         #endregion
 
-        #region Documents
+        #region Documents & Definitions
 
-        public static DocumentDetail[] Documents
+        public static DocumentDefinition[] Definitions
         {
             get
             {
-                return _documents.ToArray();
+                return _definitions.ToArray();
             }
         }
 
-        public static Image GetIcon(Type type, string iconResourceFile)
+        /// <summary>
+        /// Gets the System.Type of the document of a given file.
+        /// </summary>
+        /// <param name="fileName">Path to a file</param>
+        /// <returns>The System.Type of the document of a given file</returns>
+        public static DocumentDefinition GetDocumentDefinition(string fileName)
+        {
+            DocumentDefinition[] document = GetDocumentDefinitionByFileExtension(Path.GetExtension(fileName));
+
+            if (document.Length == 1)
+                return document[0];
+            else
+            {
+                throw new NotImplementedException();
+
+                //TODO: Read document definition from file.
+            }
+        }
+
+        /// <summary>
+        /// Gets the System.Type of the document of a given file extension.
+        /// </summary>
+        /// <param name="extension">File extesion</param>
+        /// <returns>The System.Type of the document of a given file</returns>
+        public static DocumentDefinition[] GetDocumentDefinitionByFileExtension(string extension)
+        {
+            DocumentDefinition[] document = (from a in Definitions
+                                   where a.Attributes.DefaultFileExtension.Equals(extension, StringComparison.InvariantCultureIgnoreCase)
+                                   select a).ToArray();
+
+            if (document.Length > 0)
+                return document;
+
+            throw new InvalidOperationException(
+                string.Format(Message_en.ThereIsNoEditorForType, "*" + extension));
+        }
+
+        /// <summary>
+        /// Registers a System.Type as a document.
+        /// </summary>
+        /// <param name="documentType"></param>
+        /// <returns></returns>
+        public static DocumentDefinition RegisterDocument(Type documentType)
+        {
+            DocumentDefinition doc = GetDocumentDefinition(documentType);
+
+            if (doc == null)
+            {
+                m
+                   doc = DocumentManager.GetDocumentDefinitionFromReflection(documentType);
+
+                _definitions.Add(doc);
+            }
+
+            return doc;
+        }
+
+        private static DocumentDefinition GetDocumentDefinitionFromReflection(Type documentType)
+        {
+            DocumentDefinition doc = new DocumentDefinition();
+
+            doc.DocumentType = documentType;
+
+            object[] attribs = doc.DocumentType.GetCustomAttributes(typeof(DocumentDefinitionAttribute), false);
+
+            if (attribs.Length != 0)
+                doc.Attributes = (DocumentDefinitionAttribute)attribs[0];
+            else
+                throw new InvalidOperationException(string.Format(Message_en.DocumentMissingDocumentDefinitionAttribute,
+                    doc.DocumentType.Name));
+
+            doc.Icon = DocumentManager.GetIcon(documentType, doc.Attributes.IconResourceFile);
+
+            return doc;
+        }
+
+        /// <summary>
+        /// Gets the DocumentDefinitionAttribute of a given document System.Type.
+        /// </summary>
+        /// <param name="documentType">The type of a document</param>
+        /// <returns>The DocumentDefinitionAttribute of the given System.Type</returns>
+        private static DocumentDefinition GetDocumentDefinition(Type documentType)
+        {
+            DocumentDefinition doc = (from a in Definitions.AsParallel()
+                                      where a.DocumentType == documentType
+                                      select a).First();
+            return doc;
+        }
+
+        private static Image GetIcon(Type type, string iconResourceFile)
         {
             if (iconResourceFile == null || iconResourceFile.Length == 0)
                 iconResourceFile = "File.ico";
@@ -41,91 +130,6 @@ namespace primeira.Editor
                 return null;
 
             return Image.FromStream(stream);
-        }
-
-        /// <summary>
-        /// Gets the System.Type of the document of a given file.
-        /// </summary>
-        /// <param name="fileName">Path to a file</param>
-        /// <returns>The System.Type of the document of a given file</returns>
-        public static DocumentDetail GetDocumentDetail(string fileName)
-        {
-            DocumentDetail[] document = GetDocumenttDetailByFileExtension(Path.GetExtension(fileName));
-
-            if (document.Length == 1)
-                return document[0];
-            else
-            {
-                throw new NotImplementedException();
-
-                //TODO: Read document details from file.
-            }
-        }
-
-        /// <summary>
-        /// Gets the System.Type of the document of a given file extension.
-        /// </summary>
-        /// <param name="extension">File extesion</param>
-        /// <returns>The System.Type of the document of a given file</returns>
-        public static DocumentDetail[] GetDocumenttDetailByFileExtension(string extension)
-        {
-            DocumentDetail[] document = (from a in Documents
-                                   where a.Definition.DefaultFileExtension.Equals(extension, StringComparison.InvariantCultureIgnoreCase)
-                                   select a).ToArray();
-
-            if (document.Length > 0)
-                return document;
-
-            throw new InvalidOperationException(
-                string.Format(Message_en.ThereIsNoEditorForType, "*" + extension));
-        }
-
-        /// <summary>
-        /// Gets the DocumentDefinitionAttribute of a given document System.Type.
-        /// </summary>
-        /// <param name="documentType">The type of a document</param>
-        /// <returns>The DocumentDefinitionAttribute of the given System.Type</returns>
-        public static DocumentDetail GetDocumentDetail(Type documentType)
-        {
-            DocumentDetail doc = (from a in Documents.AsParallel()
-                            where a.DocumentType == documentType
-                            select a).FirstOrDefault();
-            return doc;
-        }
-
-        private static DocumentDetail GetDocumentDetailFromReflection(Type documentType)
-        {
-            DocumentDetail doc = new DocumentDetail();
-
-            doc.DocumentType = documentType;
-
-            object[] attribs = doc.DocumentType.GetCustomAttributes(typeof(DocumentDefinitionAttribute), false);
-
-            if (attribs.Length != 0)
-                doc.Definition = (DocumentDefinitionAttribute)attribs[0];
-            else
-                throw new InvalidOperationException(string.Format(Message_en.DocumentMissingDocumentDefinitionAttribute,
-                    doc.DocumentType.Name));
-
-            doc.Icon = DocumentManager.GetIcon(documentType, doc.Definition.IconResourceFile);
-
-            return doc;
-        }
-
-        public static DocumentDetail RegisterDocument(Type documentType)
-        {
-            DocumentDetail doc = (from a in _documents
-                                  where a.DocumentType == documentType
-                                  select a).FirstOrDefault();
-
-            if (doc == null)
-            {
-                doc = DocumentManager.GetDocumentDetailFromReflection(documentType);
-
-                _documents.Add(doc);
-            }
-
-            return doc;
         }
 
         #endregion
@@ -140,13 +144,10 @@ namespace primeira.Editor
         {
             StringBuilder sb = new StringBuilder();
 
-
-            foreach (DocumentDetail doc in Documents)
+            foreach (DocumentDefinition doc in Definitions)
             {
-                DocumentDefinitionAttribute def = doc.Definition;
-
-                if (def.Options.HasFlag(DocumentDefinitionOptions.ShowIQuickLauchnOpen))
-                    sb.Append(string.Format("{0} (*{1})|*{1}|", def.Name, def.DefaultFileExtension));
+                if (doc.Attributes.Options.HasFlag(DocumentDefinitionOptions.ShowIQuickLauchnOpen))
+                    sb.Append(string.Format("{0} (*{1})|*{1}|", doc.Attributes.Name, doc.Attributes.DefaultFileExtension));
             }
 
             sb.Append("All files (*.*)|*.*");
@@ -159,17 +160,16 @@ namespace primeira.Editor
         /// </summary>
         /// <param name="FileVersion"></param>
         /// <returns></returns>
-        public static int GetDialogFilterIndex(DocumentDefinitionAttribute FileVersion)
+        public static int GetDialogFilterIndex(DocumentDefinition FileVersion)
         {
             int i = 0;
-            foreach (DocumentDetail doc in Documents)
+            foreach (DocumentDefinition doc in Definitions)
             {
-                DocumentDefinitionAttribute def = doc.Definition;
-                if (def.Options.HasFlag(DocumentDefinitionOptions.ShowIQuickLauchnOpen))
+                if (doc.Attributes.Options.HasFlag(DocumentDefinitionOptions.ShowIQuickLauchnOpen))
                     continue;
                 else i++;
 
-                if (def == FileVersion)
+                if (doc == FileVersion)
                     return i;
             }
 
@@ -200,7 +200,7 @@ namespace primeira.Editor
             {
                 Stream sm = File.OpenRead(fileName);
 
-                Type[] knownTypes = (from a in Documents
+                Type[] knownTypes = (from a in Definitions
                                      select a.DocumentType).ToArray();
 
                 Array.Resize(ref knownTypes, knownTypes.Length + 1);
@@ -227,13 +227,13 @@ namespace primeira.Editor
         /// <param name="document">The document to serialize</param>
         internal static void ToXml(DocumentBase document)
         {
-            DocumentDefinitionAttribute def = (from a in Documents.AsParallel()
+            DocumentDefinition doc = (from a in Definitions.AsParallel()
                                                where a.DocumentType == document.GetType()
-                                               select a.Definition).First();
+                                               select a).First();
 
-            if (def.Options.HasFlag(DocumentDefinitionOptions.OpenFromTypeDefaultName))
+            if (doc.Attributes.Options.HasFlag(DocumentDefinitionOptions.OpenFromTypeDefaultName))
             {
-                string fileName = def.DefaultFileName + def.DefaultFileExtension;
+                string fileName = doc.Attributes.DefaultFileName + doc.Attributes.DefaultFileExtension;
 
                 DocumentManager.ToXml(document, fileName);
             }
@@ -255,7 +255,7 @@ namespace primeira.Editor
 
             Stream sm = File.Create(fileName);
 
-            Type[] knownTypes = (from a in Documents
+            Type[] knownTypes = (from a in Definitions
                                  select a.DocumentType).ToArray();
 
             Array.Resize(ref knownTypes, 1);
@@ -279,20 +279,18 @@ namespace primeira.Editor
         /// </summary>
         /// <param name="documentType">The System.Type of the document to open</param>
         /// <returns>A loaded document</returns>
-        public static DocumentBase LoadDocument(DocumentDetail document)
+        public static DocumentBase LoadDocument(DocumentDefinition document)
         {
-            DocumentDefinitionAttribute def = document.Definition;
-
-            if (def.Options.HasFlag(DocumentDefinitionOptions.OpenFromTypeDefaultName))
+            if (document.Attributes.Options.HasFlag(DocumentDefinitionOptions.OpenFromTypeDefaultName))
             {
-                return DocumentManager.LoadDocument(document, def.DefaultFileName + def.DefaultFileExtension);
+                return DocumentManager.LoadDocument(document, document.Attributes.DefaultFileName + document.Attributes.DefaultFileExtension);
             }
             else
             {
                 throw new InvalidOperationException(
                     string.Format(
                         Message_en.DocumentMissingOpenFromTypeDefaultName,
-                        def.Name));
+                         document.Attributes.Name));
             }
         }
 
@@ -302,11 +300,9 @@ namespace primeira.Editor
         /// <param name="documentType">The System.Type of the document to open</param>
         /// <param name="fileName">The file to load</param>
         /// <returns>A loaded document</returns>
-        public static DocumentBase LoadDocument(DocumentDetail document, string fileName)
+        public static DocumentBase LoadDocument(DocumentDefinition document, string fileName)
         {
-            DocumentDefinitionAttribute def = document.Definition;
-
-            if (def.Options.HasFlag(DocumentDefinitionOptions.CustomSerializationRead))
+            if (document.Attributes.Options.HasFlag(DocumentDefinitionOptions.CustomSerializationRead))
             {
                 MethodInfo m = document.DocumentType.GetMethod("ToObject", new Type[] { typeof(string) });
 
@@ -322,11 +318,11 @@ namespace primeira.Editor
                 {
                     LogFileManager.Log(
                         string.Format(
-                            Message_en.DocumentCustomSerializatinoError, def.DefaultEditor.Name), Environment.NewLine, ex.ToString());
+                            Message_en.DocumentCustomSerializatinoError, document.Attributes.Name), Environment.NewLine, ex.ToString());
 
                     throw new InvalidOperationException(
                         string.Format(
-                            Message_en.DocumentCustomSerializatinoError, def.DefaultEditor.Name), ex);
+                            Message_en.DocumentCustomSerializatinoError, document.Attributes.Name), ex);
                 }
             }
 
@@ -339,11 +335,9 @@ namespace primeira.Editor
         /// <param name="documentType">The System.Type of the document to open</param>
         public static void SaveDocument(DocumentBase document)
         {
-            DocumentDefinitionAttribute def = document.DocumentDetail.Definition;
-
-            if (def.Options.HasFlag(DocumentDefinitionOptions.OpenFromTypeDefaultName))
+            if (document.Definition.Attributes.Options.HasFlag(DocumentDefinitionOptions.OpenFromTypeDefaultName))
             {
-                DocumentManager.SaveDocument(document, def.DefaultFileName + def.DefaultFileExtension);
+                DocumentManager.SaveDocument(document, document.Definition.Attributes.DefaultFileName + document.Definition.Attributes.DefaultFileExtension);
             }
             else
             {
@@ -361,9 +355,7 @@ namespace primeira.Editor
         /// <param name="fileName">The file to load</param>
         public static void SaveDocument(DocumentBase document, string fileName)
         {
-            DocumentDefinitionAttribute def = document.DocumentDetail.Definition;
-
-            if (def.Options.HasFlag(DocumentDefinitionOptions.CustomSerializationWrite))
+            if (document.Definition.Attributes.Options.HasFlag(DocumentDefinitionOptions.CustomSerializationWrite))
             {
                 MethodInfo m = document.GetType().GetMethod("ToXml", new Type[] { typeof(string) });
 

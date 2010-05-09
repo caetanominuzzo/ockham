@@ -41,7 +41,6 @@ namespace primeira.Editor
         /// <summary>
         /// Gets or sets the name of the icon in the assembly resources.
         /// </summary>
-        [DataMember()]
         public string IconResourceFile { get; set; }
     }
 

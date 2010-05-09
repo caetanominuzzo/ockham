@@ -6,11 +6,16 @@ namespace primeira.Editor
     [DataContract()]
     public class DocumentBase
     {
-        public DocumentDetail DocumentDetail
+        private DocumentDefinition _definition = null;
+
+        public DocumentDefinition Definition
         {
             get
             {
-                return DocumentManager.GetDocumentDetail(this.GetType());
+                if (_definition == null)
+                    _definition = DocumentManager.RegisterDocument(this.GetType());
+
+                return _definition;
             }
         }
 

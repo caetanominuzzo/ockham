@@ -26,16 +26,16 @@ namespace primeira.Editor
                 return "recently saved";
         }
 
-        public static string GetNewFile(DocumentDefinitionAttribute fileVersion, string basedir)
+        public static string GetNewFile(DocumentDefinition definition, string basedir)
         {
             string result = string.Empty;
 
             for (int i = 1; i < 1000; i++)
             {
                 result = string.Format("{0} {1}{2}",
-                    fileVersion.DefaultFileName, 
+                    definition.Attributes.DefaultFileName, 
                     i,
-                    fileVersion.DefaultFileExtension);
+                    definition.Attributes.DefaultFileExtension);
 
                 if (!File.Exists(Path.Combine(basedir, result)))
                     break;

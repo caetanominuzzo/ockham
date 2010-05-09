@@ -91,7 +91,7 @@ namespace primeira.Editor
 
             this._editor = editor;
 
-            _icon = editor.DocumentDetail.Icon;
+            _icon = editor.Definition.Icon;
 
             this._toolTip = new System.Windows.Forms.ToolTip();
 
@@ -99,9 +99,7 @@ namespace primeira.Editor
 
             this.TabStop = true;
 
-            DocumentDefinitionAttribute def = editor.DocumentDetail.Definition;
-
-            SetText(editor.FileName, def.FriendlyName);
+            SetText(editor.FileName, editor.Definition.Attributes.FriendlyName);
 
             //if (def.FriendlyName != null)
             //    SetText(def.FriendlyName);

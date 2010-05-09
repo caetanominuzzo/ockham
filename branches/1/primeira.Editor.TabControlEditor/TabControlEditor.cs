@@ -65,9 +65,9 @@ namespace primeira.Editor
 
             EditorContainerManager.SetEditorContainer((IEditorContainer)TabControlManager.GetInstance());
 
-            EditorDetail editor = EditorManager.RegisterEditor(typeof(TabControlEditor));
+            EditorDefinition editor = EditorManager.RegisterEditor(typeof(TabControlEditor));
 
-            DocumentDetail doc = editor.Documents[0];
+            DocumentDefinition doc = editor.Documents[0];
 
             IEditor tabEditor = EditorManager.LoadEditor(doc);
 
@@ -86,7 +86,7 @@ namespace primeira.Editor
 
             this.pnTabArea.Controls.Add(tabbutton);
 
-            ToolStripItem t = this.menTabs.Items.Add(tabbutton.TabTitle, editor.DocumentDetail.Icon, toolStripMenuItem_Click);
+            ToolStripItem t = this.menTabs.Items.Add(tabbutton.TabTitle, editor.Definition.Icon, toolStripMenuItem_Click);
 
             //To be removed by RemoveByKey
             t.Name = editor.FileName;

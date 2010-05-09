@@ -11,7 +11,7 @@ namespace primeira.Editor
     {
         DocumentBase Document { get; }
 
-        DocumentDetail DocumentDetail { get; }
+        DocumentDefinition Definition { get; }
 
         string FileName { get; }
 

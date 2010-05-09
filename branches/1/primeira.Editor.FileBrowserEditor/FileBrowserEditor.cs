@@ -70,33 +70,27 @@ namespace primeira.Editor
         {
             dgQuickLauch.Rows.Clear();
 
-            DocumentDefinitionAttribute def = null;
-
-            foreach (DocumentDetail doc in DocumentManager.Documents)
+             foreach (DocumentDefinition doc in DocumentManager.Definitions)
             {
-                def = doc.Definition;
-
-                if (def.Options.HasFlag(DocumentDefinitionOptions.ShowInQuickLauchDraft))
+                if (doc.Attributes.Options.HasFlag(DocumentDefinitionOptions.ShowInQuickLauchDraft))
                 {
                     int i = dgQuickLauch.Rows.Add(
                             new object[] { GetDraftImage(doc.Icon),
-                            string.Format("Draft {0} File ", def.Name),
-                            "draft", 0, "", def });
+                            string.Format("Draft {0} File ", doc.Attributes.Name),
+                            "draft", 0, "", doc });
 
                     dgQuickLauch.Rows[i].Selected = false;
                 }
             }
 
-            foreach (DocumentDetail doc in DocumentManager.Documents)
+            foreach (DocumentDefinition doc in DocumentManager.Definitions)
             {
-                def = doc.Definition;
-
-                if ((def.Options & DocumentDefinitionOptions.ShowIQuickLauchnOpen) > 0)
+                if ((doc.Attributes.Options & DocumentDefinitionOptions.ShowIQuickLauchnOpen) > 0)
                 {
                     int i = dgQuickLauch.Rows.Add(
                             new object[] {  doc.Icon,
-                            string.Format("Open or Create {0} File ", def.Name),
-                            "", 0, "", def });
+                            string.Format("Open or Create {0} File ", doc.Attributes.Name),
+                            "", 0, "", doc });
 
                     dgQuickLauch.Rows[i].Selected = false;
                 }
@@ -114,14 +108,14 @@ namespace primeira.Editor
             Size s = new Size(dgRecentFiles.Columns[1].Width, dgRecentFiles.RowTemplate.Height);
             Font f = dgRecentFiles.DefaultCellStyle.Font;
             DateTime d = DateTime.Now;
-            DocumentDetail doc;
+            DocumentDefinition doc;
             TimeSpan lastWrite;
 
             foreach (string file in files)
             {
                 if (File.Exists(file))
                 {
-                    doc = DocumentManager.GetDocumentDetail(file);
+                    doc = DocumentManager.GetDocumentDefinition(file);
 
                     lastWrite = d.Subtract(File.GetLastWriteTime(file));
 
@@ -140,9 +134,9 @@ namespace primeira.Editor
         [AddonInitialize()]
         public static void AddonInitialize()
         {
-            EditorDetail editor = EditorManager.RegisterEditor(typeof(FileBrowserEditor));
+            EditorDefinition editor = EditorManager.RegisterEditor(typeof(FileBrowserEditor));
 
-            DocumentDetail doc = editor.Documents[0];
+            DocumentDefinition doc = editor.Documents[0];
 
             EditorManager.LoadEditor(doc);
         }   
@@ -182,19 +176,19 @@ namespace primeira.Editor
             {
                 if(dgQuickLauch.Rows[e.RowIndex].Cells[2].Value.ToString() == "draft")
                 {
-                    string s = FileManager.GetNewFile((DocumentDefinitionAttribute)dgQuickLauch.Rows[e.RowIndex].Cells[5].Value, DocumentManager.BaseDir);
+                    string s = FileManager.GetNewFile((DocumentDefinition)dgQuickLauch.Rows[e.RowIndex].Cells[5].Value, DocumentManager.BaseDir);
                     s = Path.Combine(DocumentManager.BaseDir, s);
                     File.Create(s).Close();
                     EditorManager.LoadEditor(s);
                 }
                 else
                 {
-                    OpenOrCreateDocument(true, (DocumentDefinitionAttribute)dgQuickLauch.Rows[e.RowIndex].Cells[5].Value);
+                    OpenOrCreateDocument(true, (DocumentDefinition)dgQuickLauch.Rows[e.RowIndex].Cells[5].Value);
                 }
             }
         }
 
-        private void OpenOrCreateDocument(bool NewFile, DocumentDefinitionAttribute FileVersion)
+        private void OpenOrCreateDocument(bool NewFile, DocumentDefinition FileVersion)
         {
             OpenFileDialog s = new OpenFileDialog();
 
@@ -205,7 +199,7 @@ namespace primeira.Editor
 
             s.Filter = DocumentManager.RenderDialogFilterString();
 
-            s.DefaultExt = FileVersion.DefaultFileExtension;
+            s.DefaultExt = FileVersion.Attributes.DefaultFileExtension;
 
             s.FilterIndex = DocumentManager.GetDialogFilterIndex(FileVersion);
 
@@ -249,16 +243,13 @@ namespace primeira.Editor
             string[] files;
             DateTime d = DateTime.Now;
 
-            foreach(DocumentDetail doc in DocumentManager.Documents)
+            foreach(DocumentDefinition doc in DocumentManager.Definitions)
             {
 
-                DocumentDefinitionAttribute def = doc.Definition;
-
-                files = Directory.GetFiles(directoryPath,"*"+ def.DefaultFileExtension);
+                files = Directory.GetFiles(directoryPath,"*"+ doc.Attributes.DefaultFileExtension);
 
                 foreach (string file in files)
                 {
-
                     TimeSpan t = d.Subtract(File.GetLastWriteTime(file));
                     dgDirFiles.Rows.Add(
                     new object[] { m_file, file, FileManager.LastWrite(t), (int)t.TotalSeconds, file, null });

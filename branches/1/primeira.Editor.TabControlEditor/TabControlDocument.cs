@@ -12,7 +12,6 @@ namespace primeira.Editor
                 DefaultFileName = "default",
                 Description = "Tab Control",
                 DefaultFileExtension = ".tabcontrol",
-                DefaultEditor = typeof(TabControlEditor),
                 Options = DocumentDefinitionOptions.OpenFromTypeDefaultName)]
     public class TabControlDocument : DocumentBase
     {

@@ -19,9 +19,9 @@ namespace primeira.Editor
             get { return "editors.cache"; }
         }
 
-        private List<EditorDetail> _editors = new List<EditorDetail>();
+        private List<EditorDefinition> _editors = new List<EditorDefinition>();
 
-        public void AddEditor(EditorDetail editor)
+        public void AddEditor(EditorDefinition editor)
         {
             _editors.Add(editor);
         }
@@ -32,13 +32,13 @@ namespace primeira.Editor
         }
 
         [DataMember()]
-        public EditorDetail[] Editors
+        public EditorDefinition[] Editors
         {
             get { return _editors.ToArray(); }
             set
             {
                 if (_editors == null)
-                    _editors = new List<EditorDetail>(value.Length);
+                    _editors = new List<EditorDefinition>(value.Length);
                 else
                     _editors.Clear();
 
@@ -48,9 +48,9 @@ namespace primeira.Editor
 
         public static EditorManagerDocument GetInstance()
         {
-            DocumentDetail detail = DocumentManager.RegisterDocument(typeof(EditorManagerDocument));
+            DocumentDefinition def = DocumentManager.RegisterDocument(typeof(EditorManagerDocument));
 
-            EditorManagerDocument doc = (EditorManagerDocument)DocumentManager.LoadDocument(detail);
+            EditorManagerDocument doc = (EditorManagerDocument)DocumentManager.LoadDocument(def);
 
             if (doc == null)
                 throw new InvalidOperationException(
