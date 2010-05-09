@@ -80,7 +80,7 @@ namespace primeira.Editor
 
         public static void ShowConfig()
         {
-            DocumentDetail doc = (from a in EditorManager.Editors.AsParallel()
+            DocumentDefinition doc = (from a in EditorManager.Editors.AsParallel()
                      where a.Documents[0].DocumentType == typeof(ShortcutConfigDocument)
                      orderby a.Documents[0].DefaultEditor
                      select a.Documents[0]).FirstOrDefault();

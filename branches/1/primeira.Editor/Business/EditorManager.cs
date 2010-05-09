@@ -18,27 +18,25 @@ namespace primeira.Editor
         /// Registers a System.Type as an editor.
         /// </summary>
         /// <param name="type">The System.Type to register</param>
-        public static EditorDetail RegisterEditor(Type type)
+        public static EditorDefinition RegisterEditor(Type type)
         {
-            EditorDetail editor = cache.Editors.AsParallel().Where(x => x.EditorType == type).FirstOrDefault();
+            EditorDefinition editor = cache.Editors.AsParallel().Where(x => x.EditorType == type).FirstOrDefault();
 
             if(editor == null)
             {
-                editor = new EditorDetail();
+                editor = new EditorDefinition();
                 
                 editor.EditorType = type;
 
                 EditorDocumentAttribute[] dd = (EditorDocumentAttribute[])type.GetCustomAttributes(typeof(EditorDocumentAttribute), false);
 
-                List<DocumentDetail> docs = new List<DocumentDetail>();
+                List<DocumentDefinition> docs = new List<DocumentDefinition>();
 
-                DocumentDetail doc = null;
+                DocumentDefinition doc = null;
 
                 foreach (EditorDocumentAttribute d in dd)
                 {
                     doc = DocumentManager.RegisterDocument(d.DocumentType); 
-
-                    doc.DefaultEditor = doc.Definition.DefaultEditor == type;
 
                     docs.Add(doc);
                 }
@@ -108,12 +106,10 @@ namespace primeira.Editor
         /// </summary>
         /// <param name="documentType">The CLR type of the document to open.</param>
         /// <returns>The editor with the default file loaded.</returns>
-        public static IEditor LoadEditor(DocumentDetail document)
+        public static IEditor LoadEditor(DocumentDefinition document)
         {
-            DocumentDefinitionAttribute dd = document.Definition;
-
-            if (dd.Options.HasFlag(DocumentDefinitionOptions.OpenFromTypeDefaultName))
-                return LoadEditor(dd.DefaultFileName + dd.DefaultFileExtension);
+            if (document.Attributes.Options.HasFlag(DocumentDefinitionOptions.OpenFromTypeDefaultName))
+                return LoadEditor(document.Attributes.DefaultFileName + document.Attributes.DefaultFileExtension);
             
             throw new InvalidOperationException(Message_en.DocumentMissingOpenFromTypeDefaultName);
         }
@@ -124,20 +120,11 @@ namespace primeira.Editor
 
             Type editorType;
 
-            DocumentDetail doc = DocumentManager.GetDocumentDetail(fileName);
+            DocumentDefinition doc = DocumentManager.GetDocumentDefinition(fileName);
 
-            DocumentDefinitionAttribute def = doc.Definition;
-
-            if (doc.Definition.DefaultEditor != null)
-            {
-                editorType = doc.Definition.DefaultEditor;
-            }
-            else
-            {
-                editorType = (from a in EditorManager.Editors.AsParallel()
-                                where a.Documents.Contains(doc)
-                                select a.EditorType).FirstOrDefault();
-            }   
+            editorType = (from a in EditorManager.Editors.AsParallel()
+                            where a.Documents.Contains(doc)
+                            select a.EditorType).FirstOrDefault();
 
             if (editorType == null)
                 throw new InvalidOperationException(
@@ -154,7 +141,7 @@ namespace primeira.Editor
 
         #region Editors
 
-        public static EditorDetail[] Editors
+        public static EditorDefinition[] Editors
         {
             get
             {

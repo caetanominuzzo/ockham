@@ -15,7 +15,6 @@ namespace primeira.Editor
                 DefaultFileName = "Editor",
                 Description = "An editor for editors.",
                 DefaultFileExtension = ".metaeditor",
-                DefaultEditor = typeof(MetaEditor),
                 Options = DocumentDefinitionOptions.UserFile)]
     public class MetaEditorDocument : DocumentBase
     {
