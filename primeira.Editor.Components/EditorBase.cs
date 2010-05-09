@@ -52,11 +52,11 @@ namespace primeira.Editor.Components
         {
             get
             {
-                return DocumentDetail.Definition.DefaultFileName + DocumentDetail.Definition.DefaultFileExtension;
+                return Definition.Attributes.DefaultFileName + Definition.Attributes.DefaultFileExtension;
             }
         }
 
-        public DocumentDetail DocumentDetail { get; private set; }
+        public DocumentDefinition Definition { get; private set; }
 
         #endregion
 
@@ -84,9 +84,9 @@ namespace primeira.Editor.Components
         {
             this.FileName = fileName;
 
-            this.DocumentDetail = DocumentManager.GetDocumentDetail(fileName);
+            this.Definition = DocumentManager.GetDocumentDefinition(fileName);
 
-            this.Document = DocumentManager.LoadDocument(this.DocumentDetail, this.FileName);
+            this.Document = DocumentManager.LoadDocument(this.Definition, this.FileName);
         }
 
         #endregion
@@ -109,7 +109,7 @@ namespace primeira.Editor.Components
 
         public bool HasOption(DocumentDefinitionOptions Option)
         {
-            return this.DocumentDetail.Definition.Options.HasFlag(Option);
+            return this.Definition.Attributes.Options.HasFlag(Option);
         }
 
         #endregion

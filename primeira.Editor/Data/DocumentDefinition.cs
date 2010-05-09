@@ -8,16 +8,16 @@ using System.Drawing;
 namespace primeira.Editor
 {
     [DataContract()]
-    public class DocumentDetail
+    public class DocumentDefinition
     {
         [DataMember()]
         public Type DocumentType { get; set; }
 
         [DataMember()]
-        public DocumentDefinitionAttribute Definition { get; set; }
+        public DocumentDefinitionAttribute Attributes { get; set; }
 
         [DataMember()]
-        public bool DefaultEditor { get; set; }
+        public EditorDefinition DefaultEditor { get; set; }
 
         public Image Icon { get; internal set; }
     }

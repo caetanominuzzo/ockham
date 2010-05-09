@@ -10,7 +10,7 @@ namespace primeira.Editor
     [DataContract()]
     [DocumentDefinition(Name = "Window position & location cache",
                 DefaultFileName = "Window Position",
-                Description = "Stores the last position & location og an window.",
+                Description = "Stores the last position & location of an window.",
                 DefaultFileExtension = ".windowcache")]
     public class WindowPositionDocument : DocumentBase
     {
@@ -25,11 +25,11 @@ namespace primeira.Editor
 
         public static WindowPositionDocument GetInstance(string WindowName)
         {
-            DocumentDetail detail = DocumentManager.RegisterDocument(typeof(WindowPositionDocument));
+            DocumentDefinition def = DocumentManager.RegisterDocument(typeof(WindowPositionDocument));
 
             string fileName = WindowName + ".windowcache";
             WindowPositionDocument doc = (WindowPositionDocument)DocumentManager.LoadDocument(
-                detail,
+                def,
                 fileName);
 
             if (doc == null)
