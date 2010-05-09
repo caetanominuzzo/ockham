@@ -31,6 +31,9 @@ namespace primeira.Editor
 
         public static Image GetIcon(Type type, string iconResourceFile)
         {
+            if (iconResourceFile == null || iconResourceFile.Length == 0)
+                iconResourceFile = "File.ico";
+
             Stream stream = type.Assembly.GetManifestResourceStream(
                 string.Concat(type.Namespace, ".Resources.", iconResourceFile));
 
@@ -249,6 +252,7 @@ namespace primeira.Editor
         /// <param name="fileName">The file to serialize</param>
         internal static void ToXml(DocumentBase document, string fileName)
         {
+
             Stream sm = File.Create(fileName);
 
             Type[] knownTypes = (from a in Documents

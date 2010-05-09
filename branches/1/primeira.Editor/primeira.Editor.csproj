@@ -70,8 +70,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attribute\EditorDefinitionAttribute.cs" />
     <Compile Include="Business\DelayedExecutionManager.cs" />
-    <Compile Include="Document\DocumentDetail.cs" />
+    <Compile Include="Data\DocumentDetail.cs" />
+    <Compile Include="Data\EditorDetail.cs" />
     <Compile Include="Document\DocumentBase.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -86,10 +88,9 @@
     <Compile Include="Attribute\EditorDocumentAttribute.cs" />
     <Compile Include="Attribute\AddonDefinitionAttribute.cs" />
     <Compile Include="Attribute\AddonInitializeAttribute.cs" />
-    <Compile Include="Document\EditorDetail.cs" />
     <Compile Include="Data\Message-en.cs" />
     <Compile Include="Data\MessageSeverity.cs" />
-    <Compile Include="Document\Shortcut.cs" />
+    <Compile Include="Data\Shortcut.cs" />
     <Compile Include="Attribute\ShortcutVisibilityAttribute.cs" />
     <Compile Include="Document\AddonDiscoveryDocument.cs" />
     <Compile Include="Document\EditorManagerDocument.cs" />
