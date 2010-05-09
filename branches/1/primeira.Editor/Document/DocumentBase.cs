@@ -1,20 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Runtime.Serialization;
-using System.Text;
-
-using System.Reflection.Emit;
-using System.Threading;
 
 namespace primeira.Editor
 {
     [DataContract()]
     public class DocumentBase
     {
-
         public DocumentDetail DocumentDetail
         {
             get
@@ -34,7 +25,6 @@ namespace primeira.Editor
         protected static DocumentBase ToObject(string fileName, Type type)
         {
             return DocumentManager.ToObject(fileName, type);
-
         }
 
         /// <summary>

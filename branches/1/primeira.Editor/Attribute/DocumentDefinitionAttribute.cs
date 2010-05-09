@@ -36,7 +36,7 @@ namespace primeira.Editor
         /// <summary>
         /// The icon of the document. 
         /// </summary>
-        public Image Icon { get; set; }
+        public string IconResourceFile { get; set; }
         /// <summary>
         /// Sets type of the default editor for this document.
         /// </summary>

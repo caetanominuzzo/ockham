@@ -79,7 +79,7 @@ namespace primeira.Editor
                 if (def.Options.HasFlag(DocumentDefinitionOptions.ShowInQuickLauchDraft))
                 {
                     int i = dgQuickLauch.Rows.Add(
-                            new object[] { GetDraftImage(def.Icon),
+                            new object[] { GetDraftImage(doc.Icon),
                             string.Format("Draft {0} File ", def.Name),
                             "draft", 0, "", def });
 
@@ -94,7 +94,7 @@ namespace primeira.Editor
                 if ((def.Options & DocumentDefinitionOptions.ShowIQuickLauchnOpen) > 0)
                 {
                     int i = dgQuickLauch.Rows.Add(
-                            new object[] {  def.Icon,
+                            new object[] {  doc.Icon,
                             string.Format("Open or Create {0} File ", def.Name),
                             "", 0, "", def });
 
@@ -127,7 +127,7 @@ namespace primeira.Editor
 
                     dgRecentFiles.Rows.Add(
                     new object[] { 
-                        doc.Definition.Icon,
+                        doc.Icon,
                         file, FileManager.LastWrite(lastWrite), (int)lastWrite.TotalSeconds, file, null });
                 }
             }
