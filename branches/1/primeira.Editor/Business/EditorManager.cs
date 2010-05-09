@@ -162,15 +162,7 @@ namespace primeira.Editor
             }
         }
 
-        public static Image GetManifestResourceFileIcon(Type type)
-        {
-            Stream stream = type.Assembly.GetManifestResourceStream(type.Namespace + ".Resources.File.ico");
-
-            if (stream == null)
-                return null;
-
-            return Image.FromStream(stream);
-        }
+        
 
         #endregion
     }

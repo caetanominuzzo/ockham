@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Drawing;
 
 namespace primeira.Editor
 {
@@ -26,6 +27,17 @@ namespace primeira.Editor
             {
                 return _documents.ToArray();
             }
+        }
+
+        public static Image GetIcon(Type type, string iconResourceFile)
+        {
+            Stream stream = type.Assembly.GetManifestResourceStream(
+                string.Concat(type.Namespace, ".Resources.", iconResourceFile));
+
+            if (stream == null)
+                return null;
+
+            return Image.FromStream(stream);
         }
 
         /// <summary>
@@ -91,6 +103,8 @@ namespace primeira.Editor
             else
                 throw new InvalidOperationException(string.Format(Message_en.DocumentMissingDocumentDefinitionAttribute,
                     doc.DocumentType.Name));
+
+            doc.Icon = DocumentManager.GetIcon(documentType, doc.Definition.IconResourceFile);
 
             return doc;
         }

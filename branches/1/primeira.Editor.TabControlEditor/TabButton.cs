@@ -91,7 +91,7 @@ namespace primeira.Editor
 
             this._editor = editor;
 
-            _icon = EditorManager.GetManifestResourceFileIcon(this._editor.GetType());
+            _icon = editor.DocumentDetail.Icon;
 
             this._toolTip = new System.Windows.Forms.ToolTip();
 

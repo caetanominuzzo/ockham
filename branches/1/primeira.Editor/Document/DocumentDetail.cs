@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.Serialization;
+using System.Drawing;
 
 namespace primeira.Editor
 {
@@ -17,5 +18,7 @@ namespace primeira.Editor
 
         [DataMember()]
         public bool DefaultEditor { get; set; }
+
+        public Image Icon { get; internal set; }
     }
 }
