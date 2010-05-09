@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\DelayedExecutionManager.cs" />
+    <Compile Include="Data\DocumentDetail.cs" />
     <Compile Include="Data\DocumentBase.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -82,14 +83,16 @@
     <Compile Include="Business\DocumentManager.cs" />
     <Compile Include="Business\EditorManager.cs" />
     <Compile Include="Business\FileManager.cs" />
-    <Compile Include="Attribute\EditorDefinitionAttribute.cs" />
+    <Compile Include="Attribute\EditorDocumentAttribute.cs" />
     <Compile Include="Attribute\AddonDefinitionAttribute.cs" />
     <Compile Include="Attribute\AddonInitializeAttribute.cs" />
+    <Compile Include="Data\EditorDetail.cs" />
     <Compile Include="Data\Message-en.cs" />
     <Compile Include="Data\MessageSeverity.cs" />
     <Compile Include="Data\Shortcut.cs" />
     <Compile Include="Attribute\ShortcutVisibilityAttribute.cs" />
     <Compile Include="Document\AddonDiscoveryDocument.cs" />
+    <Compile Include="Document\EditorManagerDocument.cs" />
     <Compile Include="Document\ShortcutConfigDocument.cs" />
     <Compile Include="Document\WindowPositionDocument.cs" />
     <Compile Include="Interface\IEditor.cs" />

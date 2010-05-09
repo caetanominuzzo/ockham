@@ -78,16 +78,14 @@ namespace primeira.Editor
 
         #region Shortcut Editor
 
-        private static Type _shortcutConfigDocumentType;
-
-        public static void SetShortcutConfigDocumentType(Type editor)
-        {
-            _shortcutConfigDocumentType = editor;
-        }
-
         public static void ShowConfig()
         {
-            EditorManager.LoadEditor(_shortcutConfigDocumentType);
+            DocumentDetail doc = (from a in EditorManager.Editors.AsParallel()
+                     where a.Documents[0].DocumentType == typeof(ShortcutConfigDocument)
+                     orderby a.Documents[0].DefaultEditor
+                     select a.Documents[0]).FirstOrDefault();
+
+            EditorManager.LoadEditor(doc);
         }
 
         #endregion

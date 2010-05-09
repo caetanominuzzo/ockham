@@ -66,7 +66,9 @@ namespace primeira.Editor
 
         public static AddonDiscoveryDocument GetInstance()
         {
-            AddonDiscoveryDocument doc = (AddonDiscoveryDocument)DocumentManager.LoadDocument(typeof(AddonDiscoveryDocument));
+            DocumentDetail detail = DocumentManager.RegisterDocument(typeof(AddonDiscoveryDocument));
+            
+            AddonDiscoveryDocument doc = (AddonDiscoveryDocument)DocumentManager.LoadDocument(detail);
 
             if (doc == null)
                 throw new InvalidOperationException(

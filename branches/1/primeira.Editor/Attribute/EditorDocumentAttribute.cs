@@ -11,9 +11,10 @@ namespace primeira.Editor
     /// To be correctly handled the class must have an static method with AddonInitializeAttribute.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public sealed class EditorDefinitionAttribute : Attribute
+    public sealed class EditorDocumentAttribute : Attribute
     {
         public Type DocumentType { get; set; }
         public bool DefaultDocumentType { get; set; }
     }
 }
+

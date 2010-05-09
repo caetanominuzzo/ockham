@@ -25,9 +25,11 @@ namespace primeira.Editor
 
         public static WindowPositionDocument GetInstance(string WindowName)
         {
+            DocumentDetail detail = DocumentManager.RegisterDocument(typeof(WindowPositionDocument));
+
             string fileName = WindowName + ".windowcache";
             WindowPositionDocument doc = (WindowPositionDocument)DocumentManager.LoadDocument(
-                typeof(WindowPositionDocument),
+                detail,
                 fileName);
 
             if (doc == null)

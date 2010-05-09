@@ -8,7 +8,9 @@ namespace primeira.Editor
 {
     public class AddonManager
     {
-        private static List<Type> _addonTypes;
+        private static AddonDiscoveryDocument cache = null;
+
+        private static List<Type> addons = null;
 
         private static string ADDON_DIR = "Addons";
 
@@ -21,30 +23,28 @@ namespace primeira.Editor
         {
             try
             {
-                _addonTypes = new List<Type>();
-
-                List<Type> addons = new List<Type>();
+                addons = new List<Type>();
 
                 string addonDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ADDON_DIR);
 
                 if (!Directory.Exists(addonDir))
                     Directory.CreateDirectory(addonDir);
 
-                GetAllAvaiableAddonTypes(ref addons, addonDir);
+                GetAllAvaiableAddonTypes(addonDir);
 
-                AddonDiscoveryDocument cache = AddonDiscoveryDocument.GetInstance();
+                cache = AddonDiscoveryDocument.GetInstance();
 
                 string addonCacheFile = AddonDiscoveryDocument.FileName;
 
                 if (cache.LoadOrder.Length > 0 && Directory.GetLastWriteTime(addonDir) <= File.GetLastWriteTime(addonCacheFile))
                 {
-                    InitializeAddonsFromCache(ref addons, cache);
+                    InitializeAddonsFromCache();
                 }
                 else
                 {
                     cache.Clear();
 
-                    InitializeAddonGroupByGroup(ref addons, cache);
+                    InitializeAddonGroupByGroup();
 
                     cache.ToXml();
 
@@ -59,9 +59,9 @@ namespace primeira.Editor
             }
         }
 
-        private static void GetAllAvaiableAddonTypes(ref List<Type> addons, string addonDir)
+        private static void GetAllAvaiableAddonTypes(string addonDir)
         {
-            
+
             string[] dlls = Directory.GetFiles(addonDir, "*.dll", SearchOption.AllDirectories);
             //string[] dlls = Directory.GetDirectories(addonDir);
 
@@ -80,11 +80,11 @@ namespace primeira.Editor
                         addons.Add(type);
                 }
 
-             //   break;
+                //   break;
             }
         }
 
-        private static void InitializeAddonsFromCache(ref List<Type> addons, AddonDiscoveryDocument cache)
+        private static void InitializeAddonsFromCache()
         {
             AddonDiscoveryDocument.AssemblyTypeDocument[] loadOrder = cache.LoadOrder;
 
@@ -99,20 +99,20 @@ namespace primeira.Editor
             }
         }
 
-        private static void InitializeAddonGroupByGroup(ref List<Type> addons, AddonDiscoveryDocument cache)
+        private static void InitializeAddonGroupByGroup()
         {
-            InitializeAddonGroup(ref addons, AddonOptions.SystemAddon, cache);
+            InitializeAddonGroup(AddonOptions.SystemAddon);
 
-            InitializeAddonGroup(ref addons, AddonOptions.SystemDelayedInitializationAddon, cache);
+            InitializeAddonGroup(AddonOptions.SystemDelayedInitializationAddon);
 
-            InitializeAddonGroup(ref addons, AddonOptions.UserAddon, cache);
+            InitializeAddonGroup(AddonOptions.UserAddon);
 
-            InitializeAddonGroup(ref addons, AddonOptions.LastInitilizedAddon, cache);
+            InitializeAddonGroup(AddonOptions.LastInitilizedAddon);
         }
 
-        private static void InitializeAddonGroup(ref List<Type> addons, AddonOptions definitionFilter, AddonDiscoveryDocument cache)
+        private static void InitializeAddonGroup(AddonOptions definitionFilter)
         {
-            InitializeAddons(ref addons, definitionFilter, cache);
+            InitializeAddons(definitionFilter);
 
             int iLastPendencies = 0, iPendencies = 0;
 
@@ -122,13 +122,13 @@ namespace primeira.Editor
             {
                 iLastPendencies = addons.Count;
 
-                InitializeAddons(ref addons, definitionFilter, cache);
+                InitializeAddons(definitionFilter);
 
                 iPendencies = addons.Count;
             }
         }
 
-        private static void InitializeAddons(ref List<Type> addons, AddonOptions definitionsFilter, AddonDiscoveryDocument cache)
+        private static void InitializeAddons(AddonOptions definitionsFilter)
         {
             List<Type> pendencies = new List<Type>();
 
@@ -145,9 +145,9 @@ namespace primeira.Editor
 
                 try
                 {
-                    InitializeAddon(addon, cache);
+                    InitializeAddon(addon);
                 }
-                catch 
+                catch
                 {
                     pendencies.Add(addon);
                 }
@@ -158,40 +158,33 @@ namespace primeira.Editor
 
         private static void InitializeAddon(Type type)
         {
-            InitializeAddon(type, null);
-        }
+            MethodInfo[] methods = type.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
 
-        private static void InitializeAddon(Type type, AddonDiscoveryDocument cache)
-        {
-                MethodInfo[] methods = type.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
-
-                foreach (MethodInfo method in methods)
+            foreach (MethodInfo method in methods)
+            {
+                if (method.GetCustomAttributes(typeof(AddonInitializeAttribute), false).Length > 0)
                 {
-                    if (method.GetCustomAttributes(typeof(AddonInitializeAttribute), false).Length > 0)
+                    try
                     {
-                        try
-                        {
-                            method.Invoke(null, new object[] { });
-                        }
-                        catch (TargetInvocationException ex)
-                        {
-                            throw ex.InnerException;
-                        }
-
-                        break;
+                        method.Invoke(null, new object[] { });
                     }
+                    catch (TargetInvocationException ex)
+                    {
+                        throw ex.InnerException;
+                    }
+
+                    break;
                 }
+            }
 
-                _addonTypes.Add(type);
-
-                if(cache != null)
-                    cache.AddType(type);
+            if (cache != null)
+                cache.AddType(type);
         }
 
         private static void InitializationError(List<Type> addons)
         {
 
-            StringBuilder sb = new StringBuilder(); 
+            StringBuilder sb = new StringBuilder();
 
             foreach (Type error in addons)
             {

@@ -8,7 +8,7 @@ using primeira.Editor.Components;
 
 namespace primeira.Editor
 {
-    [EditorDefinition(DocumentType = typeof(FileBrowserDocument))]
+    [EditorDocument(DocumentType = typeof(FileBrowserDocument))]
     [AddonDefinition(AddonOptions.LastInitilizedAddon)]
     public partial class FileBrowserEditor :  EditorBase, IRecentFileControl
     {
@@ -70,14 +70,16 @@ namespace primeira.Editor
         {
             dgQuickLauch.Rows.Clear();
 
-            DocumentDefinitionAttribute[] defs = DocumentManager.GetDocumentDefinition();
+            DocumentDefinitionAttribute def = null;
 
-            foreach (DocumentDefinitionAttribute def in defs)
+            foreach (DocumentDetail doc in DocumentManager.Documents)
             {
-                if ((def.Options & DocumentDefinitionOptions.ShowInQuickLauchDraft) > 0)
+                def = doc.Definition;
+
+                if (def.Options.HasFlag(DocumentDefinitionOptions.ShowInQuickLauchDraft))
                 {
                     int i = dgQuickLauch.Rows.Add(
-                            new object[] { GetDraftImage(EditorManager.GetManifestResourceFileIcon(def.DefaultFileExtension)),
+                            new object[] { GetDraftImage(def.Icon),
                             string.Format("Draft {0} File ", def.Name),
                             "draft", 0, "", def });
 
@@ -85,12 +87,14 @@ namespace primeira.Editor
                 }
             }
 
-            foreach (DocumentDefinitionAttribute def in defs)
+            foreach (DocumentDetail doc in DocumentManager.Documents)
             {
+                def = doc.Definition;
+
                 if ((def.Options & DocumentDefinitionOptions.ShowIQuickLauchnOpen) > 0)
                 {
                     int i = dgQuickLauch.Rows.Add(
-                            new object[] {  EditorManager.GetManifestResourceFileIcon(def.DefaultFileExtension),
+                            new object[] {  def.Icon,
                             string.Format("Open or Create {0} File ", def.Name),
                             "", 0, "", def });
 
@@ -110,20 +114,20 @@ namespace primeira.Editor
             Size s = new Size(dgRecentFiles.Columns[1].Width, dgRecentFiles.RowTemplate.Height);
             Font f = dgRecentFiles.DefaultCellStyle.Font;
             DateTime d = DateTime.Now;
-            DocumentDefinitionAttribute docDef;
+            DocumentDetail doc;
             TimeSpan lastWrite;
 
             foreach (string file in files)
             {
                 if (File.Exists(file))
                 {
-                    docDef = DocumentManager.GetDocumentDefinition(file);
+                    doc = DocumentManager.GetDocumentDetail(file);
 
                     lastWrite = d.Subtract(File.GetLastWriteTime(file));
 
                     dgRecentFiles.Rows.Add(
                     new object[] { 
-                        docDef==null? null :  EditorManager.GetManifestResourceFileIcon(docDef.DefaultFileExtension),
+                        doc.Definition.Icon,
                         file, FileManager.LastWrite(lastWrite), (int)lastWrite.TotalSeconds, file, null });
                 }
             }
@@ -136,9 +140,11 @@ namespace primeira.Editor
         [AddonInitialize()]
         public static void AddonInitialize()
         {
-            EditorManager.RegisterEditor(typeof(FileBrowserEditor));
+            EditorDetail editor = EditorManager.RegisterEditor(typeof(FileBrowserEditor));
 
-            EditorManager.LoadEditor(typeof(FileBrowserDocument));
+            DocumentDetail doc = editor.Documents[0];
+
+            EditorManager.LoadEditor(doc);
         }   
 
         #region Event Handlers
@@ -240,12 +246,14 @@ namespace primeira.Editor
         {
             dgDirFiles.Rows.Clear();
 
-            DocumentDefinitionAttribute[] defs = DocumentManager.GetDocumentDefinition();
             string[] files;
             DateTime d = DateTime.Now;
 
-            foreach(DocumentDefinitionAttribute def in defs)
+            foreach(DocumentDetail doc in DocumentManager.Documents)
             {
+
+                DocumentDefinitionAttribute def = doc.Definition;
+
                 files = Directory.GetFiles(directoryPath,"*"+ def.DefaultFileExtension);
 
                 foreach (string file in files)

@@ -21,7 +21,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "primeira.Editor.TextEditor"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3333CB7D-972D-44E7-A0AC-52C0ADC0391E}"
 	ProjectSection(SolutionItems) = preProject
-		primeira.Editor.Application\bin\Debug\discovery.cache = primeira.Editor.Application\bin\Debug\discovery.cache
 		primeira.Editor.Application\bin\Debug\primeira.Editor.log = primeira.Editor.Application\bin\Debug\primeira.Editor.log
 	EndProjectSection
 EndProject
