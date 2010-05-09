@@ -1,16 +1,28 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Serialization;
+using System.Linq;
 using System.Reflection;
-using System.Xml;
+using System.Runtime.Serialization;
+using System.Text;
+
 using System.Reflection.Emit;
 using System.Threading;
 
 namespace primeira.Editor
 {
     [DataContract()]
-    public class DocumentBase 
+    public class DocumentBase
     {
+
+        public DocumentDetail DocumentDetail
+        {
+            get
+            {
+                return DocumentManager.GetDocumentDetail(this.GetType());
+            }
+        }
+
         #region Serialization
 
         /// <summary>

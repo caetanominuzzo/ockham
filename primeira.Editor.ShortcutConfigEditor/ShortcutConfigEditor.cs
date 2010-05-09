@@ -12,7 +12,7 @@ using primeira.Editor.Components;
 
 namespace primeira.Editor
 {
-    [EditorDefinition(DocumentType = typeof(ShortcutConfigDocument))]
+    [EditorDocument(DocumentType = typeof(ShortcutConfigDocument))]
     [AddonDefinition(AddonOptions.SystemAddon)]
     public partial class ShortcutConfigEditor : EditorBase
     {
@@ -26,8 +26,6 @@ namespace primeira.Editor
         public static void RegisterEditor()
         {
             EditorManager.RegisterEditor(typeof(ShortcutConfigEditor));
-
-            ShortcutManager.SetShortcutConfigDocumentType(typeof(ShortcutConfigDocument));
         }
 
         private void ShortcutManagerEditor_Load(object sender, EventArgs e)

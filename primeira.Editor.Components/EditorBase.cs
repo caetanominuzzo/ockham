@@ -48,16 +48,15 @@ namespace primeira.Editor.Components
             }
         }
 
-        public Type DocumentType { get; private set; }
-
         public string DefaultFileName
         {
             get
             {
-                DocumentDefinitionAttribute dd = DocumentManager.GetDocumentDefinition(this.Document.GetType());
-                return dd.DefaultFileName + dd.DefaultFileExtension;
+                return DocumentDetail.Definition.DefaultFileName + DocumentDetail.Definition.DefaultFileExtension;
             }
         }
+
+        public DocumentDetail DocumentDetail { get; private set; }
 
         #endregion
 
@@ -77,11 +76,7 @@ namespace primeira.Editor.Components
 
             this.OnChanged += new ChangedDelegate(EditorBase_OnChanged);
 
-            try //DesignTime problem
-            {
-                this.DocumentType = EditorManager.GetDocumentTypeByEditorType(this.GetType());
-            }
-            catch { }
+
         }
 
         public EditorBase(string fileName)
@@ -89,7 +84,9 @@ namespace primeira.Editor.Components
         {
             this.FileName = fileName;
 
-                this.Document = DocumentManager.LoadDocument(this.DocumentType, this.FileName);
+            this.DocumentDetail = DocumentManager.GetDocumentDetail(fileName);
+
+            this.Document = DocumentManager.LoadDocument(this.DocumentDetail, this.FileName);
         }
 
         #endregion
@@ -112,7 +109,7 @@ namespace primeira.Editor.Components
 
         public bool HasOption(DocumentDefinitionOptions Option)
         {
-            return (DocumentManager.GetDocumentDefinition(this.DocumentType).Options & Option) > 0;
+            return this.DocumentDetail.Definition.Options.HasFlag(Option);
         }
 
         #endregion

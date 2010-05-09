@@ -99,9 +99,10 @@ namespace primeira.Editor
 
             this.TabStop = true;
 
-            DocumentDefinitionAttribute def = DocumentManager.GetDocumentDefinition(editor.Document.GetType());
+            DocumentDefinitionAttribute def = editor.DocumentDetail.Definition;
 
             SetText(editor.FileName, def.FriendlyName);
+
             //if (def.FriendlyName != null)
             //    SetText(def.FriendlyName);
             //else

@@ -14,7 +14,7 @@ using System.CodeDom.Compiler;
 
 namespace primeira.Editor
 {
-    [EditorDefinition(DocumentType=typeof(TextEditorDocument))]
+    [EditorDocument(DocumentType=typeof(TextEditorDocument))]
     [AddonDefinition(AddonOptions.UserAddon)]
     public partial class TextEditor : EditorBase, IShorcutEscopeProvider
     {
@@ -26,7 +26,6 @@ namespace primeira.Editor
 
         private void TextEditor_Load(object sender, EventArgs e)
         {
-
             txtMain.Focus();
 
             List<TextEditorDocument> doc = new TextEditorDocument[] { (TextEditorDocument)this.Document }.ToList<TextEditorDocument>();

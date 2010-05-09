@@ -14,7 +14,7 @@ using System.CodeDom.Compiler;
 
 namespace primeira.Editor
 {
-    [EditorDefinition(DocumentType=typeof(MetaEditorDocument))]
+    [EditorDocument(DocumentType=typeof(MetaEditorDocument))]
     [AddonDefinition(AddonOptions.UserAddon)]
     public partial class MetaEditor : EditorBase, IShorcutEscopeProvider
     {
