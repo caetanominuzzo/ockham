@@ -14,6 +14,7 @@ namespace primeira.Editor
     public sealed class EditorDocumentAttribute : Attribute
     {
         public Type DocumentType { get; set; }
+
         public bool DefaultDocumentType { get; set; }
     }
 }
