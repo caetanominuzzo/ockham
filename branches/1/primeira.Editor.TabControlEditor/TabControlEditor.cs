@@ -13,7 +13,7 @@ using primeira.Editor.Components;
 
 namespace primeira.Editor
 {
-    [EditorDefinition(DocumentType = typeof(TabControlDocument))]
+    [EditorDocument(DocumentType = typeof(TabControlDocument))]
     [AddonDefinition(AddonOptions.SystemDelayedInitializationAddon)]
     public partial class TabControlEditor : EditorBase, IMessageControl, IShorcutEscopeProvider
     {
@@ -65,9 +65,11 @@ namespace primeira.Editor
 
             EditorContainerManager.SetEditorContainer((IEditorContainer)TabControlManager.GetInstance());
 
-            EditorManager.RegisterEditor(typeof(TabControlEditor));
+            EditorDetail editor = EditorManager.RegisterEditor(typeof(TabControlEditor));
 
-            IEditor tabEditor = EditorManager.LoadEditor(typeof(TabControlDocument));
+            DocumentDetail doc = editor.Documents[0];
+
+            IEditor tabEditor = EditorManager.LoadEditor(doc);
 
             TabControlManager.GetInstance().SetTabControl((TabControlEditor)tabEditor);
 
@@ -84,7 +86,7 @@ namespace primeira.Editor
 
             this.pnTabArea.Controls.Add(tabbutton);
 
-            ToolStripItem t = this.menTabs.Items.Add(tabbutton.TabTitle, DocumentManager.GetDocumentDefinition(editor.Document.GetType()).Icon, toolStripMenuItem_Click);
+            ToolStripItem t = this.menTabs.Items.Add(tabbutton.TabTitle, editor.DocumentDetail.Definition.Icon, toolStripMenuItem_Click);
 
             //To be removed by RemoveByKey
             t.Name = editor.FileName;

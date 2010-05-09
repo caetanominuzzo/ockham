@@ -12,25 +12,45 @@ namespace primeira.Editor
 
     public static class EditorManager
     {
-        private static List<Type> _knownEditors = new List<Type>();
+        private static EditorManagerDocument cache = EditorManagerDocument.GetInstance();
 
         /// <summary>
         /// Registers a System.Type as an editor.
         /// </summary>
         /// <param name="type">The System.Type to register</param>
-        public static void RegisterEditor(Type type)
+        public static EditorDetail RegisterEditor(Type type)
         {
-            if (!_knownEditors.Contains(type))
+            EditorDetail editor = cache.Editors.AsParallel().Where(x => x.EditorType == type).FirstOrDefault();
+
+            if(editor == null)
             {
-                _knownEditors.Add(type);
+                editor = new EditorDetail();
+                
+                editor.EditorType = type;
+
+                EditorDocumentAttribute[] dd = (EditorDocumentAttribute[])type.GetCustomAttributes(typeof(EditorDocumentAttribute), false);
+
+                List<DocumentDetail> docs = new List<DocumentDetail>();
+
+                DocumentDetail doc = null;
+
+                foreach (EditorDocumentAttribute d in dd)
+                {
+                    doc = DocumentManager.RegisterDocument(d.DocumentType); 
+
+                    doc.DefaultEditor = doc.Definition.DefaultEditor == type;
+
+                    docs.Add(doc);
+                }
+
+                editor.Documents = docs.ToArray();
+
+                cache.AddEditor(editor);
 
                 ShortcutManager.LoadFromType(type);
-
-                EditorDefinitionAttribute[] dd = (EditorDefinitionAttribute[])type.GetCustomAttributes(typeof(EditorDefinitionAttribute), false);
-
-                foreach (EditorDefinitionAttribute d in dd)
-                    DocumentManager.RegisterDocument(d.DocumentType);
             }
+
+            return editor;
         }
 
         /// <summary>
@@ -88,21 +108,9 @@ namespace primeira.Editor
         /// </summary>
         /// <param name="documentType">The CLR type of the document to open.</param>
         /// <returns>The editor with the default file loaded.</returns>
-        public static IEditor LoadEditor(MemberInfo documentType)
+        public static IEditor LoadEditor(DocumentDetail document)
         {
-            DocumentDefinitionAttribute dd = DocumentManager.GetDocumentDefinition(documentType);
-
-            if (dd == null)
-            {
-                LogFileManager.Log(string.Format(
-                        Message_en.DocumentMissingDocumentDefinitionAttribute,
-                        documentType.Name));
-
-                throw new InvalidOperationException(
-                    string.Format(
-                        Message_en.DocumentMissingDocumentDefinitionAttribute,
-                        documentType.Name));
-            }
+            DocumentDefinitionAttribute dd = document.Definition;
 
             if (dd.Options.HasFlag(DocumentDefinitionOptions.OpenFromTypeDefaultName))
                 return LoadEditor(dd.DefaultFileName + dd.DefaultFileExtension);
@@ -116,22 +124,25 @@ namespace primeira.Editor
 
             Type editorType;
 
-            DocumentDefinitionAttribute def = DocumentManager.GetDocumentDefinition(fileName);
+            DocumentDetail doc = DocumentManager.GetDocumentDetail(fileName);
 
-            if (def.DefaultEditor != null)
+            DocumentDefinitionAttribute def = doc.Definition;
+
+            if (doc.Definition.DefaultEditor != null)
             {
-                editorType = def.DefaultEditor;
+                editorType = doc.Definition.DefaultEditor;
             }
             else
             {
-                Type documentType = DocumentManager.GetDocumentType(fileName);
+                editorType = (from a in EditorManager.Editors.AsParallel()
+                                where a.Documents.Contains(doc)
+                                select a.EditorType).FirstOrDefault();
+            }   
 
-                editorType = EditorManager.GetEditorByDocumentType(documentType);
-
-                if (editorType == null)
-                    throw new InvalidOperationException(
-                        string.Format(Message_en.ThereIsNoEditorForType, fileName));
-            }
+            if (editorType == null)
+                throw new InvalidOperationException(
+                    string.Format(Message_en.ThereIsNoEditorForType, fileName));
+            
 
             res = (IEditor)editorType.GetConstructor(_defaultEditorCtor).Invoke(new object[1] { fileName });
 
@@ -141,11 +152,14 @@ namespace primeira.Editor
 
         private static Type[] _defaultEditorCtor = new Type[1] { typeof(string) };
 
-        #region Get Editor Data
+        #region Editors
 
-        public static Image GetManifestResourceFileIcon(string extension)
+        public static EditorDetail[] Editors
         {
-            return GetManifestResourceFileIcon(GetEditorTypeByFileExtension(extension));
+            get
+            {
+                return cache.Editors;
+            }
         }
 
         public static Image GetManifestResourceFileIcon(Type type)
@@ -156,28 +170,6 @@ namespace primeira.Editor
                 return null;
 
             return Image.FromStream(stream);
-        }
-
-        public static Type GetEditorTypeByFileExtension(string extension)
-        {
-            var x = (from c in _knownEditors
-                     where ((EditorDefinitionAttribute[])c.GetCustomAttributes(typeof(EditorDefinitionAttribute), false)).Count<EditorDefinitionAttribute>(z =>
-                         DocumentManager.GetDocumentDefinition(z.DocumentType).DefaultFileExtension == extension) > 0
-                     select c).First();
-
-
-            return (Type)x;
-        }
-
-        public static Type GetDocumentTypeByEditorType(Type editorType)
-        {
-            return ((EditorDefinitionAttribute)editorType.GetCustomAttributes(typeof(EditorDefinitionAttribute), false)[0]).DocumentType;
-        }
-
-        public static Type GetEditorByDocumentType(Type documentType)
-        {
-            return (from x in _knownEditors where ((EditorDefinitionAttribute[])x.GetCustomAttributes(typeof(EditorDefinitionAttribute), false))[0].DocumentType.Equals(documentType)
-                        select x).First();
         }
 
         #endregion

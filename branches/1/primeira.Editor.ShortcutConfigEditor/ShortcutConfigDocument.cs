@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.Serialization;
-using System.Drawing;
 
 namespace primeira.Editor
 {
@@ -12,8 +11,8 @@ namespace primeira.Editor
                 DefaultFileName = "default",
                 Description = "Shortcut Manager",
                 DefaultFileExtension = ".shortcut",
-                DefaultEditor = typeof(ShortcutConfigEditor),
-                Options = DocumentDefinitionOptions.DoNotShowLabelAndFixWidth | DocumentDefinitionOptions.OpenFromTypeDefaultName)]
+                FriendlyName= "Shortcuts",
+                DefaultEditor = typeof(ShortcutConfigEditor))]
     public class ShortcutConfigDocument : DocumentBase
     {
         #region Data
@@ -23,10 +22,6 @@ namespace primeira.Editor
 
         #endregion
 
-        //public static DocumentBase ToObject(string fileName)
-        //{
-        //    return DocumentBase.ToObject(fileName, typeof(ShortcutConfigDocument));
-        //}
     }
 }
 
