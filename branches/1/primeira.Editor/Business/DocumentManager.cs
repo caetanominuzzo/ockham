@@ -77,8 +77,7 @@ namespace primeira.Editor
 
             if (doc == null)
             {
-                m
-                   doc = DocumentManager.GetDocumentDefinitionFromReflection(documentType);
+                doc = DocumentManager.GetDocumentDefinitionFromReflection(documentType);
 
                 _definitions.Add(doc);
             }
