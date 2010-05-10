@@ -23,7 +23,7 @@ namespace primeira.Editor
 
     /// <summary>
     /// Used in AddonDefinitionAttribute ctor.
-    /// This enum defines the addons order to load. 
+    /// This enum defines the addons load order. 
     /// 
     /// First are loaded SystemAddon,
     ///             then SystemDelayedInitializationAddon,
