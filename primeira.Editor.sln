@@ -22,6 +22,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3333CB7D-972D-44E7-A0AC-52C0ADC0391E}"
 	ProjectSection(SolutionItems) = preProject
 		primeira.Editor.Application\bin\Debug\primeira.Editor.log = primeira.Editor.Application\bin\Debug\primeira.Editor.log
+		todo.txt = todo.txt
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "primeira.Editor.ShortcutConfigEditor", "primeira.Editor.ShortcutConfigEditor\primeira.Editor.ShortcutConfigEditor.csproj", "{F6081561-B784-42B7-ACCC-04156E85FEE5}"
