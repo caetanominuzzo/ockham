@@ -15,7 +15,7 @@ using System.CodeDom.Compiler;
 namespace primeira.Editor
 {
     [EditorDocument(DocumentType=typeof(TextEditorDocument))]
-    [AddonDefinition(AddonOptions.UserAddon)]
+    [Addon(AddonOptions.UserAddon)]
     public partial class TextEditor : EditorBase, IShorcutEscopeProvider
     {
         public TextEditor(string fileName)

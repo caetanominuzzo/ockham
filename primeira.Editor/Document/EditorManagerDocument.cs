@@ -7,11 +7,14 @@ using System.Runtime.Serialization;
 namespace primeira.Editor
 {
     [DataContract()]
-    [DocumentDefinition(Name = "Editors cache",
+    [DocumentHeader(
+                Id = "9B5FF01D-85A2-47DF-8CF0-184EC55A7B52",
+                VersionNumber = "1.0", 
+                Name = "Editors cache",
                 DefaultFileName = "editors",
                 Description = "Stores the available editors.",
                 DefaultFileExtension = ".cache",
-                Options = DocumentDefinitionOptions.OpenFromTypeDefaultName)]
+                Options = DocumentHeaderOptions.OpenFromTypeDefaultName)]
     internal class EditorManagerDocument : DocumentBase
     {
         public static string FileName
@@ -19,9 +22,9 @@ namespace primeira.Editor
             get { return "editors.cache"; }
         }
 
-        private List<EditorDefinition> _editors = new List<EditorDefinition>();
+        private List<EditorHeader> _editors = new List<EditorHeader>();
 
-        public void AddEditor(EditorDefinition editor)
+        public void AddEditor(EditorHeader editor)
         {
             _editors.Add(editor);
         }
@@ -32,13 +35,13 @@ namespace primeira.Editor
         }
 
         [DataMember()]
-        public EditorDefinition[] Editors
+        public EditorHeader[] Editors
         {
             get { return _editors.ToArray(); }
             set
             {
                 if (_editors == null)
-                    _editors = new List<EditorDefinition>(value.Length);
+                    _editors = new List<EditorHeader>(value.Length);
                 else
                     _editors.Clear();
 
@@ -48,7 +51,7 @@ namespace primeira.Editor
 
         public static EditorManagerDocument GetInstance()
         {
-            DocumentDefinition def = DocumentManager.RegisterDocument(typeof(EditorManagerDocument));
+            DocumentHeader def = DocumentManager.RegisterDocument(typeof(EditorManagerDocument));
 
             EditorManagerDocument doc = (EditorManagerDocument)DocumentManager.LoadDocument(def);
 
