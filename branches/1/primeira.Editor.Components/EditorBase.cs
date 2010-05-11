@@ -52,11 +52,11 @@ namespace primeira.Editor.Components
         {
             get
             {
-                return Definition.Attributes.DefaultFileName + Definition.Attributes.DefaultFileExtension;
+                return Header.Attributes.DefaultFileName + Header.Attributes.DefaultFileExtension;
             }
         }
 
-        public DocumentDefinition Definition { get; private set; }
+        public DocumentHeader Header { get; private set; }
 
         #endregion
 
@@ -84,9 +84,9 @@ namespace primeira.Editor.Components
         {
             this.FileName = fileName;
 
-            this.Definition = DocumentManager.GetDocumentDefinition(fileName);
+            this.Header = DocumentManager.GetDocumentHeader(fileName);
 
-            this.Document = DocumentManager.LoadDocument(this.Definition, this.FileName);
+            this.Document = DocumentManager.LoadDocument(this.Header, this.FileName);
         }
 
         #endregion
@@ -100,16 +100,15 @@ namespace primeira.Editor.Components
 
         public void PrepareToClose()
         {
-            //if !DocumentDefinitionOptions.Virtual there is not _timer set;
             if (_saveTimer != null)
                 _saveTimer.Dispose();
 
             DocumentManager.SaveDocument(this.Document, this.FileName);
         }
 
-        public bool HasOption(DocumentDefinitionOptions Option)
+        public bool HasOption(DocumentHeaderOptions Option)
         {
-            return this.Definition.Attributes.Options.HasFlag(Option);
+            return this.Header.Attributes.Options.HasFlag(Option);
         }
 
         #endregion
@@ -120,7 +119,7 @@ namespace primeira.Editor.Components
         {
             try //DesignTime problem
             {
-                if (HasOption(DocumentDefinitionOptions.TimerSaver))
+                if (HasOption(DocumentHeaderOptions.TimerSaver))
                 {
                     _saveTimer = new Timer();
                     _saveTimer.Interval = 1000;
@@ -145,7 +144,6 @@ namespace primeira.Editor.Components
 
         private void EditorBase_OnChanged()
         {
-            //Since if !DocumentDefinitionOptions.Virtual there is not _timer set;
             if (_saveTimer != null)
             {
                 _saveTimer.Stop();

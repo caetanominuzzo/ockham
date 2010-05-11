@@ -15,17 +15,17 @@ namespace primeira.Editor
 
         private static string _baseDir = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
-        private static List<DocumentDefinition> _definitions = new List<DocumentDefinition>();
+        private static List<DocumentHeader> _headers = new List<DocumentHeader>();
 
         #endregion
 
-        #region Documents & Definitions
+        #region Documents & Headers
 
-        public static DocumentDefinition[] Definitions
+        public static DocumentHeader[] Headers
         {
             get
             {
-                return _definitions.ToArray();
+                return _headers.ToArray();
             }
         }
 
@@ -34,9 +34,9 @@ namespace primeira.Editor
         /// </summary>
         /// <param name="fileName">Path to a file</param>
         /// <returns>The System.Type of the document of a given file</returns>
-        public static DocumentDefinition GetDocumentDefinition(string fileName)
+        public static DocumentHeader GetDocumentHeader(string fileName)
         {
-            DocumentDefinition[] document = GetDocumentDefinitionByFileExtension(Path.GetExtension(fileName));
+            DocumentHeader[] document = GetDocumentHeaderByFileExtension(Path.GetExtension(fileName));
 
             if (document.Length == 1)
                 return document[0];
@@ -44,7 +44,8 @@ namespace primeira.Editor
             {
                 throw new NotImplementedException();
 
-                //TODO: Read document definition from file.
+                //TODO: Read document header from file.
+                //Read the begining (a chunk of bytes) of the given file.
             }
         }
 
@@ -53,9 +54,9 @@ namespace primeira.Editor
         /// </summary>
         /// <param name="extension">File extesion</param>
         /// <returns>The System.Type of the document of a given file</returns>
-        public static DocumentDefinition[] GetDocumentDefinitionByFileExtension(string extension)
+        public static DocumentHeader[] GetDocumentHeaderByFileExtension(string extension)
         {
-            DocumentDefinition[] document = (from a in Definitions
+            DocumentHeader[] document = (from a in Headers
                                    where a.Attributes.DefaultFileExtension.Equals(extension, StringComparison.InvariantCultureIgnoreCase)
                                    select a).ToArray();
 
@@ -71,49 +72,61 @@ namespace primeira.Editor
         /// </summary>
         /// <param name="documentType"></param>
         /// <returns></returns>
-        public static DocumentDefinition RegisterDocument(Type documentType)
+        public static DocumentHeader RegisterDocument(Type documentType)
         {
-            DocumentDefinition doc = GetDocumentDefinition(documentType);
+            DocumentHeader doc = GetDocumentHeader(documentType);
 
             if (doc == null)
             {
-                doc = DocumentManager.GetDocumentDefinitionFromReflection(documentType);
+                doc = DocumentManager.GetDocumentHeaderFromReflection(documentType);
 
-                _definitions.Add(doc);
+                _headers.Add(doc);
             }
 
             return doc;
         }
 
-        private static DocumentDefinition GetDocumentDefinitionFromReflection(Type documentType)
+        private static DocumentHeader GetDocumentHeaderFromReflection(Type documentType)
         {
-            DocumentDefinition doc = new DocumentDefinition();
-
-            doc.DocumentType = documentType;
-
-            object[] attribs = doc.DocumentType.GetCustomAttributes(typeof(DocumentDefinitionAttribute), false);
+            object[] attribs = documentType.GetCustomAttributes(typeof(DocumentHeaderAttribute), false);
 
             if (attribs.Length != 0)
-                doc.Attributes = (DocumentDefinitionAttribute)attribs[0];
+            {
+                DocumentHeader doc = new DocumentHeader();
+
+                doc.Attributes = (DocumentHeaderAttribute)attribs[0];
+
+                doc.DocumentType = documentType;
+
+                doc.Icon = DocumentManager.GetIcon(documentType, doc.Attributes.IconResourceFile);
+
+                doc.DocumentVersion = new Version(doc.Attributes.Id, doc.Attributes.VersionNumber);
+
+                if (doc.DefaultEditorVersion != null)
+                {
+                    EditorHeader[] editor = EditorManager.GetEditors(doc.DefaultEditorVersion);
+
+                    if(editor.Count() > 0)
+                        doc.DefaultEditor = editor[0];
+                }
+
+                return doc;
+            }
             else
-                throw new InvalidOperationException(string.Format(Message_en.DocumentMissingDocumentDefinitionAttribute,
-                    doc.DocumentType.Name));
-
-            doc.Icon = DocumentManager.GetIcon(documentType, doc.Attributes.IconResourceFile);
-
-            return doc;
+                throw new InvalidOperationException(string.Format(Message_en.DocumentMissingDocumentHeaderAttribute,
+                    documentType.Name));
         }
 
         /// <summary>
-        /// Gets the DocumentDefinitionAttribute of a given document System.Type.
+        /// Gets the DocumentHeaderAttribute of a given document System.Type.
         /// </summary>
         /// <param name="documentType">The type of a document</param>
-        /// <returns>The DocumentDefinitionAttribute of the given System.Type</returns>
-        private static DocumentDefinition GetDocumentDefinition(Type documentType)
+        /// <returns>The DocumentHeaderAttribute of the given System.Type</returns>
+        private static DocumentHeader GetDocumentHeader(Type documentType)
         {
-            DocumentDefinition doc = (from a in Definitions.AsParallel()
+            DocumentHeader doc = (from a in Headers.AsParallel()
                                       where a.DocumentType == documentType
-                                      select a).First();
+                                      select a).FirstOrDefault();
             return doc;
         }
 
@@ -143,9 +156,9 @@ namespace primeira.Editor
         {
             StringBuilder sb = new StringBuilder();
 
-            foreach (DocumentDefinition doc in Definitions)
+            foreach (DocumentHeader doc in Headers)
             {
-                if (doc.Attributes.Options.HasFlag(DocumentDefinitionOptions.ShowIQuickLauchnOpen))
+                if (doc.Attributes.Options.HasFlag(DocumentHeaderOptions.ShowIQuickLauchnOpen))
                     sb.Append(string.Format("{0} (*{1})|*{1}|", doc.Attributes.Name, doc.Attributes.DefaultFileExtension));
             }
 
@@ -159,12 +172,12 @@ namespace primeira.Editor
         /// </summary>
         /// <param name="FileVersion"></param>
         /// <returns></returns>
-        public static int GetDialogFilterIndex(DocumentDefinition FileVersion)
+        public static int GetDialogFilterIndex(DocumentHeader FileVersion)
         {
             int i = 0;
-            foreach (DocumentDefinition doc in Definitions)
+            foreach (DocumentHeader doc in Headers)
             {
-                if (doc.Attributes.Options.HasFlag(DocumentDefinitionOptions.ShowIQuickLauchnOpen))
+                if (doc.Attributes.Options.HasFlag(DocumentHeaderOptions.ShowIQuickLauchnOpen))
                     continue;
                 else i++;
 
@@ -199,7 +212,7 @@ namespace primeira.Editor
             {
                 Stream sm = File.OpenRead(fileName);
 
-                Type[] knownTypes = (from a in Definitions
+                Type[] knownTypes = (from a in Headers
                                      select a.DocumentType).ToArray();
 
                 Array.Resize(ref knownTypes, knownTypes.Length + 1);
@@ -226,11 +239,11 @@ namespace primeira.Editor
         /// <param name="document">The document to serialize</param>
         internal static void ToXml(DocumentBase document)
         {
-            DocumentDefinition doc = (from a in Definitions.AsParallel()
+            DocumentHeader doc = (from a in Headers.AsParallel()
                                                where a.DocumentType == document.GetType()
                                                select a).First();
 
-            if (doc.Attributes.Options.HasFlag(DocumentDefinitionOptions.OpenFromTypeDefaultName))
+            if (doc.Attributes.Options.HasFlag(DocumentHeaderOptions.OpenFromTypeDefaultName))
             {
                 string fileName = doc.Attributes.DefaultFileName + doc.Attributes.DefaultFileExtension;
 
@@ -254,12 +267,8 @@ namespace primeira.Editor
 
             Stream sm = File.Create(fileName);
 
-            Type[] knownTypes = (from a in Definitions
+            Type[] knownTypes = (from a in Headers
                                  select a.DocumentType).ToArray();
-
-            Array.Resize(ref knownTypes, 1);
-
-            knownTypes[knownTypes.Length - 1] = document.GetType();
 
             DataContractSerializer ser = new DataContractSerializer(typeof(DocumentBase),
                 knownTypes,
@@ -278,9 +287,9 @@ namespace primeira.Editor
         /// </summary>
         /// <param name="documentType">The System.Type of the document to open</param>
         /// <returns>A loaded document</returns>
-        public static DocumentBase LoadDocument(DocumentDefinition document)
+        public static DocumentBase LoadDocument(DocumentHeader document)
         {
-            if (document.Attributes.Options.HasFlag(DocumentDefinitionOptions.OpenFromTypeDefaultName))
+            if (document.Attributes.Options.HasFlag(DocumentHeaderOptions.OpenFromTypeDefaultName))
             {
                 return DocumentManager.LoadDocument(document, document.Attributes.DefaultFileName + document.Attributes.DefaultFileExtension);
             }
@@ -299,9 +308,9 @@ namespace primeira.Editor
         /// <param name="documentType">The System.Type of the document to open</param>
         /// <param name="fileName">The file to load</param>
         /// <returns>A loaded document</returns>
-        public static DocumentBase LoadDocument(DocumentDefinition document, string fileName)
+        public static DocumentBase LoadDocument(DocumentHeader document, string fileName)
         {
-            if (document.Attributes.Options.HasFlag(DocumentDefinitionOptions.CustomSerializationRead))
+            if (document.Attributes.Options.HasFlag(DocumentHeaderOptions.CustomSerializationRead))
             {
                 MethodInfo m = document.DocumentType.GetMethod("ToObject", new Type[] { typeof(string) });
 
@@ -334,9 +343,9 @@ namespace primeira.Editor
         /// <param name="documentType">The System.Type of the document to open</param>
         public static void SaveDocument(DocumentBase document)
         {
-            if (document.Definition.Attributes.Options.HasFlag(DocumentDefinitionOptions.OpenFromTypeDefaultName))
+            if (document.Header.Attributes.Options.HasFlag(DocumentHeaderOptions.OpenFromTypeDefaultName))
             {
-                DocumentManager.SaveDocument(document, document.Definition.Attributes.DefaultFileName + document.Definition.Attributes.DefaultFileExtension);
+                DocumentManager.SaveDocument(document, document.Header.Attributes.DefaultFileName + document.Header.Attributes.DefaultFileExtension);
             }
             else
             {
@@ -354,7 +363,7 @@ namespace primeira.Editor
         /// <param name="fileName">The file to load</param>
         public static void SaveDocument(DocumentBase document, string fileName)
         {
-            if (document.Definition.Attributes.Options.HasFlag(DocumentDefinitionOptions.CustomSerializationWrite))
+            if (document.Header.Attributes.Options.HasFlag(DocumentHeaderOptions.CustomSerializationWrite))
             {
                 MethodInfo m = document.GetType().GetMethod("ToXml", new Type[] { typeof(string) });
 

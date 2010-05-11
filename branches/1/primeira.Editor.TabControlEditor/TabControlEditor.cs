@@ -14,7 +14,7 @@ using primeira.Editor.Components;
 namespace primeira.Editor
 {
     [EditorDocument(DocumentType = typeof(TabControlDocument))]
-    [AddonDefinition(AddonOptions.SystemDelayedInitializationAddon)]
+    [Addon(AddonOptions.SystemDelayedInitializationAddon)]
     public partial class TabControlEditor : EditorBase, IMessageControl, IShorcutEscopeProvider
     {
 
@@ -65,9 +65,9 @@ namespace primeira.Editor
 
             EditorContainerManager.SetEditorContainer((IEditorContainer)TabControlManager.GetInstance());
 
-            EditorDefinition editor = EditorManager.RegisterEditor(typeof(TabControlEditor));
+            EditorHeader editor = EditorManager.RegisterEditor(typeof(TabControlEditor));
 
-            DocumentDefinition doc = editor.Documents[0];
+            DocumentHeader doc = editor.Documents[0];
 
             IEditor tabEditor = EditorManager.LoadEditor(doc);
 
@@ -86,7 +86,7 @@ namespace primeira.Editor
 
             this.pnTabArea.Controls.Add(tabbutton);
 
-            ToolStripItem t = this.menTabs.Items.Add(tabbutton.TabTitle, editor.Definition.Icon, toolStripMenuItem_Click);
+            ToolStripItem t = this.menTabs.Items.Add(tabbutton.TabTitle, editor.Header.Icon, toolStripMenuItem_Click);
 
             //To be removed by RemoveByKey
             t.Name = editor.FileName;
@@ -102,7 +102,7 @@ namespace primeira.Editor
 
         void editor_OnSelected(IEditor sender)
         {
-            btnClose.Enabled = !sender.HasOption(DocumentDefinitionOptions.NeverClose);
+            btnClose.Enabled = !sender.HasOption(DocumentHeaderOptions.NeverClose);
 
             if (btnClose.Enabled)
                 btnClose.Image = Image.FromFile(@"D:\Desenv\Ockham\branches\1\primeira.Editor.TabControlEditor\close5.gif");

@@ -8,7 +8,10 @@ using System.Drawing;
 namespace primeira.Editor
 {
     [DataContract()]
-    [DocumentDefinition(Name = "Window position & location cache",
+    [DocumentHeader(
+                Id = "FC5FDE83-71EE-4A3E-8694-465FBF719779",
+                VersionNumber = "1.0",
+                Name = "Window position & location cache",
                 DefaultFileName = "Window Position",
                 Description = "Stores the last position & location of an window.",
                 DefaultFileExtension = ".windowcache")]
@@ -25,7 +28,7 @@ namespace primeira.Editor
 
         public static WindowPositionDocument GetInstance(string WindowName)
         {
-            DocumentDefinition def = DocumentManager.RegisterDocument(typeof(WindowPositionDocument));
+            DocumentHeader def = DocumentManager.RegisterDocument(typeof(WindowPositionDocument));
 
             string fileName = WindowName + ".windowcache";
             WindowPositionDocument doc = (WindowPositionDocument)DocumentManager.LoadDocument(

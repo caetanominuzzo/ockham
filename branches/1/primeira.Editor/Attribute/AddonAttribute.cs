@@ -11,18 +11,18 @@ namespace primeira.Editor
     /// To be correctly handled the class must have an static method with AddonInitializeAttribute.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public sealed class AddonDefinitionAttribute : Attribute
+    public sealed class AddonAttribute : Attribute
     {
         public AddonOptions Options {get; private set;}
 
-        public AddonDefinitionAttribute(AddonOptions options) 
+        public AddonAttribute(AddonOptions options) 
         {
             Options = options;
         }
     }
 
     /// <summary>
-    /// Used in AddonDefinitionAttribute ctor.
+    /// Used in AddonAttribute ctor.
     /// This enum defines the addons load order. 
     /// 
     /// First are loaded SystemAddon,

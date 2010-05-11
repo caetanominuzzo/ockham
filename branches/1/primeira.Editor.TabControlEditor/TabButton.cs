@@ -33,7 +33,7 @@ namespace primeira.Editor
             {
                 this.Bounds = bounds;
 
-                _hideLabel = _editor.HasOption(DocumentDefinitionOptions.DoNotShowLabelAndFixWidth);
+                _hideLabel = _editor.HasOption(DocumentHeaderOptions.DoNotShowLabelAndFixWidth);
 
                 if(!_hideLabel)
                     _printLabel = MeasureFromIDC();
@@ -91,7 +91,7 @@ namespace primeira.Editor
 
             this._editor = editor;
 
-            _icon = editor.Definition.Icon;
+            _icon = editor.Header.Icon;
 
             this._toolTip = new System.Windows.Forms.ToolTip();
 
@@ -99,7 +99,7 @@ namespace primeira.Editor
 
             this.TabStop = true;
 
-            SetText(editor.FileName, editor.Definition.Attributes.FriendlyName);
+            SetText(editor.FileName, editor.Header.Attributes.FriendlyName);
 
             //if (def.FriendlyName != null)
             //    SetText(def.FriendlyName);

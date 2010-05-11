@@ -7,11 +7,14 @@ using System.Runtime.Serialization;
 namespace primeira.Editor
 {
     [DataContract()]
-    [DocumentDefinition(Name = "Addon Discovery Cache",
+    [DocumentHeader(
+                Id="F6A86949-950C-448C-9183-90DB3E3651D5",
+                VersionNumber = "1.0",
+                Name = "Addon Discovery Cache",
                 DefaultFileName = "discovery",
                 Description = "Stores the last addon discovery order.",
                 DefaultFileExtension = ".cache",
-                Options=DocumentDefinitionOptions.OpenFromTypeDefaultName)]
+                Options=DocumentHeaderOptions.OpenFromTypeDefaultName)]
     internal class AddonDiscoveryDocument : DocumentBase
     {
         public static string FileName
@@ -66,7 +69,7 @@ namespace primeira.Editor
 
         public static AddonDiscoveryDocument GetInstance()
         {
-            DocumentDefinition def = DocumentManager.RegisterDocument(typeof(AddonDiscoveryDocument));
+            DocumentHeader def = DocumentManager.RegisterDocument(typeof(AddonDiscoveryDocument));
 
             AddonDiscoveryDocument doc = (AddonDiscoveryDocument)DocumentManager.LoadDocument(def);
 

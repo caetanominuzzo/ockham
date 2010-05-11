@@ -4,19 +4,21 @@ using System.Runtime.Serialization;
 namespace primeira.Editor
 {
     [DataContract()]
-    public class DocumentBase
+    public class DocumentBase : IExtensibleDataObject
     {
-        private DocumentDefinition _definition = null;
+        private DocumentHeader _header = null;
 
-        public DocumentDefinition Definition
+        [DataMember(Order=0)]
+        public DocumentHeader Header
         {
             get
             {
-                if (_definition == null)
-                    _definition = DocumentManager.RegisterDocument(this.GetType());
+                if (_header == null)
+                    _header = DocumentManager.RegisterDocument(this.GetType());
 
-                return _definition;
+                return _header;
             }
+            set { } //Just for serialization. The header must be registered in the getter.
         }
 
         #region Serialization
@@ -40,6 +42,24 @@ namespace primeira.Editor
         protected static void ToXml(DocumentBase document, string fileName)
         {
             DocumentManager.ToXml(document, fileName);
+        }
+
+        #endregion
+
+        #region IExtensibleDataObject Members
+
+        private ExtensionDataObject _extensionDataObject;
+
+        public ExtensionDataObject ExtensionData
+        {
+            get
+            {
+                return _extensionDataObject;
+            }
+            set
+            {
+                _extensionDataObject = value;
+            }
         }
 
         #endregion

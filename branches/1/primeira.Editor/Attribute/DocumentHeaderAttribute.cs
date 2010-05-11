@@ -9,8 +9,16 @@ namespace primeira.Editor
     /// The class must descend from DocumentBase in order to work properly.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public sealed class DocumentDefinitionAttribute : Attribute
+    public sealed class DocumentHeaderAttribute : Attribute
     {
+        /// <summary>
+        /// Gets or sets the id of the document. 
+        /// </summary>
+        public string Id { get; set; }
+        /// <summary>
+        /// Gets or sets the version of the document. 
+        /// </summary>
+        public string VersionNumber { get; set; }
         /// <summary>
         /// Gets or sets the name of the document. Eg.: "Text File", it will appear as "Text File Document".
         /// </summary>
@@ -30,9 +38,9 @@ namespace primeira.Editor
         public string DefaultFileExtension { get; set; }
         /// <summary>
         /// Gets or sets the options of the document.
-        /// See DocumentDefinitionOptions.
+        /// See DocumenHeaderOptions.
         /// </summary>
-        public DocumentDefinitionOptions Options { get; set; }
+        public DocumentHeaderOptions Options { get; set; }
         /// <summary>
         /// Gets or sets a mask to hide the real file name. Eg.: "Revisions".
         /// To concat the original file name use: "Revisions of %". The percent symbol will be replaced by the real file name becomimg: "Revisions of Noname 1.txt". 
@@ -42,11 +50,12 @@ namespace primeira.Editor
         /// Gets or sets the name of the icon in the assembly resources.
         /// </summary>
         public string IconResourceFile { get; set; }
+
     }
 
 
     [Flags()]
-    public enum DocumentDefinitionOptions
+    public enum DocumentHeaderOptions
     {
         None = 0,
         /// <summary>

@@ -11,7 +11,7 @@ namespace primeira.Editor
     {
         DocumentBase Document { get; }
 
-        DocumentDefinition Definition { get; }
+        DocumentHeader Header { get; }
 
         string FileName { get; }
 
@@ -19,7 +19,7 @@ namespace primeira.Editor
 
         event SelectedDelegate OnSelected;
 
-        bool HasOption(DocumentDefinitionOptions Option);
+        bool HasOption(DocumentHeaderOptions Option);
     }
 
 }

@@ -9,7 +9,7 @@ using primeira.Editor.Components;
 namespace primeira.Editor
 {
     [EditorDocument(DocumentType = typeof(FileBrowserDocument))]
-    [AddonDefinition(AddonOptions.LastInitilizedAddon)]
+    [Addon(AddonOptions.LastInitilizedAddon)]
     public partial class FileBrowserEditor :  EditorBase, IRecentFileControl
     {
         #region Fields
@@ -70,9 +70,9 @@ namespace primeira.Editor
         {
             dgQuickLauch.Rows.Clear();
 
-             foreach (DocumentDefinition doc in DocumentManager.Definitions)
+             foreach (DocumentHeader doc in DocumentManager.Headers)
             {
-                if (doc.Attributes.Options.HasFlag(DocumentDefinitionOptions.ShowInQuickLauchDraft))
+                if (doc.Attributes.Options.HasFlag(DocumentHeaderOptions.ShowInQuickLauchDraft))
                 {
                     int i = dgQuickLauch.Rows.Add(
                             new object[] { GetDraftImage(doc.Icon),
@@ -83,9 +83,9 @@ namespace primeira.Editor
                 }
             }
 
-            foreach (DocumentDefinition doc in DocumentManager.Definitions)
+            foreach (DocumentHeader doc in DocumentManager.Headers)
             {
-                if ((doc.Attributes.Options & DocumentDefinitionOptions.ShowIQuickLauchnOpen) > 0)
+                if ((doc.Attributes.Options & DocumentHeaderOptions.ShowIQuickLauchnOpen) > 0)
                 {
                     int i = dgQuickLauch.Rows.Add(
                             new object[] {  doc.Icon,
@@ -108,14 +108,14 @@ namespace primeira.Editor
             Size s = new Size(dgRecentFiles.Columns[1].Width, dgRecentFiles.RowTemplate.Height);
             Font f = dgRecentFiles.DefaultCellStyle.Font;
             DateTime d = DateTime.Now;
-            DocumentDefinition doc;
+            DocumentHeader doc;
             TimeSpan lastWrite;
 
             foreach (string file in files)
             {
                 if (File.Exists(file))
                 {
-                    doc = DocumentManager.GetDocumentDefinition(file);
+                    doc = DocumentManager.GetDocumentHeader(file);
 
                     lastWrite = d.Subtract(File.GetLastWriteTime(file));
 
@@ -134,9 +134,9 @@ namespace primeira.Editor
         [AddonInitialize()]
         public static void AddonInitialize()
         {
-            EditorDefinition editor = EditorManager.RegisterEditor(typeof(FileBrowserEditor));
+            EditorHeader editor = EditorManager.RegisterEditor(typeof(FileBrowserEditor));
 
-            DocumentDefinition doc = editor.Documents[0];
+            DocumentHeader doc = editor.Documents[0];
 
             EditorManager.LoadEditor(doc);
         }   
@@ -176,19 +176,19 @@ namespace primeira.Editor
             {
                 if(dgQuickLauch.Rows[e.RowIndex].Cells[2].Value.ToString() == "draft")
                 {
-                    string s = FileManager.GetNewFile((DocumentDefinition)dgQuickLauch.Rows[e.RowIndex].Cells[5].Value, DocumentManager.BaseDir);
+                    string s = FileManager.GetNewFile((DocumentHeader)dgQuickLauch.Rows[e.RowIndex].Cells[5].Value, DocumentManager.BaseDir);
                     s = Path.Combine(DocumentManager.BaseDir, s);
                     File.Create(s).Close();
                     EditorManager.LoadEditor(s);
                 }
                 else
                 {
-                    OpenOrCreateDocument(true, (DocumentDefinition)dgQuickLauch.Rows[e.RowIndex].Cells[5].Value);
+                    OpenOrCreateDocument(true, (DocumentHeader)dgQuickLauch.Rows[e.RowIndex].Cells[5].Value);
                 }
             }
         }
 
-        private void OpenOrCreateDocument(bool NewFile, DocumentDefinition FileVersion)
+        private void OpenOrCreateDocument(bool NewFile, DocumentHeader FileVersion)
         {
             OpenFileDialog s = new OpenFileDialog();
 
@@ -243,7 +243,7 @@ namespace primeira.Editor
             string[] files;
             DateTime d = DateTime.Now;
 
-            foreach(DocumentDefinition doc in DocumentManager.Definitions)
+            foreach(DocumentHeader doc in DocumentManager.Headers)
             {
 
                 files = Directory.GetFiles(directoryPath,"*"+ doc.Attributes.DefaultFileExtension);
