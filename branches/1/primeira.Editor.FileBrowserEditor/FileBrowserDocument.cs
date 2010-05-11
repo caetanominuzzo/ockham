@@ -15,7 +15,7 @@ namespace primeira.Editor
                 DefaultFileName = "default",
                 Description = "File & Tab Operations",
                 DefaultFileExtension = ".filebrowser",
-                FriendlyName="File Tab",
+                FriendlyNameMask="File Tab",
                 Options = (DocumentHeaderOptions.DoNotShowLabelAndFixWidth | DocumentHeaderOptions.TimerSaver | DocumentHeaderOptions.NeverClose | DocumentHeaderOptions.OpenFromTypeDefaultName))]
     public class FileBrowserDocument : DocumentBase
     {

@@ -72,11 +72,11 @@ namespace primeira.Editor
 
              foreach (DocumentHeader doc in DocumentManager.Headers)
             {
-                if (doc.Attributes.Options.HasFlag(DocumentHeaderOptions.ShowInQuickLauchDraft))
+                if (doc.Options.HasFlag(DocumentHeaderOptions.ShowInQuickLauchDraft))
                 {
                     int i = dgQuickLauch.Rows.Add(
                             new object[] { GetDraftImage(doc.Icon),
-                            string.Format("Draft {0} File ", doc.Attributes.Name),
+                            string.Format("Draft {0} File ", doc.Name),
                             "draft", 0, "", doc });
 
                     dgQuickLauch.Rows[i].Selected = false;
@@ -85,11 +85,11 @@ namespace primeira.Editor
 
             foreach (DocumentHeader doc in DocumentManager.Headers)
             {
-                if ((doc.Attributes.Options & DocumentHeaderOptions.ShowIQuickLauchnOpen) > 0)
+                if ((doc.Options & DocumentHeaderOptions.ShowIQuickLauchnOpen) > 0)
                 {
                     int i = dgQuickLauch.Rows.Add(
                             new object[] {  doc.Icon,
-                            string.Format("Open or Create {0} File ", doc.Attributes.Name),
+                            string.Format("Open or Create {0} File ", doc.Name),
                             "", 0, "", doc });
 
                     dgQuickLauch.Rows[i].Selected = false;
@@ -199,7 +199,7 @@ namespace primeira.Editor
 
             s.Filter = DocumentManager.RenderDialogFilterString();
 
-            s.DefaultExt = FileVersion.Attributes.DefaultFileExtension;
+            s.DefaultExt = FileVersion.DefaultFileExtension;
 
             s.FilterIndex = DocumentManager.GetDialogFilterIndex(FileVersion);
 
@@ -246,7 +246,7 @@ namespace primeira.Editor
             foreach(DocumentHeader doc in DocumentManager.Headers)
             {
 
-                files = Directory.GetFiles(directoryPath,"*"+ doc.Attributes.DefaultFileExtension);
+                files = Directory.GetFiles(directoryPath,"*"+ doc.DefaultFileExtension);
 
                 foreach (string file in files)
                 {

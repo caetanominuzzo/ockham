@@ -108,8 +108,8 @@ namespace primeira.Editor
         /// <returns>The editor with the default file loaded.</returns>
         public static IEditor LoadEditor(DocumentHeader document)
         {
-            if (document.Attributes.Options.HasFlag(DocumentHeaderOptions.OpenFromTypeDefaultName))
-                return LoadEditor(document.Attributes.DefaultFileName + document.Attributes.DefaultFileExtension);
+            if (document.Options.HasFlag(DocumentHeaderOptions.OpenFromTypeDefaultName))
+                return LoadEditor(document.DefaultFileName + document.DefaultFileExtension);
 
             throw new InvalidOperationException(Message_en.DocumentMissingOpenFromTypeDefaultName);
         }

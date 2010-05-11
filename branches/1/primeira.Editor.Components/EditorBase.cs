@@ -52,7 +52,7 @@ namespace primeira.Editor.Components
         {
             get
             {
-                return Header.Attributes.DefaultFileName + Header.Attributes.DefaultFileExtension;
+                return Header.DefaultFileName + Header.DefaultFileExtension;
             }
         }
 
@@ -108,7 +108,7 @@ namespace primeira.Editor.Components
 
         public bool HasOption(DocumentHeaderOptions Option)
         {
-            return this.Header.Attributes.Options.HasFlag(Option);
+            return this.Header.Options.HasFlag(Option);
         }
 
         #endregion
