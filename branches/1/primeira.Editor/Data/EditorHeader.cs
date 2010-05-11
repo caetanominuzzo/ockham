@@ -9,12 +9,12 @@ namespace primeira.Editor
     [DataContract()]
     public class EditorHeader
     {
-        public Type EditorType { get; set; }
+        public Type EditorType { get; internal set; }
 
         [DataMember()]
         public Version EditorVersion { get; set; }
 
-        public DocumentHeader[] Documents { get; set; }
+        public DocumentHeader[] Documents { get; internal set; }
 
         [DataMember()]
         public Version[] DocumentsVersions { get; set; }

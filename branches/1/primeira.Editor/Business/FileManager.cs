@@ -33,9 +33,9 @@ namespace primeira.Editor
             for (int i = 1; i < 1000; i++)
             {
                 result = string.Format("{0} {1}{2}",
-                    header.Attributes.DefaultFileName, 
+                    header.DefaultFileName, 
                     i,
-                    header.Attributes.DefaultFileExtension);
+                    header.DefaultFileExtension);
 
                 if (!File.Exists(Path.Combine(basedir, result)))
                     break;
