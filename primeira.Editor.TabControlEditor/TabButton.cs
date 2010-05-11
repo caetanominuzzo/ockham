@@ -99,7 +99,7 @@ namespace primeira.Editor
 
             this.TabStop = true;
 
-            SetText(editor.FileName, editor.Header.Attributes.FriendlyName);
+            SetText(editor.FileName, editor.Header.FriendlyNameMask);
 
             //if (def.FriendlyName != null)
             //    SetText(def.FriendlyName);

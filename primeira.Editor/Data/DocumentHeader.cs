@@ -14,9 +14,6 @@ namespace primeira.Editor
         public Version DocumentVersion { get; set; }
 
         [DataMember()]
-        public DocumentHeaderAttribute Attributes { get; set; }
-
-        [DataMember()]
         public VersionFilter DefaultEditorVersion { get; set; }
 
         public Type DocumentType { get; set; }
@@ -24,6 +21,40 @@ namespace primeira.Editor
         public EditorHeader DefaultEditor { get; set; }
         
         public Image Icon { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets the name of the document. Eg.: "Text File", it will appear as "Text File Document".
+        /// </summary>
+        [DataMember()]
+        public string Name { get; set; }
+        /// <summary>
+        /// Gets or sets the description of the document. Eg.: "Simple plain text."
+        /// </summary>
+        [DataMember()]
+        public string Description { get; set; }
+        /// <summary>
+        /// Gets or sets the default name of the document file. Eg.: "NoName". Used with DefaultFileExtension.
+        /// </summary>
+        [DataMember()]
+        public string DefaultFileName { get; set; }
+        /// <summary>
+        /// Gets or sets the default extension of the document file. Eg.: ".txt". Used with DefaultFileExtension.
+        /// Must contain the initial dot.
+        /// </summary>
+        [DataMember()]
+        public string DefaultFileExtension { get; set; }
+        /// <summary>
+        /// Gets or sets the options of the document.
+        /// See DocumenHeaderOptions.
+        /// </summary>
+        [DataMember()]
+        public DocumentHeaderOptions Options { get; set; }
+        /// <summary>
+        /// Gets or sets a mask to hide the real file name. Eg.: "Revisions".
+        /// To concat the original file name use: "Revisions of %". The percent symbol will be replaced by the real file name becomimg: "Revisions of Noname 1.txt". 
+        /// </summary>
+        [DataMember()]
+        public string FriendlyNameMask { get; set; }
 
         #region IExtensibleDataObject Members
 

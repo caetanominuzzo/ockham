@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
 
 namespace primeira.Editor
 {
@@ -45,12 +46,11 @@ namespace primeira.Editor
         /// Gets or sets a mask to hide the real file name. Eg.: "Revisions".
         /// To concat the original file name use: "Revisions of %". The percent symbol will be replaced by the real file name becomimg: "Revisions of Noname 1.txt". 
         /// </summary>
-        public string FriendlyName { get; set; }
+        public string FriendlyNameMask { get; set; }
         /// <summary>
         /// Gets or sets the name of the icon in the assembly resources.
         /// </summary>
         public string IconResourceFile { get; set; }
-
     }
 
 

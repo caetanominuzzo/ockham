@@ -57,7 +57,7 @@ namespace primeira.Editor
         public static DocumentHeader[] GetDocumentHeaderByFileExtension(string extension)
         {
             DocumentHeader[] document = (from a in Headers
-                                   where a.Attributes.DefaultFileExtension.Equals(extension, StringComparison.InvariantCultureIgnoreCase)
+                                   where a.DefaultFileExtension.Equals(extension, StringComparison.InvariantCultureIgnoreCase)
                                    select a).ToArray();
 
             if (document.Length > 0)
@@ -94,13 +94,20 @@ namespace primeira.Editor
             {
                 DocumentHeader doc = new DocumentHeader();
 
-                doc.Attributes = (DocumentHeaderAttribute)attribs[0];
+                DocumentHeaderAttribute attr = (DocumentHeaderAttribute)attribs[0];
 
                 doc.DocumentType = documentType;
 
-                doc.Icon = DocumentManager.GetIcon(documentType, doc.Attributes.IconResourceFile);
+                doc.Name = attr.Name;
+                doc.Options = attr.Options;
+                doc.Description = attr.Description;
+                doc.DefaultFileName = attr.DefaultFileName;
+                doc.DefaultFileExtension = attr.DefaultFileExtension;
+                doc.FriendlyNameMask = doc.FriendlyNameMask;
 
-                doc.DocumentVersion = new Version(doc.Attributes.Id, doc.Attributes.VersionNumber);
+                doc.Icon = DocumentManager.GetIcon(documentType, attr.IconResourceFile);
+
+                doc.DocumentVersion = new Version(attr.Id, attr.VersionNumber);
 
                 if (doc.DefaultEditorVersion != null)
                 {
@@ -158,8 +165,8 @@ namespace primeira.Editor
 
             foreach (DocumentHeader doc in Headers)
             {
-                if (doc.Attributes.Options.HasFlag(DocumentHeaderOptions.ShowIQuickLauchnOpen))
-                    sb.Append(string.Format("{0} (*{1})|*{1}|", doc.Attributes.Name, doc.Attributes.DefaultFileExtension));
+                if (doc.Options.HasFlag(DocumentHeaderOptions.ShowIQuickLauchnOpen))
+                    sb.Append(string.Format("{0} (*{1})|*{1}|", doc.Name, doc.DefaultFileExtension));
             }
 
             sb.Append("All files (*.*)|*.*");
@@ -177,7 +184,7 @@ namespace primeira.Editor
             int i = 0;
             foreach (DocumentHeader doc in Headers)
             {
-                if (doc.Attributes.Options.HasFlag(DocumentHeaderOptions.ShowIQuickLauchnOpen))
+                if (doc.Options.HasFlag(DocumentHeaderOptions.ShowIQuickLauchnOpen))
                     continue;
                 else i++;
 
@@ -243,9 +250,9 @@ namespace primeira.Editor
                                                where a.DocumentType == document.GetType()
                                                select a).First();
 
-            if (doc.Attributes.Options.HasFlag(DocumentHeaderOptions.OpenFromTypeDefaultName))
+            if (doc.Options.HasFlag(DocumentHeaderOptions.OpenFromTypeDefaultName))
             {
-                string fileName = doc.Attributes.DefaultFileName + doc.Attributes.DefaultFileExtension;
+                string fileName = doc.DefaultFileName + doc.DefaultFileExtension;
 
                 DocumentManager.ToXml(document, fileName);
             }
@@ -289,16 +296,16 @@ namespace primeira.Editor
         /// <returns>A loaded document</returns>
         public static DocumentBase LoadDocument(DocumentHeader document)
         {
-            if (document.Attributes.Options.HasFlag(DocumentHeaderOptions.OpenFromTypeDefaultName))
+            if (document.Options.HasFlag(DocumentHeaderOptions.OpenFromTypeDefaultName))
             {
-                return DocumentManager.LoadDocument(document, document.Attributes.DefaultFileName + document.Attributes.DefaultFileExtension);
+                return DocumentManager.LoadDocument(document, document.DefaultFileName + document.DefaultFileExtension);
             }
             else
             {
                 throw new InvalidOperationException(
                     string.Format(
                         Message_en.DocumentMissingOpenFromTypeDefaultName,
-                         document.Attributes.Name));
+                         document.Name));
             }
         }
 
@@ -310,7 +317,7 @@ namespace primeira.Editor
         /// <returns>A loaded document</returns>
         public static DocumentBase LoadDocument(DocumentHeader document, string fileName)
         {
-            if (document.Attributes.Options.HasFlag(DocumentHeaderOptions.CustomSerializationRead))
+            if (document.Options.HasFlag(DocumentHeaderOptions.CustomSerializationRead))
             {
                 MethodInfo m = document.DocumentType.GetMethod("ToObject", new Type[] { typeof(string) });
 
@@ -326,11 +333,11 @@ namespace primeira.Editor
                 {
                     LogFileManager.Log(
                         string.Format(
-                            Message_en.DocumentCustomSerializatinoError, document.Attributes.Name), Environment.NewLine, ex.ToString());
+                            Message_en.DocumentCustomSerializatinoError, document.Name), Environment.NewLine, ex.ToString());
 
                     throw new InvalidOperationException(
                         string.Format(
-                            Message_en.DocumentCustomSerializatinoError, document.Attributes.Name), ex);
+                            Message_en.DocumentCustomSerializatinoError, document.Name), ex);
                 }
             }
 
@@ -343,9 +350,9 @@ namespace primeira.Editor
         /// <param name="documentType">The System.Type of the document to open</param>
         public static void SaveDocument(DocumentBase document)
         {
-            if (document.Header.Attributes.Options.HasFlag(DocumentHeaderOptions.OpenFromTypeDefaultName))
+            if (document.Header.Options.HasFlag(DocumentHeaderOptions.OpenFromTypeDefaultName))
             {
-                DocumentManager.SaveDocument(document, document.Header.Attributes.DefaultFileName + document.Header.Attributes.DefaultFileExtension);
+                DocumentManager.SaveDocument(document, document.Header.DefaultFileName + document.Header.DefaultFileExtension);
             }
             else
             {
@@ -363,7 +370,7 @@ namespace primeira.Editor
         /// <param name="fileName">The file to load</param>
         public static void SaveDocument(DocumentBase document, string fileName)
         {
-            if (document.Header.Attributes.Options.HasFlag(DocumentHeaderOptions.CustomSerializationWrite))
+            if (document.Header.Options.HasFlag(DocumentHeaderOptions.CustomSerializationWrite))
             {
                 MethodInfo m = document.GetType().GetMethod("ToXml", new Type[] { typeof(string) });
 

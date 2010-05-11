@@ -14,7 +14,7 @@ namespace primeira.Editor
                 DefaultFileName = "default",
                 Description = "Shortcut Manager",
                 DefaultFileExtension = ".shortcut",
-                FriendlyName= "Shortcuts"
+                FriendlyNameMask= "Shortcuts"
                 //, DefaultEditor = typeof(ShortcutConfigEditor)
                 , Options=DocumentHeaderOptions.OpenFromTypeDefaultName
                 )]
