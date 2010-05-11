@@ -11,11 +11,14 @@ using primeira.Editor;
 namespace primeira.Editor
 {
     [DataContract()]
-    [DocumentDefinition(Name = "Meta Editor",
+    [DocumentHeader(
+                Id = "6225BC45-218C-4E1E-BE24-745CF827EABD",
+                VersionNumber = "1.0",
+                Name = "Meta Editor",
                 DefaultFileName = "Editor",
                 Description = "An editor for editors.",
                 DefaultFileExtension = ".metaeditor",
-                Options = DocumentDefinitionOptions.UserFile)]
+                Options = DocumentHeaderOptions.UserFile)]
     public class MetaEditorDocument : DocumentBase
     {
         UndoRedo<string> _editorName = new UndoRedo<string>(string.Empty);

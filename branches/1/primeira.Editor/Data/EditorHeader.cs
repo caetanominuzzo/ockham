@@ -7,12 +7,17 @@ using System.Runtime.Serialization;
 namespace primeira.Editor
 {
     [DataContract()]
-    public class EditorDefinition
+    public class EditorHeader
     {
-        [DataMember()]
         public Type EditorType { get; set; }
 
         [DataMember()]
-        public DocumentDefinition[] Documents { get; set; }
+        public Version EditorVersion { get; set; }
+
+        public DocumentHeader[] Documents { get; set; }
+
+        [DataMember()]
+        public Version[] DocumentsVersions { get; set; }
+
     }
 }

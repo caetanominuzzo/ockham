@@ -76,7 +76,7 @@ namespace primeira.Editor
 
                 foreach (Type type in types)
                 {
-                    if (type.GetCustomAttributes(typeof(AddonDefinitionAttribute), true).Length > 0)
+                    if (type.GetCustomAttributes(typeof(AddonAttribute), true).Length > 0)
                         addons.Add(type);
                 }
 
@@ -110,9 +110,9 @@ namespace primeira.Editor
             InitializeAddonGroup(AddonOptions.LastInitilizedAddon);
         }
 
-        private static void InitializeAddonGroup(AddonOptions definitionFilter)
+        private static void InitializeAddonGroup(AddonOptions optionFilter)
         {
-            InitializeAddons(definitionFilter);
+            InitializeAddons(optionFilter);
 
             int iLastPendencies = 0, iPendencies = 0;
 
@@ -122,22 +122,22 @@ namespace primeira.Editor
             {
                 iLastPendencies = addons.Count;
 
-                InitializeAddons(definitionFilter);
+                InitializeAddons(optionFilter);
 
                 iPendencies = addons.Count;
             }
         }
 
-        private static void InitializeAddons(AddonOptions definitionsFilter)
+        private static void InitializeAddons(AddonOptions optionFilter)
         {
             List<Type> pendencies = new List<Type>();
 
             foreach (Type addon in addons)
             {
-                AddonDefinitionAttribute[] attr = (AddonDefinitionAttribute[])addon.GetCustomAttributes(typeof(AddonDefinitionAttribute), false);
+                AddonAttribute[] attr = (AddonAttribute[])addon.GetCustomAttributes(typeof(AddonAttribute), false);
 
                 if (attr.Length > 0)
-                    if ((attr[0].Options & definitionsFilter) == 0)
+                    if ((attr[0].Options & optionFilter) == 0)
                     {
                         pendencies.Add(addon);
                         continue;

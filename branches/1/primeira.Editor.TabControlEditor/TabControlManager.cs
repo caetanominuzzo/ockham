@@ -77,7 +77,7 @@ namespace primeira.Editor
             {
                 iiFixedSizeWidth = iiFixedSizeCount * (FIXED_SIZE_TABBUTTON_WIDTH + iiLeftMargin);
 
-                if (editor.Definition.Attributes.Options.HasFlag(DocumentDefinitionOptions.DoNotShowLabelAndFixWidth))
+                if (editor.Header.Attributes.Options.HasFlag(DocumentHeaderOptions.DoNotShowLabelAndFixWidth))
                 {
                     _tabcontrol.TabButton(editor).SetBounds(new Rectangle(iiAbsoluteLeftMargin + iiFixedSizeWidth + iiLeftMargin, 3, FIXED_SIZE_TABBUTTON_WIDTH, 25));
 
@@ -128,7 +128,7 @@ namespace primeira.Editor
                     _openEditors.Add(value);
                     _openEditorsTabOrder.Insert(0, value);
 
-                    if(value.HasOption(DocumentDefinitionOptions.DoNotShowLabelAndFixWidth))
+                    if(value.HasOption(DocumentHeaderOptions.DoNotShowLabelAndFixWidth))
                         _openEditorsDisplayOrder.Insert(0, value);
                     else
                         _openEditorsDisplayOrder.Add(value);
@@ -202,7 +202,7 @@ namespace primeira.Editor
             {
                 editor = _openEditors[i];
 
-                if(editor.HasOption(DocumentDefinitionOptions.NeverClose))
+                if(editor.HasOption(DocumentHeaderOptions.NeverClose))
                     i++;
                 else
                     CloseEditor(editor);
@@ -215,7 +215,7 @@ namespace primeira.Editor
         public bool CloseEditor(IEditor editor)
         {
 
-            if (editor != null && !editor.HasOption(DocumentDefinitionOptions.NeverClose))
+            if (editor != null && !editor.HasOption(DocumentHeaderOptions.NeverClose))
             {
                 _tabcontrol.SaveCloseEditor(editor);
 

@@ -11,11 +11,14 @@ using primeira.Editor;
 namespace primeira.Editor
 {
     [DataContract()]
-    [DocumentDefinition(Name = "Text Editor",
+    [DocumentHeader(
+                Id = "70A84F3A-926E-43B2-BD5E-ED4AFDDC0844",
+                VersionNumber = "1.0",
+                Name = "Text Editor",
                 DefaultFileName = "Noname",
                 Description = "A plain text editor.",
                 DefaultFileExtension = ".txt",
-                Options = DocumentDefinitionOptions.UserFile | DocumentDefinitionOptions.CustomSerialization)]
+                Options = DocumentHeaderOptions.UserFile | DocumentHeaderOptions.CustomSerialization)]
     public class TextEditorDocument : DocumentBase
     {
         [DataMember()]

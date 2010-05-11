@@ -8,11 +8,14 @@ using System.Runtime.InteropServices;
 namespace primeira.Editor
 {
     [DataContract()]
-    [DocumentDefinition(Name = "Tab Control",
+    [DocumentHeader(
+                Id = "B95F5D57-F826-4493-91B9-A1683358A909",
+                VersionNumber = "1.0",
+                Name = "Tab Control",
                 DefaultFileName = "default",
                 Description = "Tab Control",
                 DefaultFileExtension = ".tabcontrol",
-                Options = DocumentDefinitionOptions.OpenFromTypeDefaultName)]
+                Options = DocumentHeaderOptions.OpenFromTypeDefaultName)]
     public class TabControlDocument : DocumentBase
     {
         private IEnumerable<string> _openEditors;

@@ -11,7 +11,7 @@ namespace primeira.Editor
 
         public static void AddEditor(IEditor editor)
         {
-            if(editor.HasOption(DocumentDefinitionOptions.ShowInRecents))
+            if(editor.HasOption(DocumentHeaderOptions.ShowInRecents))
             {
                 if (FileManager.Recent != null)
                     FileManager.Recent.AddRecent(editor.FileName);

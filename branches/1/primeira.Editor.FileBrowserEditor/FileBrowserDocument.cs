@@ -8,12 +8,15 @@ using primeira.Editor;
 namespace primeira.Editor
 {
     [DataContract()]
-    [DocumentDefinition(Name = "File Browser Configuration",
+    [DocumentHeader(
+                Id = "A9ED003E-992E-4952-A5D1-39EF2766A48F",
+                VersionNumber = "1.0",
+                Name = "File Browser Configuration",
                 DefaultFileName = "default",
                 Description = "File & Tab Operations",
                 DefaultFileExtension = ".filebrowser",
                 FriendlyName="File Tab",
-                Options = (DocumentDefinitionOptions.DoNotShowLabelAndFixWidth | DocumentDefinitionOptions.TimerSaver | DocumentDefinitionOptions.NeverClose | DocumentDefinitionOptions.OpenFromTypeDefaultName))]
+                Options = (DocumentHeaderOptions.DoNotShowLabelAndFixWidth | DocumentHeaderOptions.TimerSaver | DocumentHeaderOptions.NeverClose | DocumentHeaderOptions.OpenFromTypeDefaultName))]
     public class FileBrowserDocument : DocumentBase
     {
         private List<string> _recent = new List<string>();
