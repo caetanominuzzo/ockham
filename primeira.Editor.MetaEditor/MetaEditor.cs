@@ -10,12 +10,15 @@ using primeira.Editor;
 using primeira.Editor.Components;
 using Microsoft.CSharp;
 using System.CodeDom.Compiler;
+using primeira.Editor;
 
+[assembly: EditorHeader("primeira.Editor.MetaEditor",
+    Name = "MetaEditor",
+    Id = "{CCE4A5DB-266A-4701-87ED-5244F5F76516}")]
 
 namespace primeira.Editor
 {
     [EditorDocument(DocumentType=typeof(MetaEditorDocument))]
-    [Addon(AddonOptions.UserAddon)]
     public partial class MetaEditor : EditorBase, IShorcutEscopeProvider
     {
         public MetaEditor(string fileName)
@@ -61,12 +64,6 @@ namespace primeira.Editor
 
             //((primeira.Editor.MetaEditorDocument)(((primeira.Editor.MetaEditor)((primeira.Editor.TabControlManager)(primeira.Editor.EditorContainerManager._))._activeEditor).Document)).EditorName = "asd";
 
-        }
-
-        [AddonInitialize()]
-        public static void AddonInitialize()
-        {
-            EditorManager.RegisterEditor(typeof(MetaEditor));
         }
 
         private void btnNewGuid_Click(object sender, EventArgs e)

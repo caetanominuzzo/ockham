@@ -10,22 +10,20 @@ using System.IO;
 using primeira.Editor;
 using primeira.Editor.Components;
 
+[assembly: EditorHeader("primeira.Editor.ShortcutConfigEditor",
+    AddonOptions.SystemAddon,
+    Name = "ShortcutConfigEditor",
+    Id = "{328F4FE6-7D48-44EB-AC09-7B9F2E8FFB33}")]
+
 namespace primeira.Editor
 {
     [EditorDocument(DocumentType = typeof(ShortcutConfigDocument))]
-    [Addon(AddonOptions.SystemAddon)]
     public partial class ShortcutConfigEditor : EditorBase
     {
         public ShortcutConfigEditor(string fileName)
             : base(fileName)
         {
             InitializeComponent();
-        }
-
-        [AddonInitialize()]
-        public static void RegisterEditor()
-        {
-            EditorManager.RegisterEditor(typeof(ShortcutConfigEditor));
         }
 
         private void ShortcutManagerEditor_Load(object sender, EventArgs e)

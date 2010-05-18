@@ -5,11 +5,18 @@ using System.Windows.Forms;
 using System.IO;
 using System.Drawing.Drawing2D;
 using primeira.Editor.Components;
+using primeira.Editor;
+
+[assembly: EditorHeader(
+    "primeira.Editor.FileBrowserEditor",
+    "AddonInitialize",
+    AddonOptions.LastInitilizedAddon,
+    Name = "FileBrowserEditor",
+    Id = "{B44995A7-81F8-41B8-94D0-9234A024966A}")]
 
 namespace primeira.Editor
 {
     [EditorDocument(DocumentType = typeof(FileBrowserDocument))]
-    [Addon(AddonOptions.LastInitilizedAddon)]
     public partial class FileBrowserEditor :  EditorBase, IRecentFileControl
     {
         #region Fields
@@ -131,12 +138,9 @@ namespace primeira.Editor
 
         #endregion
 
-        [AddonInitialize()]
         public static void AddonInitialize()
         {
-            EditorHeader editor = EditorManager.RegisterEditor(typeof(FileBrowserEditor));
-
-            DocumentHeader doc = editor.Documents[0];
+            DocumentHeader doc = DocumentManager.GetDocumentHeader(typeof(FileBrowserDocument));
 
             EditorManager.LoadEditor(doc);
         }   

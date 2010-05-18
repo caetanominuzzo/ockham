@@ -19,6 +19,7 @@ namespace primeira.Editor
                 Options = (DocumentHeaderOptions.DoNotShowLabelAndFixWidth | DocumentHeaderOptions.TimerSaver | DocumentHeaderOptions.NeverClose | DocumentHeaderOptions.OpenFromTypeDefaultName))]
     public class FileBrowserDocument : DocumentBase
     {
+
         private List<string> _recent = new List<string>();
 
         public void AddRecent(string fileName)
@@ -42,5 +43,6 @@ namespace primeira.Editor
             }
 
         }
+
     }
 }

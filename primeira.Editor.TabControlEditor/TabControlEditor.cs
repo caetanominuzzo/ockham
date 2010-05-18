@@ -10,11 +10,16 @@ using System.IO;
 using System.Runtime.InteropServices;
 using primeira.Editor;
 using primeira.Editor.Components;
+using primeira.Editor;
+
+[assembly: EditorHeader("primeira.Editor.TabControlEditor",
+    "AddonInitialize",
+    AddonOptions.SystemDelayedInitializationAddon,
+    Id = "{CA79941A-CF5C-4304-87EF-E8C20B0E75B6}")]
 
 namespace primeira.Editor
 {
     [EditorDocument(DocumentType = typeof(TabControlDocument))]
-    [Addon(AddonOptions.SystemDelayedInitializationAddon)]
     public partial class TabControlEditor : EditorBase, IMessageControl, IShorcutEscopeProvider
     {
 
@@ -53,7 +58,6 @@ namespace primeira.Editor
             TabControlManager.GetInstance().RefreshTabButtonSize();
         }
 
-        [AddonInitialize()]
         public static void AddonInitialize()
         {
             FormBase fmMain = new FormBase();
@@ -65,9 +69,7 @@ namespace primeira.Editor
 
             EditorContainerManager.SetEditorContainer((IEditorContainer)TabControlManager.GetInstance());
 
-            EditorHeader editor = EditorManager.RegisterEditor(typeof(TabControlEditor));
-
-            DocumentHeader doc = editor.Documents[0];
+            DocumentHeader doc = DocumentManager.GetDocumentHeader(typeof(TabControlDocument));
 
             IEditor tabEditor = EditorManager.LoadEditor(doc);
 

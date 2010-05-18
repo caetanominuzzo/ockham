@@ -70,10 +70,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attribute\EditorHeaderAttribute.cs" />
+    <Compile Include="Attribute\HeaderAttributeBase.cs" />
     <Compile Include="Business\DelayedExecutionManager.cs" />
+    <Compile Include="Data\AddonHeader.cs" />
+    <Compile Include="Data\Authorship.cs" />
     <Compile Include="Data\DocumentHeader.cs" />
     <Compile Include="Data\EditorHeader.cs" />
-    <Compile Include="Data\Version.cs" />
+    <Compile Include="Data\HeaderBase.cs" />
+    <Compile Include="Data\VersionData.cs" />
     <Compile Include="Data\VersionFilter.cs" />
     <Compile Include="Document\DocumentBase.cs">
       <SubType>Code</SubType>
@@ -87,14 +92,13 @@
     <Compile Include="Business\EditorManager.cs" />
     <Compile Include="Business\FileManager.cs" />
     <Compile Include="Attribute\EditorDocumentAttribute.cs" />
-    <Compile Include="Attribute\AddonAttribute.cs" />
-    <Compile Include="Attribute\AddonInitializeAttribute.cs" />
+    <Compile Include="Attribute\AddonHeaderAttribute.cs" />
     <Compile Include="Data\Message-en.cs" />
     <Compile Include="Data\MessageSeverity.cs" />
     <Compile Include="Data\Shortcut.cs" />
     <Compile Include="Attribute\ShortcutVisibilityAttribute.cs" />
     <Compile Include="Document\AddonDiscoveryDocument.cs" />
-    <Compile Include="Document\EditorManagerDocument.cs" />
+    <Compile Include="Document\EditorHeaderDocument.cs" />
     <Compile Include="Document\ShortcutConfigDocument.cs" />
     <Compile Include="Document\WindowPositionDocument.cs" />
     <Compile Include="Interface\IEditor.cs" />
