@@ -36,6 +36,12 @@ namespace primeira.Editor
 
         #endregion
 
+        public TabControlEditor()
+            : base()
+        {
+            InitializeComponent();
+        }
+
         public TabControlEditor(string fileName)
             : base(fileName)
         {
@@ -63,13 +69,13 @@ namespace primeira.Editor
             FormBase fmMain = new FormBase();
 
             //try to set windows 7 style
-            DwmHelper.SeventishIt(fmMain);
+            //DwmHelper.SeventishIt(fmMain);
 
             TabControlManager.GetInstance().MainForm = fmMain;
 
             EditorContainerManager.SetEditorContainer((IEditorContainer)TabControlManager.GetInstance());
 
-            DocumentHeader doc = DocumentManager.GetDocumentHeader(typeof(TabControlDocument));
+            DocumentHeader doc = DocumentManager.RegisterDocument(typeof(TabControlDocument));
 
             IEditor tabEditor = EditorManager.LoadEditor(doc);
 

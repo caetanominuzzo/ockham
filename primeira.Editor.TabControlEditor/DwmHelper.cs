@@ -30,6 +30,15 @@ namespace primeira.Editor
 
         internal static void SeventishIt(Control control)
         {
+            //Control c = new Control();
+            //c.BackColor = System.Drawing.Color.Black;
+            //c.Dock = DockStyle.Top;
+            //c.Width = control.Width;
+            //c.Height = 33;
+
+            
+            //control.Controls.Add(c);
+
             control.BackColor = System.Drawing.Color.Black;
 
             NativeMethods.MARGINS margins = new NativeMethods.MARGINS();

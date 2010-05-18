@@ -56,7 +56,9 @@ namespace primeira.Editor
 
         public static AddonDiscoveryDocument GetInstance()
         {
-            AddonDiscoveryDocument doc = (AddonDiscoveryDocument)DocumentManager.ToObject(FileName, typeof(AddonDiscoveryDocument));
+            DocumentHeader header = DocumentManager.RegisterDocument(typeof(AddonDiscoveryDocument));
+
+            AddonDiscoveryDocument doc = (AddonDiscoveryDocument)DocumentManager.LoadDocument(header, FileName);
 
             FileInfo f = new FileInfo(FileName);
 
@@ -72,7 +74,7 @@ namespace primeira.Editor
 
         public void ToXml()
         {
-            DocumentManager.SaveDocument(this);
+            DocumentManager.SaveDocument(this, FileName);
         }
     }
 }

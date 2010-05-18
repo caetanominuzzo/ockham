@@ -6,7 +6,7 @@ using System.Text;
 namespace primeira.Editor
 {
     /// <summary>
-    /// Defines all addons inside an assembly.
+    /// Defines an addons inside an assembly.
     /// </summary>
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple=true)]
     public class AddonHeaderAttribute : HeaderAttributeBase

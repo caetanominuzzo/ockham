@@ -6,6 +6,7 @@ using System.IO;
 using System.Drawing.Drawing2D;
 using primeira.Editor.Components;
 using primeira.Editor;
+using System.Text;
 
 [assembly: EditorHeader(
     "primeira.Editor.FileBrowserEditor",
@@ -140,7 +141,7 @@ namespace primeira.Editor
 
         public static void AddonInitialize()
         {
-            DocumentHeader doc = DocumentManager.GetDocumentHeader(typeof(FileBrowserDocument));
+            DocumentHeader doc = DocumentManager.RegisterDocument(typeof(FileBrowserDocument));
 
             EditorManager.LoadEditor(doc);
         }   
@@ -201,11 +202,11 @@ namespace primeira.Editor
             if (NewFile)
                 s.FileName = FileManager.GetNewFile(FileVersion, DocumentManager.BaseDir);
 
-            s.Filter = DocumentManager.RenderDialogFilterString();
+            s.Filter = RenderDialogFilterString();
 
             s.DefaultExt = FileVersion.DefaultFileExtension;
 
-            s.FilterIndex = DocumentManager.GetDialogFilterIndex(FileVersion);
+            s.FilterIndex = GetDialogFilterIndex(FileVersion);
 
             s.InitialDirectory = DocumentManager.BaseDir;
 
@@ -239,6 +240,51 @@ namespace primeira.Editor
         }
 
         #endregion
+
+        #region Dialogs
+
+        /// <summary>
+        /// Renders a dialog filter string with all registered document types.
+        /// </summary>
+        /// <returns></returns>
+        public static string RenderDialogFilterString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (DocumentHeader doc in DocumentManager.Headers)
+            {
+                if (doc.Options.HasFlag(DocumentHeaderOptions.ShowIQuickLauchnOpen))
+                    sb.Append(string.Format("{0} (*{1})|*{1}|", doc.Name, doc.DefaultFileExtension));
+            }
+
+            sb.Append("All files (*.*)|*.*");
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Gets the dialog filter string index of a given file type.
+        /// </summary>
+        /// <param name="FileVersion"></param>
+        /// <returns></returns>
+        public static int GetDialogFilterIndex(DocumentHeader FileVersion)
+        {
+            int i = 0;
+            foreach (DocumentHeader doc in DocumentManager.Headers)
+            {
+                if (doc.Options.HasFlag(DocumentHeaderOptions.ShowIQuickLauchnOpen))
+                    continue;
+                else i++;
+
+                if (doc == FileVersion)
+                    return i;
+            }
+
+            return 1;
+        }
+
+        #endregion
+
 
         private void folderBrowser1_OnDirectoryChange(string directoryPath)
         {

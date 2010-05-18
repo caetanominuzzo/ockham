@@ -6,7 +6,7 @@ using System.Text;
 namespace primeira.Editor
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class HeaderAttributeBase : Attribute
+    public abstract class HeaderAttributeBase : Attribute
     {
         /// <summary>
         /// Gets or sets the id of the document. 

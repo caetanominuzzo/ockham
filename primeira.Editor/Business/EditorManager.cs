@@ -14,9 +14,17 @@ namespace primeira.Editor
     {
         private static EditorHeaderDocument cache = null;
 
+        public static EditorHeader[] Headers
+        {
+            get
+            {
+                return cache.Headers;
+            }
+        }
+
         public static void Discovery()
         {
-            cache = new EditorHeaderDocument();
+            cache = EditorHeaderDocument.GetInstance();
 
             if (cache.LastWriteTime > AddonManager.CacheLastWriteTime)
             {
@@ -58,37 +66,14 @@ namespace primeira.Editor
         {
             return cache.Headers.AsParallel().Where(x => x.BaseType == editorType).FirstOrDefault();
         }
-
-        private static EditorHeader GetEditorHeaderFromReflection(Type editorType)
+        
+        /// <summary>
+        /// Registers a System.Type as an editor.
+        /// </summary>
+        /// <param name="editorType">The System.Type to register</param>
+        public static EditorHeader[] GetEditorHeaders(VersionFilter version)
         {
-            EditorHeader editor = null;
-
-            EditorHeaderAttribute attrib = (EditorHeaderAttribute)editorType.Assembly.GetCustomAttributes(typeof(EditorHeaderAttribute), false).FirstOrDefault();
-
-            if (attrib != null)
-            {
-                editor = new EditorHeader(editorType);
-
-                editor.GetHeaderBaseFromReflection(attrib);
-
-                editor.DocumentVersions = GetEditorDocumentsHeadersFromReflection(editorType);
-            }
-
-            return editor;
-        }
-
-        private static VersionData[] GetEditorDocumentsHeadersFromReflection(Type editorType)
-        {
-            EditorDocumentAttribute[] dd = (EditorDocumentAttribute[])editorType.GetCustomAttributes(typeof(EditorDocumentAttribute), false);
-
-            List<VersionData> tmp = new List<VersionData>(dd.Length);
-
-            foreach (EditorDocumentAttribute d in dd)
-            {
-                tmp.Add(DocumentManager.RegisterDocument(d.DocumentType).Version);
-            }
-
-            return tmp.ToArray();
+            return cache.Headers.Where(x => x.Version.Id == version.Target).ToArray();
         }
 
         /// <summary>
@@ -109,7 +94,7 @@ namespace primeira.Editor
 
             try
             {
-                res = EditorManager.CreateEditor(fileName);
+                res = EditorManager.InternalLoadEditor(fileName);
 
                 if (res != null)
                     EditorContainerManager.AddEditor(res);
@@ -144,16 +129,48 @@ namespace primeira.Editor
             throw new InvalidOperationException(Message_en.DocumentMissingOpenFromTypeDefaultName);
         }
 
-        private static IEditor CreateEditor(string fileName)
+        private static EditorHeader GetEditorHeaderFromReflection(Type editorType)
+        {
+            EditorHeader editor = null;
+
+            EditorHeaderAttribute attrib = (EditorHeaderAttribute)editorType.Assembly.GetCustomAttributes(typeof(EditorHeaderAttribute), false).FirstOrDefault();
+
+            if (attrib != null)
+            {
+                editor = new EditorHeader(editorType);
+
+                editor.GetHeaderBaseFromReflection(attrib);
+
+                editor.DocumentVersions = GetEditorDocumentsHeadersFromReflection(editorType);
+            }
+
+            return editor;
+        }
+
+        private static VersionData[] GetEditorDocumentsHeadersFromReflection(Type editorType)
+        {
+            EditorDocumentAttribute[] dd = (EditorDocumentAttribute[])editorType.GetCustomAttributes(typeof(EditorDocumentAttribute), false);
+
+            List<VersionData> tmp = new List<VersionData>(dd.Length);
+
+            foreach (EditorDocumentAttribute d in dd)
+            {
+                tmp.Add(DocumentManager.RegisterDocument(d.DocumentType).Version);
+            }
+
+            return tmp.ToArray();
+        }
+
+        private static IEditor InternalLoadEditor(string fileName)
         {
             IEditor res = null;
 
             Type editorType;
 
-            DocumentHeader def = DocumentManager.GetDocumentHeader(fileName);
+            DocumentHeader header = DocumentManager.GetDocumentHeader(fileName);
 
             editorType = ( from a in EditorManager.Headers.AsParallel()
-                           where a.DocumentVersions != null && a.DocumentVersions.Contains(def.Version)
+                           where a.DocumentVersions != null && a.DocumentVersions.Contains(header.Version)
                            select a.BaseType ).FirstOrDefault();
 
             if (editorType == null)
@@ -169,25 +186,6 @@ namespace primeira.Editor
 
         private static Type[] _defaultEditorCtor = new Type[1] { typeof(string) };
 
-        #region Editors
 
-        public static EditorHeader[] Headers
-        {
-            get
-            {
-                return cache.Headers;
-            }
-        }
-
-        public static EditorHeader[] GetEditorsHeader(VersionFilter filter)
-        {
-            return ( from a in cache.Headers
-                     where a.Version.Id == filter.Target
-                        && a.Version.Number == filter.Number
-                     select a ).ToArray();
-
-        }
-
-        #endregion
     }
 }

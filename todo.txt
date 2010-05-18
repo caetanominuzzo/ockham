@@ -1,0 +1,18 @@
+Create HeaderDocument<T> to substitute EditorHeaderDocument & DocumentHeaderDocument by HeaderDocument<EditorHeader> & HeaderDocument<DocumentHeader> 
+AddonCache too.
+
+Persist Editors & Documents Headers
+
+Default Document Editor  Management 
+
+Default Editor Document Management
+
+Document Header Reader
+Dated Cache
+
+Persist Shortcut Configuration
+
+ICSharp Editor
+
+Control + T Switching
+

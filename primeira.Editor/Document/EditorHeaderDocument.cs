@@ -61,7 +61,9 @@ namespace primeira.Editor
 
         public static EditorHeaderDocument GetInstance()
         {
-            EditorHeaderDocument doc = (EditorHeaderDocument)DocumentManager.ToObject(FileName, typeof(EditorHeaderDocument));
+            DocumentHeader header = DocumentManager.RegisterDocument(typeof(EditorHeaderDocument));
+
+            EditorHeaderDocument doc = (EditorHeaderDocument)DocumentManager.LoadDocument(header, FileName);
 
             FileInfo f = new FileInfo(FileName);
 
@@ -77,7 +79,7 @@ namespace primeira.Editor
 
         public void ToXml()
         {
-            DocumentManager.SaveDocument(this);
+            DocumentManager.SaveDocument(this, FileName);
         }
 
     }
