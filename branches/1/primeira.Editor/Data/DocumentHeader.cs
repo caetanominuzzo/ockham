@@ -8,30 +8,13 @@ using System.Drawing;
 namespace primeira.Editor
 {
     [DataContract()]
-    public class DocumentHeader : IExtensibleDataObject
+    public class DocumentHeader : HeaderBase
     {
-        [DataMember()]
-        public Version DocumentVersion { get; set; }
-
+        /// <summary>
+        /// Gets or sets the version of the default editor for the document.
+        /// </summary>
         [DataMember()]
         public VersionFilter DefaultEditorVersion { get; set; }
-
-        public Type DocumentType { get; set; }
-
-        public EditorHeader DefaultEditor { get; set; }
-        
-        public Image Icon { get; internal set; }
-
-        /// <summary>
-        /// Gets or sets the name of the document. Eg.: "Text File", it will appear as "Text File Document".
-        /// </summary>
-        [DataMember()]
-        public string Name { get; set; }
-        /// <summary>
-        /// Gets or sets the description of the document. Eg.: "Simple plain text."
-        /// </summary>
-        [DataMember()]
-        public string Description { get; set; }
         /// <summary>
         /// Gets or sets the default name of the document file. Eg.: "NoName". Used with DefaultFileExtension.
         /// </summary>
@@ -56,22 +39,8 @@ namespace primeira.Editor
         [DataMember()]
         public string FriendlyNameMask { get; set; }
 
-        #region IExtensibleDataObject Members
+        public EditorHeader DefaultEditor { get; internal set; }
 
-        private ExtensionDataObject _extensionDataObject;
-
-        public ExtensionDataObject ExtensionData
-        {
-            get
-            {
-                return _extensionDataObject;
-            }
-            set
-            {
-                _extensionDataObject = value;
-            }
-        }
-
-        #endregion
+        public Image Icon { get; internal set; }
     }
 }

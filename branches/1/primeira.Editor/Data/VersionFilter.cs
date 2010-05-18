@@ -7,13 +7,12 @@ using System.Runtime.Serialization;
 namespace primeira.Editor
 {
     [DataContract()]
-    public class EditorHeader : AddonHeader
+    public class VersionFilter
     {
         [DataMember()]
-        public VersionData[] DocumentVersions { get; set; }
+        public Guid Target { get; set; }
 
-        public EditorHeader(Type editorType)
-            : base(editorType)
-        { }
+        [DataMember()]
+        public string Number { get; set; }
     }
 }

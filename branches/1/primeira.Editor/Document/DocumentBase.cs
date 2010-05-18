@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using System.IO;
 
 namespace primeira.Editor
 {
@@ -8,7 +9,7 @@ namespace primeira.Editor
     {
         private DocumentHeader _header = null;
 
-        [DataMember(Order=0)]
+        [DataMember(Order = 0)]
         public DocumentHeader Header
         {
             get

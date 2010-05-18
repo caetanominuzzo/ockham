@@ -95,6 +95,7 @@
   <ItemGroup>
     <EmbeddedResource Include="EditorBase.resx">
       <DependentUpon>EditorBase.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormBase.resx">
       <DependentUpon>FormBase.cs</DependentUpon>

@@ -12,43 +12,83 @@ namespace primeira.Editor
 
     public static class EditorManager
     {
-        private static EditorManagerDocument cache = EditorManagerDocument.GetInstance();
+        private static EditorHeaderDocument cache = null;
+
+        public static void Discovery()
+        {
+            cache = new EditorHeaderDocument();
+
+            if (cache.LastWriteTime > AddonManager.CacheLastWriteTime)
+            {
+                AddonManager.Addons.AsParallel().ForAll(a =>
+                {
+                    cache.Headers.AsParallel().ForAll(b =>
+                    {
+                        if (a.Version.Id == b.Version.Id)
+                        {
+                            b.BaseType = a.BaseType;
+                            b.DocumentVersions = GetEditorDocumentsHeadersFromReflection(b.BaseType);
+                        }
+                    });
+                });
+            }
+            else
+            {
+                cache.Clear();
+
+                AddonManager.Addons.AsParallel().ForAll(a =>
+                {
+                    EditorHeader header = null;
+
+                    header = GetEditorHeaderFromReflection(a.BaseType);
+
+                    if (header != null)
+                        cache.AddEditorHeader(header);
+                });
+
+                cache.ToXml();
+            }
+        }
 
         /// <summary>
         /// Registers a System.Type as an editor.
         /// </summary>
-        /// <param name="type">The System.Type to register</param>
-        public static EditorHeader RegisterEditor(Type type)
+        /// <param name="editorType">The System.Type to register</param>
+        public static EditorHeader GetEditorHeader(Type editorType)
         {
-            EditorHeader editor = cache.Editors.AsParallel().Where(x => x.EditorType == type).FirstOrDefault();
+            return cache.Headers.AsParallel().Where(x => x.BaseType == editorType).FirstOrDefault();
+        }
 
-            if (editor == null)
+        private static EditorHeader GetEditorHeaderFromReflection(Type editorType)
+        {
+            EditorHeader editor = null;
+
+            EditorHeaderAttribute attrib = (EditorHeaderAttribute)editorType.Assembly.GetCustomAttributes(typeof(EditorHeaderAttribute), false).FirstOrDefault();
+
+            if (attrib != null)
             {
-                editor = new EditorHeader();
+                editor = new EditorHeader(editorType);
 
-                editor.EditorType = type;
+                editor.GetHeaderBaseFromReflection(attrib);
 
-                EditorDocumentAttribute[] dd = (EditorDocumentAttribute[])type.GetCustomAttributes(typeof(EditorDocumentAttribute), false);
-
-                List<DocumentHeader> docs = new List<DocumentHeader>();
-
-                DocumentHeader doc = null;
-
-                foreach (EditorDocumentAttribute d in dd)
-                {
-                    doc = DocumentManager.RegisterDocument(d.DocumentType);
-
-                    docs.Add(doc);
-                }
-
-                editor.Documents = docs.ToArray();
-
-                cache.AddEditor(editor);
-
-                ShortcutManager.LoadFromType(type);
+                editor.DocumentVersions = GetEditorDocumentsHeadersFromReflection(editorType);
             }
 
             return editor;
+        }
+
+        private static VersionData[] GetEditorDocumentsHeadersFromReflection(Type editorType)
+        {
+            EditorDocumentAttribute[] dd = (EditorDocumentAttribute[])editorType.GetCustomAttributes(typeof(EditorDocumentAttribute), false);
+
+            List<VersionData> tmp = new List<VersionData>(dd.Length);
+
+            foreach (EditorDocumentAttribute d in dd)
+            {
+                tmp.Add(DocumentManager.RegisterDocument(d.DocumentType).Version);
+            }
+
+            return tmp.ToArray();
         }
 
         /// <summary>
@@ -70,6 +110,11 @@ namespace primeira.Editor
             try
             {
                 res = EditorManager.CreateEditor(fileName);
+
+                if (res != null)
+                    EditorContainerManager.AddEditor(res);
+
+                return res;
             }
             catch (TargetInvocationException ex)
             {
@@ -83,21 +128,6 @@ namespace primeira.Editor
                 throw;
             }
 
-            if (res != null)
-            {
-                EditorContainerManager.AddEditor(res);
-                return res;
-            }
-            else
-            {
-                MessageManager.Send(
-                    MessageSeverity.Alert,
-                    string.Format(
-                        Message_en.EditorCreationError,
-                        fileName));
-
-                return null;
-            }
         }
 
         /// <summary>
@@ -122,9 +152,9 @@ namespace primeira.Editor
 
             DocumentHeader def = DocumentManager.GetDocumentHeader(fileName);
 
-            editorType = (from a in EditorManager.Editors.AsParallel()
-                          where a.Documents.Contains(def)
-                          select a.EditorType).FirstOrDefault();
+            editorType = ( from a in EditorManager.Headers.AsParallel()
+                           where a.DocumentVersions != null && a.DocumentVersions.Contains(def.Version)
+                           select a.BaseType ).FirstOrDefault();
 
             if (editorType == null)
                 throw new InvalidOperationException(
@@ -141,20 +171,20 @@ namespace primeira.Editor
 
         #region Editors
 
-        public static EditorHeader[] Editors
+        public static EditorHeader[] Headers
         {
             get
             {
-                return cache.Editors;
+                return cache.Headers;
             }
         }
 
-        public static EditorHeader[] GetEditors(VersionFilter filter)
+        public static EditorHeader[] GetEditorsHeader(VersionFilter filter)
         {
-            return (from a in cache.Editors
-                    where a.EditorVersion.Id == filter.Target
-                       && a.EditorVersion.Number == filter.Number
-                    select a).ToArray();
+            return ( from a in cache.Headers
+                     where a.Version.Id == filter.Target
+                        && a.Version.Number == filter.Number
+                     select a ).ToArray();
 
         }
 

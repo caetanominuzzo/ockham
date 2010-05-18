@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Linq;
 
 namespace primeira.Editor
 {
@@ -10,9 +11,26 @@ namespace primeira.Editor
     {
         private static AddonDiscoveryDocument cache = null;
 
-        private static List<Type> addons = null;
-
         private static string ADDON_DIR = "Addons";
+
+        public static AddonHeader[] Addons
+        {
+            get
+            {
+                return cache == null ? null :
+                    ( from a in cache.Addons
+                      where a.BaseType != null
+                      select a ).ToArray();
+            }
+        }
+
+        public static DateTime CacheLastWriteTime
+        {
+            get
+            {
+                return cache == null ? DateTime.MinValue : cache.LastWriteTime;
+            }
+        }
 
         /// <summary>
         /// Discovers and initializes all available addons.
@@ -23,33 +41,38 @@ namespace primeira.Editor
         {
             try
             {
-                addons = new List<Type>();
-
                 string addonDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ADDON_DIR);
 
                 if (!Directory.Exists(addonDir))
                     Directory.CreateDirectory(addonDir);
 
-                GetAllAvaiableAddonTypes(addonDir);
 
                 cache = AddonDiscoveryDocument.GetInstance();
 
-                string addonCacheFile = AddonDiscoveryDocument.FileName;
-
-                if (cache.LoadOrder.Length > 0 && Directory.GetLastWriteTime(addonDir) <= File.GetLastWriteTime(addonCacheFile))
+                if (cache.Addons.Length > 0 && Directory.GetLastWriteTime(addonDir) <= cache.LastWriteTime)
                 {
-                    InitializeAddonsFromCache();
+                    AddonHeader[] addons = cache.Addons;
+
+                    foreach (AddonHeader assembly in addons)
+                    {
+                        LoadAddonHeaderFromReflection(assembly);
+                    }
                 }
                 else
                 {
                     cache.Clear();
 
-                    InitializeAddonGroupByGroup();
+                    string[] dlls = Directory.GetFiles(addonDir, "*.dll", SearchOption.AllDirectories);
+
+                    foreach (string dll in dlls)
+                    {
+                        AddonHeader header = GetAddonHeaderReflection(dll);
+
+                        if (header != null)
+                            cache.AddHeader(header);
+                    }
 
                     cache.ToXml();
-
-                    if (addons.Count > 0)
-                        InitializationError(addons);
                 }
             }
             catch (Exception ex)
@@ -59,146 +82,77 @@ namespace primeira.Editor
             }
         }
 
-        private static void GetAllAvaiableAddonTypes(string addonDir)
+        private static void LoadAddonHeaderFromReflection(AddonHeader header)
         {
+            Assembly ass = Assembly.LoadFrom(header.AssemblyFile);
 
-            string[] dlls = Directory.GetFiles(addonDir, "*.dll", SearchOption.AllDirectories);
-            //string[] dlls = Directory.GetDirectories(addonDir);
+            AddonHeaderAttribute attrib = (AddonHeaderAttribute)ass.GetCustomAttributes(typeof(AddonHeaderAttribute), false).FirstOrDefault();
 
-            Assembly ass = null;
-
-            foreach (string dll in dlls)
+            if (attrib != null)
             {
-                //ass = Assembly.LoadFrom(@"D:\Desenv\Ockham\branches\1\primeira.Editor.Application\bin\Debug\Addons\TabControlEditor\primeira.Editor.TabControlEditor.dll");
-                ass = Assembly.LoadFrom(dll);
+                header.BaseType = ass.GetType(attrib.ClassName);
 
-                Type[] types = ass.GetExportedTypes();
+                header.Options = header.Options;
 
-                foreach (Type type in types)
-                {
-                    if (type.GetCustomAttributes(typeof(AddonAttribute), true).Length > 0)
-                        addons.Add(type);
-                }
+                header.GetHeaderBaseFromReflection(attrib);
 
-                //   break;
+                if (attrib.InitializeMethodName != null)
+                    header.InitializeMethod = header.BaseType.GetMethod(attrib.InitializeMethodName);
             }
         }
 
-        private static void InitializeAddonsFromCache()
+        private static AddonHeader GetAddonHeaderReflection(string assemblyFile)
         {
-            AddonDiscoveryDocument.AssemblyTypeDocument[] loadOrder = cache.LoadOrder;
+            Assembly ass = Assembly.LoadFrom(assemblyFile);
 
-            foreach (AddonDiscoveryDocument.AssemblyTypeDocument assembly in loadOrder)
+            AddonHeaderAttribute attrib = (AddonHeaderAttribute)ass.GetCustomAttributes(typeof(AddonHeaderAttribute), false).FirstOrDefault();
+
+            AddonHeader header = null;
+
+            if (attrib != null)
             {
-                foreach (Type type in addons)
+                Type t = ass.GetType(attrib.ClassName);
+
+                if (t != null)
                 {
-                    if (type.Assembly.CodeBase.Equals(assembly.AssemblyFile))
-                        if (type.Name == assembly.Type)
-                            InitializeAddon(type);
-                }
-            }
-        }
+                    header = new AddonHeader(t);
 
-        private static void InitializeAddonGroupByGroup()
-        {
-            InitializeAddonGroup(AddonOptions.SystemAddon);
+                    header.Options = attrib.Options;
 
-            InitializeAddonGroup(AddonOptions.SystemDelayedInitializationAddon);
+                    header.GetHeaderBaseFromReflection(attrib);
 
-            InitializeAddonGroup(AddonOptions.UserAddon);
-
-            InitializeAddonGroup(AddonOptions.LastInitilizedAddon);
-        }
-
-        private static void InitializeAddonGroup(AddonOptions optionFilter)
-        {
-            InitializeAddons(optionFilter);
-
-            int iLastPendencies = 0, iPendencies = 0;
-
-            iPendencies = addons.Count;
-
-            while (iPendencies > 0 && iLastPendencies != iPendencies)
-            {
-                iLastPendencies = addons.Count;
-
-                InitializeAddons(optionFilter);
-
-                iPendencies = addons.Count;
-            }
-        }
-
-        private static void InitializeAddons(AddonOptions optionFilter)
-        {
-            List<Type> pendencies = new List<Type>();
-
-            foreach (Type addon in addons)
-            {
-                AddonAttribute[] attr = (AddonAttribute[])addon.GetCustomAttributes(typeof(AddonAttribute), false);
-
-                if (attr.Length > 0)
-                    if ((attr[0].Options & optionFilter) == 0)
-                    {
-                        pendencies.Add(addon);
-                        continue;
-                    }
-
-                try
-                {
-                    InitializeAddon(addon);
-                }
-                catch
-                {
-                    pendencies.Add(addon);
+                    if (attrib.InitializeMethodName != null)
+                        header.InitializeMethod = header.BaseType.GetMethod(attrib.InitializeMethodName);
                 }
             }
 
-            addons = pendencies;
+            return header;
         }
 
-        private static void InitializeAddon(Type type)
+        public static void InitializeAddons()
         {
-            MethodInfo[] methods = type.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
+            MethodInfo[] methods = (from a in cache.Addons
+                                    where a.InitializeMethod != null
+                                    orderby a.Options
+                                    select a.InitializeMethod).ToArray();
 
-            foreach (MethodInfo method in methods)
+            foreach(MethodInfo m in methods)
             {
-                if (method.GetCustomAttributes(typeof(AddonInitializeAttribute), false).Length > 0)
-                {
-                    try
-                    {
-                        method.Invoke(null, new object[] { });
-                    }
-                    catch (TargetInvocationException ex)
-                    {
-                        throw ex.InnerException;
-                    }
-
-                    break;
-                }
+                InitializeAddon(m);
             }
-
-            if (cache != null)
-                cache.AddType(type);
         }
 
-        private static void InitializationError(List<Type> addons)
+        private static void InitializeAddon(MethodInfo method)
         {
-
-            StringBuilder sb = new StringBuilder();
-
-            foreach (Type error in addons)
+            try
             {
-                try
-                {
-                    InitializeAddon(error);
-                }
-                catch
-                {
-                    sb.AppendFormat("Addon '{0}' failed to initialize.");
-                }
+                method.Invoke(null, System.Type.EmptyTypes);
             }
-
-            throw new InvalidOperationException(sb.ToString());
+            catch (TargetInvocationException)
+            {
+                throw new Exception(
+                    string.Format(Message_en.AddonLoadingError, method.DeclaringType.Name));
+            }
         }
     }
 }
