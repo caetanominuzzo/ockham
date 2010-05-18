@@ -96,18 +96,6 @@
     <Compile Include="TabControlManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\primeira.Editor.Components\primeira.Editor.Components.csproj">
-      <Project>{F5E3F2D5-0629-4BEF-BC64-718E8483655E}</Project>
-      <Name>primeira.Editor.Components</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\primeira.Editor\primeira.Editor.csproj">
-      <Project>{60E195BA-125C-4DC4-A7B9-26C033CD1DCC}</Project>
-      <Name>primeira.Editor</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -135,6 +123,16 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\primeira.Editor.Components\primeira.Editor.Components.csproj">
+      <Project>{F5E3F2D5-0629-4BEF-BC64-718E8483655E}</Project>
+      <Name>primeira.Editor.Components</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\primeira.Editor\primeira.Editor.csproj">
+      <Project>{60E195BA-125C-4DC4-A7B9-26C033CD1DCC}</Project>
+      <Name>primeira.Editor</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

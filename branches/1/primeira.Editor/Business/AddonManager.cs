@@ -11,7 +11,15 @@ namespace primeira.Editor
     {
         private static AddonDiscoveryDocument cache = null;
 
-        private static string ADDON_DIR = "Addons";
+        private static string _baseDir = "Addons";
+
+        public static DateTime CacheLastWriteTime
+        {
+            get
+            {
+                return cache == null ? DateTime.MinValue : cache.LastWriteTime;
+            }
+        }
 
         public static AddonHeader[] Addons
         {
@@ -24,14 +32,6 @@ namespace primeira.Editor
             }
         }
 
-        public static DateTime CacheLastWriteTime
-        {
-            get
-            {
-                return cache == null ? DateTime.MinValue : cache.LastWriteTime;
-            }
-        }
-
         /// <summary>
         /// Discovers and initializes all available addons.
         /// 
@@ -41,7 +41,7 @@ namespace primeira.Editor
         {
             try
             {
-                string addonDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ADDON_DIR);
+                string addonDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, _baseDir);
 
                 if (!Directory.Exists(addonDir))
                     Directory.CreateDirectory(addonDir);
@@ -79,6 +79,23 @@ namespace primeira.Editor
             {
                 LogFileManager.Log(Message_en.AddonDiscoveryError, Environment.NewLine, ex.ToString());
                 throw;
+            }
+        }
+
+        /// <summary>
+        /// Invoke the initialization method in each addon.
+        /// The initialization method is set on AddonHeaderAtribute.
+        /// </summary>
+        public static void InitializeAddons()
+        {
+            MethodInfo[] methods = ( from a in cache.Addons
+                                     where a.InitializeMethod != null
+                                     orderby a.Options
+                                     select a.InitializeMethod ).ToArray();
+
+            foreach (MethodInfo m in methods)
+            {
+                InitializeAddon(m);
             }
         }
 
@@ -129,26 +146,13 @@ namespace primeira.Editor
             return header;
         }
 
-        public static void InitializeAddons()
-        {
-            MethodInfo[] methods = (from a in cache.Addons
-                                    where a.InitializeMethod != null
-                                    orderby a.Options
-                                    select a.InitializeMethod).ToArray();
-
-            foreach(MethodInfo m in methods)
-            {
-                InitializeAddon(m);
-            }
-        }
-
         private static void InitializeAddon(MethodInfo method)
         {
             try
             {
                 method.Invoke(null, System.Type.EmptyTypes);
             }
-            catch (TargetInvocationException)
+            catch (TargetInvocationException ex)
             {
                 throw new Exception(
                     string.Format(Message_en.AddonLoadingError, method.DeclaringType.Name));

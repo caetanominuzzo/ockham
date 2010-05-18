@@ -101,11 +101,6 @@ namespace primeira.Editor
 
             SetText(editor.FileName, editor.Header.FriendlyNameMask);
 
-            //if (def.FriendlyName != null)
-            //    SetText(def.FriendlyName);
-            //else
-            //    SetText(editor.FileName);
-
             this.Click += new EventHandler(TabButton_Click);
 
             this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);

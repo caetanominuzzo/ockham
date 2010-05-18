@@ -80,7 +80,7 @@ namespace primeira.Editor
 
         public static void ShowConfig()
         {
-            DocumentHeader header = DocumentManager.GetDocumentHeader(typeof(ShortcutConfigDocument));
+            DocumentHeader header = DocumentManager.RegisterDocument(typeof(ShortcutConfigDocument));
 
             EditorManager.LoadEditor(header);
         }

@@ -5,6 +5,10 @@ using System.Text;
 
 namespace primeira.Editor
 {
+    /// <summary>
+    /// Defines an addons (explicitly an editor) inside an assembly.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Assembly, AllowMultiple=true)]
     public sealed class EditorHeaderAttribute : AddonHeaderAttribute
     {
         public EditorHeaderAttribute(string typeName, string initializeMethodName, AddonOptions options)

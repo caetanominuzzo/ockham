@@ -32,7 +32,7 @@ namespace primeira.Editor
         /// <returns></returns>
         protected static DocumentBase ToObject(string fileName, Type type)
         {
-            return DocumentManager.ToObject(fileName, type);
+            return DocumentManager.InternalLoadDocument(type, fileName);
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace primeira.Editor
         /// <param name="fileName">The file to serialize</param>
         protected static void ToXml(DocumentBase document, string fileName)
         {
-            DocumentManager.ToXml(document, fileName);
+            DocumentManager.InternalSaveDocument(document, fileName);
         }
 
         #endregion
