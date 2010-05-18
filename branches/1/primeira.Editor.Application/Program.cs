@@ -11,13 +11,17 @@ namespace primeira.Editor
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(params string[] args)
         {
             Application.EnableVisualStyles();
 
             Application.SetCompatibleTextRenderingDefault(false);
 
             AddonManager.Discovery();
+
+            EditorManager.Discovery();
+
+            AddonManager.InitializeAddons();
 
             ShortcutManager.InitializePreFilter();
 

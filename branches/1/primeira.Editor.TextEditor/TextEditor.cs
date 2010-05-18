@@ -11,11 +11,12 @@ using primeira.Editor.Components;
 using Microsoft.CSharp;
 using System.CodeDom.Compiler;
 
+[assembly: EditorHeader("primeira.Editor.TextEditor",
+    Id="{5F78D7E7-2A69-43F3-9CDE-2D793E3DDC50}")]
 
 namespace primeira.Editor
 {
     [EditorDocument(DocumentType=typeof(TextEditorDocument))]
-    [Addon(AddonOptions.UserAddon)]
     public partial class TextEditor : EditorBase, IShorcutEscopeProvider
     {
         public TextEditor(string fileName)
@@ -42,12 +43,6 @@ namespace primeira.Editor
             this.txtMain.MouseUp += new System.Windows.Forms.MouseEventHandler(this.txtMain_TextChanged);
             this.txtMain.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtMain_TextChanged);
 
-        }
-
-        [AddonInitialize()]
-        public static void AddonInitialize()
-        {
-            EditorManager.RegisterEditor(typeof(TextEditor));
         }
 
         private void txtMain_TextChanged(object sender, EventArgs e)

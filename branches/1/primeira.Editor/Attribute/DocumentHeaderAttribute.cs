@@ -10,24 +10,8 @@ namespace primeira.Editor
     /// The class must descend from DocumentBase in order to work properly.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public sealed class DocumentHeaderAttribute : Attribute
+    public sealed class DocumentHeaderAttribute : HeaderAttributeBase
     {
-        /// <summary>
-        /// Gets or sets the id of the document. 
-        /// </summary>
-        public string Id { get; set; }
-        /// <summary>
-        /// Gets or sets the version of the document. 
-        /// </summary>
-        public string VersionNumber { get; set; }
-        /// <summary>
-        /// Gets or sets the name of the document. Eg.: "Text File", it will appear as "Text File Document".
-        /// </summary>
-        public string Name { get; set; }
-        /// <summary>
-        /// Gets or sets the description of the document. Eg.: "Simple plain text."
-        /// </summary>
-        public string Description { get; set; }
         /// <summary>
         /// Gets or sets the default name of the document file. Eg.: "NoName". Used with DefaultFileExtension.
         /// </summary>

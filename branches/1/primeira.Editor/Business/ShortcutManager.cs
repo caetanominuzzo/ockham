@@ -80,12 +80,9 @@ namespace primeira.Editor
 
         public static void ShowConfig()
         {
-            DocumentHeader doc = (from a in EditorManager.Editors.AsParallel()
-                     where a.Documents[0].DocumentType == typeof(ShortcutConfigDocument)
-                     orderby a.Documents[0].DefaultEditor
-                     select a.Documents[0]).FirstOrDefault();
+            DocumentHeader header = DocumentManager.GetDocumentHeader(typeof(ShortcutConfigDocument));
 
-            EditorManager.LoadEditor(doc);
+            EditorManager.LoadEditor(header);
         }
 
         #endregion
@@ -166,6 +163,13 @@ namespace primeira.Editor
             {
                 s = _shortcuts.Find(x => x.Method == method && x.Key == key && x.Modifiers == Keys);
 
+                if (s == null)
+                {
+                    LoadFromType(target.GetType(), null);
+
+                    s = _shortcuts.Find(x => x.Method == method && x.Key == key && x.Modifiers == Keys);
+                }
+                
                 s.Target.Add(target);
             }
             
