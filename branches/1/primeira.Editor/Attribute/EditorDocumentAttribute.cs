@@ -8,7 +8,7 @@ namespace primeira.Editor
     /// <summary>
     /// Defines a class as an Editor for an specific document.
     /// 
-    /// To be correctly handled the class must be registered as an editor.
+    /// To be correctly handled the class must be registered as an editor using EditorHeaderAttribute.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public sealed class EditorDocumentAttribute : Attribute

@@ -73,6 +73,7 @@
     <Compile Include="Attribute\EditorHeaderAttribute.cs" />
     <Compile Include="Attribute\HeaderAttributeBase.cs" />
     <Compile Include="Business\DelayedExecutionManager.cs" />
+    <Compile Include="Business\DocumentManager.Serialization.cs" />
     <Compile Include="Data\AddonHeader.cs" />
     <Compile Include="Data\Authorship.cs" />
     <Compile Include="Data\DocumentHeader.cs" />
