@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.Serialization;
 using System.Drawing;
+using System.IO;
 using UndoRedoFramework;
 using primeira.Editor;
 
@@ -39,12 +40,21 @@ namespace primeira.Editor
 
         public static DocumentBase ToObject(string fileName)
         {
-            return DocumentBase.ToObject(fileName + ".user", typeof(TextEditorDocument));
+            string internalFileName = fileName + ".user";
+
+            bool alreadyExists =  File.Exists(internalFileName);
+            
+            DocumentBase tmp = DocumentBase.ToObject(fileName + ".user", typeof(TextEditorDocument));
+
+            if (!alreadyExists)
+                ((TextEditorDocument)tmp).Content = File.ReadAllText(fileName);
+
+            return tmp;
         }
 
         public void ToXml(string fileName)
         {
-            System.IO.File.WriteAllText(fileName, Content);
+            File.WriteAllText(fileName, Content);
 
             DocumentBase.ToXml(this, fileName + ".user");
         }

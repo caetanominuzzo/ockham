@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.lblQuickLauch = new System.Windows.Forms.Label();
             this.lblRecent = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
@@ -61,16 +61,16 @@
             this.ColHardFilename = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColFileVersion = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgDirFiles)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgQuickLauch)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgRecentFiles)).BeginInit();
+            ( (System.ComponentModel.ISupportInitialize)( this.dgDirFiles ) ).BeginInit();
+            ( (System.ComponentModel.ISupportInitialize)( this.dgQuickLauch ) ).BeginInit();
+            ( (System.ComponentModel.ISupportInitialize)( this.dgRecentFiles ) ).BeginInit();
             this.SuspendLayout();
             // 
             // lblQuickLauch
             // 
             this.lblQuickLauch.AutoSize = true;
             this.lblQuickLauch.BackColor = System.Drawing.Color.Transparent;
-            this.lblQuickLauch.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblQuickLauch.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
             this.lblQuickLauch.ForeColor = System.Drawing.Color.DarkGray;
             this.lblQuickLauch.Location = new System.Drawing.Point(7, 20);
             this.lblQuickLauch.Name = "lblQuickLauch";
@@ -82,7 +82,7 @@
             // 
             this.lblRecent.AutoSize = true;
             this.lblRecent.BackColor = System.Drawing.Color.Transparent;
-            this.lblRecent.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblRecent.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
             this.lblRecent.ForeColor = System.Drawing.Color.DarkGray;
             this.lblRecent.Location = new System.Drawing.Point(290, 20);
             this.lblRecent.Name = "lblRecent";
@@ -92,9 +92,9 @@
             // 
             // panel4
             // 
-            this.panel4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel4.Anchor = ( (System.Windows.Forms.AnchorStyles)( ( ( ( System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom )
+                        | System.Windows.Forms.AnchorStyles.Left )
+                        | System.Windows.Forms.AnchorStyles.Right ) ) );
             this.panel4.Controls.Add(this.label1);
             this.panel4.Controls.Add(this.panel3);
             this.panel4.Controls.Add(this.panel2);
@@ -102,7 +102,7 @@
             this.panel4.Controls.Add(this.dgDirFiles);
             this.panel4.Location = new System.Drawing.Point(530, 50);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(875, 542);
+            this.panel4.Size = new System.Drawing.Size(0, 0);
             this.panel4.TabIndex = 13;
             this.panel4.Visible = false;
             // 
@@ -110,7 +110,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
             this.label1.ForeColor = System.Drawing.Color.LightGray;
             this.label1.Location = new System.Drawing.Point(20, 340);
             this.label1.Name = "label1";
@@ -120,32 +120,32 @@
             // 
             // panel3
             // 
-            this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(219)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
+            this.panel3.Anchor = ( (System.Windows.Forms.AnchorStyles)( ( ( System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left )
+                        | System.Windows.Forms.AnchorStyles.Right ) ) );
+            this.panel3.BackColor = System.Drawing.Color.FromArgb(( (int)( ( (byte)( 219 ) ) ) ), ( (int)( ( (byte)( 225 ) ) ) ), ( (int)( ( (byte)( 255 ) ) ) ));
             this.panel3.Location = new System.Drawing.Point(10, 60);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(875, 1);
+            this.panel3.Size = new System.Drawing.Size(0, 1);
             this.panel3.TabIndex = 12;
             // 
             // panel2
             // 
-            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(219)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
-            this.panel2.Location = new System.Drawing.Point(10, 442);
+            this.panel2.Anchor = ( (System.Windows.Forms.AnchorStyles)( ( ( System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left )
+                        | System.Windows.Forms.AnchorStyles.Right ) ) );
+            this.panel2.BackColor = System.Drawing.Color.FromArgb(( (int)( ( (byte)( 219 ) ) ) ), ( (int)( ( (byte)( 225 ) ) ) ), ( (int)( ( (byte)( 255 ) ) ) ));
+            this.panel2.Location = new System.Drawing.Point(10, -100);
             this.panel2.Name = "panel2";
             this.panel2.Padding = new System.Windows.Forms.Padding(0, 0, 5, 0);
-            this.panel2.Size = new System.Drawing.Size(875, 40);
+            this.panel2.Size = new System.Drawing.Size(0, 40);
             this.panel2.TabIndex = 11;
             // 
             // folderBrowser1
             // 
-            this.folderBrowser1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.folderBrowser1.Anchor = ( (System.Windows.Forms.AnchorStyles)( ( ( System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left )
+                        | System.Windows.Forms.AnchorStyles.Right ) ) );
             this.folderBrowser1.Location = new System.Drawing.Point(0, 0);
             this.folderBrowser1.Name = "folderBrowser1";
-            this.folderBrowser1.Size = new System.Drawing.Size(875, 46);
+            this.folderBrowser1.Size = new System.Drawing.Size(0, 46);
             this.folderBrowser1.TabIndex = 7;
             this.folderBrowser1.OnDirectoryChange += new primeira.Editor.FileBrowserEditorComponents.FolderBrowser.OnDirectoryChangeDelegate(this.folderBrowser1_OnDirectoryChange);
             // 
@@ -155,9 +155,9 @@
             this.dgDirFiles.AllowUserToDeleteRows = false;
             this.dgDirFiles.AllowUserToResizeColumns = false;
             this.dgDirFiles.AllowUserToResizeRows = false;
-            this.dgDirFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgDirFiles.Anchor = ( (System.Windows.Forms.AnchorStyles)( ( ( ( System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom )
+                        | System.Windows.Forms.AnchorStyles.Left )
+                        | System.Windows.Forms.AnchorStyles.Right ) ) );
             this.dgDirFiles.BackgroundColor = System.Drawing.Color.White;
             this.dgDirFiles.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgDirFiles.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
@@ -171,15 +171,15 @@
             this.dataGridViewTextBoxColumn9,
             this.dataGridViewTextBoxColumn10});
             this.dgDirFiles.Cursor = System.Windows.Forms.Cursors.Hand;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Gray;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(219)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.DimGray;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgDirFiles.DefaultCellStyle = dataGridViewCellStyle1;
-            this.dgDirFiles.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(219)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.Gray;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.FromArgb(( (int)( ( (byte)( 219 ) ) ) ), ( (int)( ( (byte)( 225 ) ) ) ), ( (int)( ( (byte)( 255 ) ) ) ));
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.DimGray;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgDirFiles.DefaultCellStyle = dataGridViewCellStyle4;
+            this.dgDirFiles.GridColor = System.Drawing.Color.FromArgb(( (int)( ( (byte)( 219 ) ) ) ), ( (int)( ( (byte)( 225 ) ) ) ), ( (int)( ( (byte)( 255 ) ) ) ));
             this.dgDirFiles.Location = new System.Drawing.Point(10, 70);
             this.dgDirFiles.MultiSelect = false;
             this.dgDirFiles.Name = "dgDirFiles";
@@ -189,7 +189,7 @@
             this.dgDirFiles.RowTemplate.Height = 35;
             this.dgDirFiles.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dgDirFiles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgDirFiles.Size = new System.Drawing.Size(875, 542);
+            this.dgDirFiles.Size = new System.Drawing.Size(0, 0);
             this.dgDirFiles.StandardTab = true;
             this.dgDirFiles.TabIndex = 9;
             this.dgDirFiles.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
@@ -241,12 +241,12 @@
             // 
             // panel1
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)));
-            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(219)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
+            this.panel1.Anchor = ( (System.Windows.Forms.AnchorStyles)( ( ( System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom )
+                        | System.Windows.Forms.AnchorStyles.Left ) ) );
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(( (int)( ( (byte)( 219 ) ) ) ), ( (int)( ( (byte)( 225 ) ) ) ), ( (int)( ( (byte)( 255 ) ) ) ));
             this.panel1.Location = new System.Drawing.Point(280, 60);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1, 542);
+            this.panel1.Size = new System.Drawing.Size(1, 0);
             this.panel1.TabIndex = 8;
             // 
             // dgQuickLauch
@@ -255,8 +255,8 @@
             this.dgQuickLauch.AllowUserToDeleteRows = false;
             this.dgQuickLauch.AllowUserToResizeColumns = false;
             this.dgQuickLauch.AllowUserToResizeRows = false;
-            this.dgQuickLauch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)));
+            this.dgQuickLauch.Anchor = ( (System.Windows.Forms.AnchorStyles)( ( ( System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom )
+                        | System.Windows.Forms.AnchorStyles.Left ) ) );
             this.dgQuickLauch.BackgroundColor = System.Drawing.Color.White;
             this.dgQuickLauch.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgQuickLauch.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
@@ -270,15 +270,15 @@
             this.dataGridViewTextBoxColumn4,
             this.dataGridViewTextBoxColumn5});
             this.dgQuickLauch.Cursor = System.Windows.Forms.Cursors.Hand;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Gray;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(219)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.DimGray;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgQuickLauch.DefaultCellStyle = dataGridViewCellStyle2;
-            this.dgQuickLauch.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(219)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.Gray;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.FromArgb(( (int)( ( (byte)( 219 ) ) ) ), ( (int)( ( (byte)( 225 ) ) ) ), ( (int)( ( (byte)( 255 ) ) ) ));
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.DimGray;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgQuickLauch.DefaultCellStyle = dataGridViewCellStyle5;
+            this.dgQuickLauch.GridColor = System.Drawing.Color.FromArgb(( (int)( ( (byte)( 219 ) ) ) ), ( (int)( ( (byte)( 225 ) ) ) ), ( (int)( ( (byte)( 255 ) ) ) ));
             this.dgQuickLauch.Location = new System.Drawing.Point(10, 50);
             this.dgQuickLauch.MultiSelect = false;
             this.dgQuickLauch.Name = "dgQuickLauch";
@@ -288,7 +288,7 @@
             this.dgQuickLauch.RowTemplate.Height = 35;
             this.dgQuickLauch.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dgQuickLauch.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgQuickLauch.Size = new System.Drawing.Size(260, 542);
+            this.dgQuickLauch.Size = new System.Drawing.Size(260, 0);
             this.dgQuickLauch.StandardTab = true;
             this.dgQuickLauch.TabIndex = 5;
             this.dgQuickLauch.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
@@ -344,9 +344,9 @@
             this.dgRecentFiles.AllowUserToDeleteRows = false;
             this.dgRecentFiles.AllowUserToResizeColumns = false;
             this.dgRecentFiles.AllowUserToResizeRows = false;
-            this.dgRecentFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgRecentFiles.Anchor = ( (System.Windows.Forms.AnchorStyles)( ( ( ( System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom )
+                        | System.Windows.Forms.AnchorStyles.Left )
+                        | System.Windows.Forms.AnchorStyles.Right ) ) );
             this.dgRecentFiles.BackgroundColor = System.Drawing.Color.White;
             this.dgRecentFiles.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgRecentFiles.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
@@ -360,15 +360,15 @@
             this.ColHardFilename,
             this.ColFileVersion});
             this.dgRecentFiles.Cursor = System.Windows.Forms.Cursors.Hand;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Gray;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(219)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.DimGray;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgRecentFiles.DefaultCellStyle = dataGridViewCellStyle3;
-            this.dgRecentFiles.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(219)))), ((int)(((byte)(225)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.Color.Gray;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(( (int)( ( (byte)( 219 ) ) ) ), ( (int)( ( (byte)( 225 ) ) ) ), ( (int)( ( (byte)( 255 ) ) ) ));
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.DimGray;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgRecentFiles.DefaultCellStyle = dataGridViewCellStyle6;
+            this.dgRecentFiles.GridColor = System.Drawing.Color.FromArgb(( (int)( ( (byte)( 219 ) ) ) ), ( (int)( ( (byte)( 225 ) ) ) ), ( (int)( ( (byte)( 255 ) ) ) ));
             this.dgRecentFiles.Location = new System.Drawing.Point(290, 50);
             this.dgRecentFiles.MultiSelect = false;
             this.dgRecentFiles.Name = "dgRecentFiles";
@@ -378,12 +378,13 @@
             this.dgRecentFiles.RowTemplate.Height = 35;
             this.dgRecentFiles.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dgRecentFiles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgRecentFiles.Size = new System.Drawing.Size(928, 542);
+            this.dgRecentFiles.Size = new System.Drawing.Size(53, 0);
             this.dgRecentFiles.StandardTab = true;
             this.dgRecentFiles.TabIndex = 2;
             this.dgRecentFiles.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             this.dgRecentFiles.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellMouseEnter);
             this.dgRecentFiles.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellMouseLeave);
+            this.dgRecentFiles.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dgRecentFiles_CellPainting);
             // 
             // ColIcon
             // 
@@ -437,13 +438,13 @@
             this.Controls.Add(this.dgQuickLauch);
             this.Controls.Add(this.dgRecentFiles);
             this.Name = "FileBrowserEditor";
-            this.Size = new System.Drawing.Size(1226, 582);
+            this.Size = new System.Drawing.Size(0, 0);
             this.Load += new System.EventHandler(this.FileBrowserEditor_Load);
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgDirFiles)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgQuickLauch)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgRecentFiles)).EndInit();
+            ( (System.ComponentModel.ISupportInitialize)( this.dgDirFiles ) ).EndInit();
+            ( (System.ComponentModel.ISupportInitialize)( this.dgQuickLauch ) ).EndInit();
+            ( (System.ComponentModel.ISupportInitialize)( this.dgRecentFiles ) ).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

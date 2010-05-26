@@ -5,7 +5,6 @@ using System.Text;
 using System.Runtime.Serialization;
 using System.IO;
 
-
 namespace primeira.Editor
 {
     [DataContract()]
@@ -14,7 +13,7 @@ namespace primeira.Editor
                 VersionNumber = "1.0",
                 Name = "Editors cache",
                 DefaultFileName = "editors",
-                Description = "Stores the available editors.",
+                Description = "Stores the last sucessful editors discovery.",
                 DefaultFileExtension = ".cache",
                 Options = DocumentHeaderOptions.OpenFromTypeDefaultName)]
     internal class EditorHeaderDocument : DocumentBase
@@ -81,6 +80,5 @@ namespace primeira.Editor
         {
             DocumentManager.SaveDocument(this, FileName);
         }
-
     }
 }

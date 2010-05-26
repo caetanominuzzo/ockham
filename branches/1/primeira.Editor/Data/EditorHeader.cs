@@ -10,7 +10,7 @@ namespace primeira.Editor
     public class EditorHeader : AddonHeader
     {
         [DataMember()]
-        public VersionData[] DocumentVersions { get; set; }
+        public VersionFilter[] DocumentVersions { get; set; }
 
         public EditorHeader(Type editorType)
             : base(editorType)

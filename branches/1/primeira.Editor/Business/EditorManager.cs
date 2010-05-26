@@ -8,8 +8,18 @@ using System.Drawing;
 
 namespace primeira.Editor
 {
-    public delegate void SelectedDelegate(IEditor sender);
-
+    /// <summary>
+    /// Provides methods to register and manage editors headers and editors. 
+    /// 
+    /// Editors are classes defined in assemblies with EditorHeader Attribute.
+    /// 
+    /// All editors are dicovered and registered by the application after the addons discovery.
+    /// 
+    /// Like AddonManager & DocumentManager this class works with a cache of headers (here, editor headers).
+    /// This cache is usefeul to prevents intensive access to custom attributes.
+    /// Like AddonManager, but unlike DocumentManager classes EditorManager persists this cache on file.
+    /// This cache file is an EditorHeaderDocument object.
+    /// </summary>
     public static class EditorManager
     {
         private static EditorHeaderDocument cache = null;
@@ -35,7 +45,7 @@ namespace primeira.Editor
                         if (a.Version.Id == b.Version.Id)
                         {
                             b.BaseType = a.BaseType;
-                            b.DocumentVersions = GetEditorDocumentsHeadersFromReflection(b.BaseType);
+                            b.DocumentVersions = GetEditorDocumentsHeadersFromReflection(b);
                         }
                     });
                 });
@@ -52,6 +62,8 @@ namespace primeira.Editor
 
                     if (header != null)
                         cache.AddEditorHeader(header);
+
+                    header.DocumentVersions = GetEditorDocumentsHeadersFromReflection(header);
                 });
 
                 cache.ToXml();
@@ -77,7 +89,19 @@ namespace primeira.Editor
         }
 
         /// <summary>
-        /// Load the specified file in the registered editor.
+        /// Registers a System.Type as an editor.
+        /// </summary>
+        /// <param name="editorType">The System.Type to register</param>
+        public static EditorHeader GetEditorHeader(VersionFilter version)
+        {
+            return ( from a in cache.Headers
+                     where a.Version != null && a.Version.Filter(version)
+                     orderby a.Version
+                     select a ).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Loads the specified file in the registered editor.
         /// If the file is already open its tab is selected.
         /// </summary>
         /// <param name="fileName">The file to open.</param>
@@ -129,6 +153,28 @@ namespace primeira.Editor
             throw new InvalidOperationException(Message_en.DocumentMissingOpenFromTypeDefaultName);
         }
 
+        private static IEditor InternalLoadEditor(string fileName)
+        {
+            IEditor res = null;
+
+            Type editorType;
+
+            DocumentHeader header = DocumentManager.GetDocumentHeader(fileName);
+
+            editorType = ( from a in EditorManager.Headers.AsParallel()
+                           where a.DocumentVersions != null && header.Version.FilterAny(a.DocumentVersions)
+                           select a.BaseType ).FirstOrDefault();
+
+            if (editorType == null)
+                throw new InvalidOperationException(
+                    string.Format(Message_en.ThereIsNoEditorForType, fileName));
+            
+            res = (IEditor)editorType.GetConstructor(_defaultEditorCtor).Invoke(new object[1] { fileName });
+
+            return res;
+
+        }
+
         private static EditorHeader GetEditorHeaderFromReflection(Type editorType)
         {
             EditorHeader editor = null;
@@ -141,51 +187,33 @@ namespace primeira.Editor
 
                 editor.GetHeaderBaseFromReflection(attrib);
 
-                editor.DocumentVersions = GetEditorDocumentsHeadersFromReflection(editorType);
+                
             }
 
             return editor;
         }
 
-        private static VersionData[] GetEditorDocumentsHeadersFromReflection(Type editorType)
+        private static VersionFilter[] GetEditorDocumentsHeadersFromReflection(EditorHeader header)
         {
-            EditorDocumentAttribute[] dd = (EditorDocumentAttribute[])editorType.GetCustomAttributes(typeof(EditorDocumentAttribute), false);
+            EditorDocumentAttribute[] dd = (EditorDocumentAttribute[])header.BaseType.GetCustomAttributes(typeof(EditorDocumentAttribute), false);
 
-            List<VersionData> tmp = new List<VersionData>(dd.Length);
+            List<VersionFilter> tmp = new List<VersionFilter>(dd.Length);
+
+            DocumentHeader doc;
 
             foreach (EditorDocumentAttribute d in dd)
             {
-                tmp.Add(DocumentManager.RegisterDocument(d.DocumentType).Version);
+                doc = DocumentManager.RegisterDocument(d.DocumentType);
+
+                if (doc.DefaultEditor == null || header.Version > doc.DefaultEditor.Version)
+                    doc.DefaultEditor = header;
+
+                tmp.Add((VersionFilter)doc.Version);
             }
 
             return tmp.ToArray();
         }
 
-        private static IEditor InternalLoadEditor(string fileName)
-        {
-            IEditor res = null;
-
-            Type editorType;
-
-            DocumentHeader header = DocumentManager.GetDocumentHeader(fileName);
-
-            editorType = ( from a in EditorManager.Headers.AsParallel()
-                           where a.DocumentVersions != null && a.DocumentVersions.Contains(header.Version)
-                           select a.BaseType ).FirstOrDefault();
-
-            if (editorType == null)
-                throw new InvalidOperationException(
-                    string.Format(Message_en.ThereIsNoEditorForType, fileName));
-
-
-            res = (IEditor)editorType.GetConstructor(_defaultEditorCtor).Invoke(new object[1] { fileName });
-
-            return res;
-
-        }
-
         private static Type[] _defaultEditorCtor = new Type[1] { typeof(string) };
-
-
     }
 }

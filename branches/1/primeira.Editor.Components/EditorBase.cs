@@ -26,7 +26,7 @@ namespace primeira.Editor.Components
 
         public string FileName { get; set; }
 
-        public DocumentBase Document { get; private set; }
+        public DocumentBase Document { get; protected set; }
 
         public bool Selected
         {
@@ -56,7 +56,7 @@ namespace primeira.Editor.Components
             }
         }
 
-        public DocumentHeader Header { get; private set; }
+        public DocumentHeader Header { get; protected set; }
 
         #endregion
 

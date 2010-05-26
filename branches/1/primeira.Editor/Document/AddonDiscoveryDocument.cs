@@ -9,20 +9,19 @@ using System.IO;
 namespace primeira.Editor
 {
     [DataContract()]
-    [KnownType(typeof(Type))]
     [DocumentHeader(
                 Id="F6A86949-950C-448C-9183-90DB3E3651D5",
                 VersionNumber = "1.0",
                 Name = "Addon Discovery Cache",
-                DefaultFileName = "discovery",
-                Description = "Stores the last addon discovery order.",
+                DefaultFileName = "addons",
+                Description = "Stores the last sucessful addons discovery.",
                 DefaultFileExtension = ".cache",
                 Options=DocumentHeaderOptions.OpenFromTypeDefaultName)]
     public class AddonDiscoveryDocument : DocumentBase
     {
         public static string FileName
         {
-            get { return "discovery.cache"; }
+            get { return "addons.cache"; }
         }
 
         private List<AddonHeader> _addons = new List<AddonHeader>();

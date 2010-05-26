@@ -13,7 +13,8 @@ using primeira.Editor.Components;
 [assembly: EditorHeader("primeira.Editor.ShortcutConfigEditor",
     AddonOptions.SystemAddon,
     Name = "ShortcutConfigEditor",
-    Id = "{328F4FE6-7D48-44EB-AC09-7B9F2E8FFB33}")]
+    Id = "{328F4FE6-7D48-44EB-AC09-7B9F2E8FFB33}",
+    VersionNumber="3.1.a")]
 
 namespace primeira.Editor
 {
