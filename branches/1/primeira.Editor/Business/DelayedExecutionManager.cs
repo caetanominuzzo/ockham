@@ -48,7 +48,15 @@ namespace primeira.Editor
             {
                 if (x.Active && x.ExecutionTime < DateTime.Now)
                 {
-                    x.TaskMethod.Invoke();
+                    try
+                    {
+                        x.TaskMethod.Invoke();
+                    }
+                    catch
+                    {
+                        //TODO:log the catch.
+                        //Delayed tasks must have his own error control.
+                    }
                     x.Active = false;
                 }
             });

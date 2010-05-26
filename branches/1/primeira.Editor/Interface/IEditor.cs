@@ -6,7 +6,8 @@ using System.Drawing;
 
 namespace primeira.Editor
 {
-    
+    public delegate void SelectedDelegate(IEditor sender);
+
     public interface IEditor
     {
         DocumentBase Document { get; }

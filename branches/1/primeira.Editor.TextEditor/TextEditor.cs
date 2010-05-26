@@ -12,16 +12,22 @@ using Microsoft.CSharp;
 using System.CodeDom.Compiler;
 
 [assembly: EditorHeader("primeira.Editor.TextEditor",
-    Id="{5F78D7E7-2A69-43F3-9CDE-2D793E3DDC50}")]
+    Id = "{5F78D7E7-2A69-43F3-9CDE-2D793E3DDC50}")]
 
 namespace primeira.Editor
 {
-    [EditorDocument(DocumentType=typeof(TextEditorDocument))]
+    [EditorDocument(DocumentType = typeof(TextEditorDocument))]
+    [EditorDocument(DocumentType = typeof(AddonDiscoveryDocument))]
     public partial class TextEditor : EditorBase, IShorcutEscopeProvider
     {
-        public TextEditor(string fileName)
-            : base(fileName)
+        public TextEditor(string fileName) : base()
         {
+            this.FileName = fileName;
+            
+            this.Header = DocumentManager.RegisterDocument(typeof(TextEditorDocument));
+
+            this.Document = DocumentManager.LoadDocument(Header, FileName);
+
             InitializeComponent();
         }
 

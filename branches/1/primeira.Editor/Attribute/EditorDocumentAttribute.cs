@@ -10,12 +10,10 @@ namespace primeira.Editor
     /// 
     /// To be correctly handled the class must be registered as an editor using EditorHeaderAttribute.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public sealed class EditorDocumentAttribute : Attribute
     {
         public Type DocumentType { get; set; }
-
-        public bool DefaultDocumentType { get; set; }
     }
 }
 

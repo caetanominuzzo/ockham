@@ -7,6 +7,18 @@ using System.Linq;
 
 namespace primeira.Editor
 {
+    /// <summary>
+    /// Provides methods to register and manage addon headers and addons. 
+    /// 
+    /// Addons are classes defined in assemblies with AddonHeader Attribute.
+    /// 
+    /// All addons are dicovered and registered by the application.
+    /// 
+    /// Like EditorManager & DocumentManager this class works with a cache of headers (here, addon headers).
+    /// This cache is usefeul to prevents intensive access to custom attributes.
+    /// Like EditorManager, but unlike DocumentManager classes AddonManager persists this cache on file.
+    /// This file is an AddonHeaderDocument object.
+    /// </summary>
     public class AddonManager
     {
         private static AddonDiscoveryDocument cache = null;
