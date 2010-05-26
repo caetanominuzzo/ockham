@@ -9,19 +9,27 @@ using System.Text;
 
 namespace primeira.Editor
 {
+    /// <summary>
+    /// Provides methods to register and manage documents headers and documents. 
+    /// Also provides serialization methods for documents.
+    /// 
+    /// Documents are classes with DocumentHeader Attribute.
+    /// 
+    /// A document must be registered with RegisterDocument before use.
+    /// 
+    /// Like AddonManager & EditorManager this class works with a cache of headers (here, document headers).
+    /// This cache is usefeul to prevents intensive access to custom attributes.
+    /// But unlike AddonManager & EditorManager classes DocumentManager does not persists this cache on file
+    /// becouse EditorManager, even loading header from a cache file, will access some custom attributes.
+    /// At this point these attributes are param'ed to DocumentManager.
+    /// </summary>
     public static partial class DocumentManager
     {
+        private static List<DocumentHeader> _headers = new List<DocumentHeader>();
 
-        private static List<DocumentHeader> _headers = new List<DocumentHeader>(); 
-        
-        private static string _baseDir = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-
-        public static string BaseDir
-        {
-            get { return _baseDir; }
-            set { _baseDir = value; }
-        }
-
+        /// <summary>
+        /// The document header cache.
+        /// </summary>
         public static DocumentHeader[] Headers
         {
             get
@@ -65,10 +73,19 @@ namespace primeira.Editor
                 return document[0];
             else
             {
-                throw new NotImplementedException();
+                document = ( from a in document
+                             where a.DefaultEditor != null
+                             select a ).ToArray();
 
-                //TODO: Read document header from file.
-                //Read the begining (a chunk of bytes) of the given file.
+                if (document.Length == 1)
+                    return document[0];
+                else
+                {
+                    throw new NotImplementedException();
+
+                    //TODO: Read document header from file.
+                    //Read the begining (a chunk of bytes) of the given file.
+                }
             }
         }
 
@@ -122,6 +139,9 @@ namespace primeira.Editor
 
                 header.BaseType = documentType;
 
+                if (attr.DefaultEditor != null)
+                    header.DefaultEditor = EditorManager.GetEditorHeader(attr.DefaultEditor);
+
                 header.Options = attr.Options;
                 header.DefaultFileName = attr.DefaultFileName;
                 header.DefaultFileExtension = attr.DefaultFileExtension;
@@ -146,7 +166,7 @@ namespace primeira.Editor
                     documentType.Name));
         }
 
-        private static Image GetIcon(Type type, string iconResourceFile)
+        public static Image GetIcon(Type type, string iconResourceFile)
         {
             if (iconResourceFile == null || iconResourceFile.Length == 0)
                 iconResourceFile = "File.ico";

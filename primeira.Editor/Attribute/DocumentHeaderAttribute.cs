@@ -35,6 +35,10 @@ namespace primeira.Editor
         /// Gets or sets the name of the icon in the assembly resources.
         /// </summary>
         public string IconResourceFile { get; set; }
+        /// <summary>
+        /// Gets or sets the version of the default editor.
+        /// </summary>
+        public VersionFilter DefaultEditor { get; set; }
     }
 
 

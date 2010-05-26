@@ -8,6 +8,14 @@ namespace primeira.Editor
 {
     partial class DocumentManager
     {
+        private static string _baseDir = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+        public static string BaseDir
+        {
+            get { return _baseDir; }
+            set { _baseDir = value; }
+        }
+
         /// <summary>
         /// Loads a document by its default name.
         /// </summary>

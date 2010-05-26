@@ -7,6 +7,7 @@ using System.Drawing.Drawing2D;
 using primeira.Editor.Components;
 using primeira.Editor;
 using System.Text;
+using System.Linq;
 
 [assembly: EditorHeader(
     "primeira.Editor.FileBrowserEditor",
@@ -18,7 +19,7 @@ using System.Text;
 namespace primeira.Editor
 {
     [EditorDocument(DocumentType = typeof(FileBrowserDocument))]
-    public partial class FileBrowserEditor :  EditorBase, IRecentFileControl
+    public partial class FileBrowserEditor : EditorBase, IRecentFileControl
     {
         #region Fields
 
@@ -78,7 +79,7 @@ namespace primeira.Editor
         {
             dgQuickLauch.Rows.Clear();
 
-             foreach (DocumentHeader doc in DocumentManager.Headers)
+            foreach (DocumentHeader doc in DocumentManager.Headers)
             {
                 if (doc.Options.HasFlag(DocumentHeaderOptions.ShowInQuickLauchDraft))
                 {
@@ -93,7 +94,7 @@ namespace primeira.Editor
 
             foreach (DocumentHeader doc in DocumentManager.Headers)
             {
-                if ((doc.Options & DocumentHeaderOptions.ShowIQuickLauchnOpen) > 0)
+                if (( doc.Options & DocumentHeaderOptions.ShowIQuickLauchnOpen ) > 0)
                 {
                     int i = dgQuickLauch.Rows.Add(
                             new object[] {  doc.Icon,
@@ -111,26 +112,28 @@ namespace primeira.Editor
         {
             dgRecentFiles.Rows.Clear();
 
-            string[] files = ((FileBrowserDocument)Document).Recent;
+            string[] files = ( (FileBrowserDocument)Document ).Recent;
 
             Size s = new Size(dgRecentFiles.Columns[1].Width, dgRecentFiles.RowTemplate.Height);
             Font f = dgRecentFiles.DefaultCellStyle.Font;
             DateTime d = DateTime.Now;
-            DocumentHeader doc;
             TimeSpan lastWrite;
+
+            Image loading = DocumentManager.GetIcon(this.GetType(), "loadinfo.net.gif");
 
             foreach (string file in files)
             {
                 if (File.Exists(file))
                 {
-                    doc = DocumentManager.GetDocumentHeader(file);
 
                     lastWrite = d.Subtract(File.GetLastWriteTime(file));
 
-                    dgRecentFiles.Rows.Add(
-                    new object[] { 
-                        doc.Icon,
-                        file, FileManager.LastWrite(lastWrite), (int)lastWrite.TotalSeconds, file, null });
+                    int iRow = dgRecentFiles.Rows.Add(
+                                    new object[] { 
+                                        loading,
+                                        file, FileManager.LastWrite(lastWrite), (int)lastWrite.TotalSeconds, file, null });
+
+                    delayedSetFileIcon(file, dgRecentFiles.Rows[iRow].Cells[0]);
                 }
             }
 
@@ -144,7 +147,7 @@ namespace primeira.Editor
             DocumentHeader doc = DocumentManager.RegisterDocument(typeof(FileBrowserDocument));
 
             EditorManager.LoadEditor(doc);
-        }   
+        }
 
         #region Event Handlers
 
@@ -161,25 +164,25 @@ namespace primeira.Editor
 
         private void dataGridView_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
         {
-            ((DataGridView)sender).Rows[e.RowIndex].Selected = true;
+            ( (DataGridView)sender ).Rows[e.RowIndex].Selected = true;
         }
 
         private void dataGridView_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
         {
-            ((DataGridView)sender).Rows[e.RowIndex].Selected = false;
+            ( (DataGridView)sender ).Rows[e.RowIndex].Selected = false;
         }
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
-        {   
-            if(sender == dgDirFiles)
+        {
+            if (sender == dgDirFiles)
             {
                 EditorManager.LoadEditor(dgDirFiles.Rows[e.RowIndex].Cells[4].Value.ToString());
             }
             else if (sender == dgRecentFiles)
-               EditorManager.LoadEditor(dgRecentFiles.Rows[e.RowIndex].Cells[4].Value.ToString());
+                EditorManager.LoadEditor(dgRecentFiles.Rows[e.RowIndex].Cells[4].Value.ToString());
             else
             {
-                if(dgQuickLauch.Rows[e.RowIndex].Cells[2].Value.ToString() == "draft")
+                if (dgQuickLauch.Rows[e.RowIndex].Cells[2].Value.ToString() == "draft")
                 {
                     string s = FileManager.GetNewFile((DocumentHeader)dgQuickLauch.Rows[e.RowIndex].Cells[5].Value, DocumentManager.BaseDir);
                     s = Path.Combine(DocumentManager.BaseDir, s);
@@ -229,14 +232,14 @@ namespace primeira.Editor
 
         public void AddRecent(string fileName)
         {
-            ((FileBrowserDocument)Document).AddRecent(fileName);
+            ( (FileBrowserDocument)Document ).AddRecent(fileName);
 
             Changed();
         }
 
         public string[] GetRecent()
         {
-            return ((FileBrowserDocument)Document).Recent;
+            return ( (FileBrowserDocument)Document ).Recent;
         }
 
         #endregion
@@ -293,10 +296,10 @@ namespace primeira.Editor
             string[] files;
             DateTime d = DateTime.Now;
 
-            foreach(DocumentHeader doc in DocumentManager.Headers)
+            foreach (DocumentHeader doc in DocumentManager.Headers)
             {
 
-                files = Directory.GetFiles(directoryPath,"*"+ doc.DefaultFileExtension);
+                files = Directory.GetFiles(directoryPath, "*" + doc.DefaultFileExtension);
 
                 foreach (string file in files)
                 {
@@ -320,7 +323,56 @@ namespace primeira.Editor
 
         }
 
+        private void delayedSetFileIcon(string file, DataGridViewCell cellImageValue)
+        {
+            DocumentHeader[] headers = DocumentManager.GetDocumentHeaderByFileExtension(Path.GetExtension(file));
 
+            DocumentHeader header = null;
+
+            DelayedExecutionManager.AddTask(file, 0, () =>
+            {
+
+                if (headers.Length == 1)
+                    header = headers[0];
+                else
+                {
+                    headers = ( from a in headers
+                                where a.Icon != null
+                                select a ).ToArray();
+
+                    if (headers.Length == 1)
+                        header = headers[0];
+                    else
+                    {
+                        //TODO:Ask to editors who can open the content of this file
+                    }
+                }
+
+                dgRecentFiles.Invoke(new Action(() =>
+                {
+
+                    if (header != null)
+                        cellImageValue.Value = header.Icon;
+                    else
+                        cellImageValue.Value = DocumentManager.GetIcon(this.GetType(), "File.ico");
+                }));
+            });
+
+        }
+
+        private void dgRecentFiles_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            if (e.ColumnIndex == 0)
+            {
+                System.Drawing.Drawing2D.GraphicsContainer container =
+                    e.Graphics.BeginContainer();
+
+                e.Graphics.SetClip(e.CellBounds);
+                e.Graphics.DrawImageUnscaled((Image)e.Value, e.CellBounds.Location);
+
+                e.Graphics.EndContainer(container);
+            }
+        }
 
 
 

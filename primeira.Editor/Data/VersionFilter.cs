@@ -13,6 +13,12 @@ namespace primeira.Editor
         public Guid Target { get; set; }
 
         [DataMember()]
-        public string Number { get; set; }
+        public string[] Numbers { get; set; }
+
+        [DataMember()]
+        public string MinNumber { get; set; }
+
+        [DataMember()]
+        public string MaxNumber { get; set; }
     }
 }
