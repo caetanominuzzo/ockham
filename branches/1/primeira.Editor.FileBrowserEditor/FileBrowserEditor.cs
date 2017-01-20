@@ -119,7 +119,7 @@ namespace primeira.Editor
             DateTime d = DateTime.Now;
             TimeSpan lastWrite;
 
-            Image loading = DocumentManager.GetIcon(this.GetType(), "loadinfo.net.gif");
+            Image loading = DocumentManager.GetIcon(this.GetType(), "File.ico");
 
             foreach (string file in files)
             {

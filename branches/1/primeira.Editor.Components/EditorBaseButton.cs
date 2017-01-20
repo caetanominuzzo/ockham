@@ -11,7 +11,7 @@ namespace primeira.Editor.Components
 {
     public class EditorBaseButton : Button
     {
-        private Image m_image = Image.FromFile(@"D:\Desenv\Neural Network\Imgs.png");
+        private Image m_image = Image.FromFile(@"D:\ockham\branches\1\primeira.Editor.Components\tab\ball.png");
         private bool m_showLabel = false;
         private bool m_showFocus = true;
 
